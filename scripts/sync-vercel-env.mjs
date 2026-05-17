@@ -44,7 +44,8 @@ function parseEnvFile(filePath) {
 }
 
 function runVercel(argumentsList) {
-  const result = spawnSync(vercelBinary, argumentsList, { shell: true, {
+  const result = spawnSync(vercelBinary, argumentsList, {
+    shell: true,
     cwd: process.cwd(),
     encoding: "utf8",
   });

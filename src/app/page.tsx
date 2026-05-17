@@ -125,20 +125,19 @@ export default async function Home() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(70,184,245,0.28),_transparent_46%),linear-gradient(160deg,_rgba(13,45,98,0.98),_rgba(22,92,187,0.92))]" />
             <div className="relative z-10 grid gap-6 text-white">
               <div className="flex items-center justify-between text-sm uppercase tracking-[0.24em] text-white/74">
-                <span>Nang luc cot loi</span>
+                <span>Năng lực cốt lõi</span>
                 <span>Since 2025</span>
               </div>
 
               <div className="rounded-[1.75rem] border border-white/14 bg-white/10 p-6 backdrop-blur">
                 <div className="text-sm uppercase tracking-[0.2em] text-white/70">
-                  Dong hanh cung
+                  Đồng hành cùng
                 </div>
                 <div className="mt-3 font-[family:var(--font-display)] text-3xl font-semibold">
-                  Phong xet nghiem, benh vien va trung tam nghien cuu
+                  Phòng xét nghiệm, bệnh viện và trung tâm nghiên cứu
                 </div>
                 <p className="mt-4 text-sm leading-7 text-white/80">
-                  Huong tiep can tap trung vao giao dien catalog, mo ta ky thuat,
-                  tai lieu PDF va lien he bao gia thay vi mo hinh thuong mai dien tu.
+                  Hướng tiếp cận tập trung vào giao diện catalog, mô tả kỹ thuật, tài liệu PDF và liên hệ báo giá thay vì mô hình thương mại điện tử.
                 </p>
               </div>
 

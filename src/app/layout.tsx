@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { NavBar } from "@/components/nav-bar";
 import {
   getNavigationItems,
   getSiteMetadata,
@@ -58,56 +58,14 @@ export default async function RootLayout({
       <body className="min-h-full bg-[var(--color-bg)] text-[var(--color-ink)]">
         <div className="relative isolate flex min-h-screen flex-col overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top,_rgba(61,128,255,0.26),_transparent_52%),linear-gradient(180deg,_rgba(243,248,255,0.95),_rgba(243,248,255,0))]" />
-          <header className="sticky top-0 z-30 border-b border-white/50 bg-[rgba(243,248,255,0.82)] backdrop-blur-xl">
-            <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-8">
-              <Link href="/" className="flex items-center gap-3 text-[var(--color-ink)]">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#0d2d62,#2e7ef7)] font-[family:var(--font-display)] text-sm font-semibold tracking-[0.24em] text-white">
-                  TAKO
-                </span>
-                <span>
-                  <span className="block font-[family:var(--font-display)] text-lg font-semibold tracking-tight">
-                    {siteMetadata.companyName}
-                  </span>
-                  <span className="block text-xs uppercase tracking-[0.24em] text-[var(--color-muted)]">
-                    {localizeText(chromeCopy.partnerTagline, locale)}
-                  </span>
-                </span>
-              </Link>
-
-              <div className="hidden items-center gap-4 lg:flex">
-                <nav className="items-center gap-6 text-sm font-medium text-[var(--color-muted)] lg:flex">
-                  {navigationItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="transition hover:text-[var(--color-ink)]"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </nav>
-                <LanguageSwitcher
-                  currentLocale={locale}
-                  label={localizeText(chromeCopy.language, locale)}
-                />
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="lg:hidden">
-                  <LanguageSwitcher
-                    currentLocale={locale}
-                    label={localizeText(chromeCopy.language, locale)}
-                  />
-                </div>
-                <Link
-                  href="/lien-he"
-                  className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(13,45,98,0.18)] transition hover:bg-[var(--color-primary-strong)]"
-                >
-                  {localizeText(chromeCopy.cta, locale)}
-                </Link>
-              </div>
-            </div>
-          </header>
+          <NavBar
+            locale={locale}
+            companyName={siteMetadata.companyName}
+            partnerTagline={localizeText(chromeCopy.partnerTagline, locale)}
+            navigationItems={navigationItems}
+            ctaLabel={localizeText(chromeCopy.cta, locale)}
+            languageLabel={localizeText(chromeCopy.language, locale)}
+          />
 
           <main className="flex-1">{children}</main>
 
