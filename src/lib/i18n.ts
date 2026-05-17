@@ -44,11 +44,8 @@ export function isLocale(value: string | null | undefined): value is Locale {
 }
 
 export async function getRequestLocale(): Promise<Locale> {
-  const { cookies } = await import("next/headers");
-  const cookieStore = await cookies();
-  const locale = cookieStore.get(localeCookieName)?.value;
-
-  return isLocale(locale) ? locale : "vi";
+  const envLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE;
+  return isLocale(envLocale) ? envLocale : "vi";
 }
 
 export function localizeText(value: LocalizedText, locale: Locale) {
