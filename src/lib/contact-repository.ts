@@ -5,13 +5,13 @@ import { getMongoDatabase } from "@/lib/mongodb";
 type ContactDocument = ContactSubmissionInput & {
   _id?: ObjectId;
   createdAt: Date;
-  status: "new";
+  status: "new" | "handled";
 };
 
 export type StoredContact = ContactSubmissionInput & {
   id: string;
   createdAt: string;
-  status: "new";
+  status: "new" | "handled";
 };
 
 async function getContactsCollection() {
@@ -53,4 +53,37 @@ export async function listContacts(limit = 50): Promise<StoredContact[]> {
 export async function getContactCount(): Promise<number> {
   const collection = await getContactsCollection();
   return await collection.countDocuments();
+}
+
+export async function updateContact(
+  id: string,
+  payload: Partial<ContactSubmissionInput> & { status?: "new" | "handled" },
+) {
+  const collection = await getContactsCollection();
+  const _id = new ObjectId(id);
+
+  await collection.updateOne(
+    { _id },
+    {
+      $set: {
+        ...payload,
+      },
+    },
+  );
+}
+
+export async function deleteContact(id: string) {
+  const collection = await getContactsCollection();
+  const _id = new ObjectId(id);
+  await collection.deleteOne({ _id });
+}
+
+export async function deleteContacts(ids: string[]) {
+  if (ids.length === 0) {
+    return;
+  }
+
+  const collection = await getContactsCollection();
+  const objectIds = ids.map((id) => new ObjectId(id));
+  await collection.deleteMany({ _id: { $in: objectIds } });
 }

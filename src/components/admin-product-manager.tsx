@@ -52,6 +52,7 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
   const [activeLocale, setActiveLocale] = useState<LocaleField>("vi");
   const [applicationsText, setApplicationsText] = useState((initialProducts[0]?.applications || []).join(", "));
   const [feedback, setFeedback] = useState("");
+  const [uploadingPdf, setUploadingPdf] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const selectedProduct = useMemo(
@@ -180,6 +181,35 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
       applyDraft(payload);
       setFeedback("Đã lưu sản phẩm.");
     });
+  }
+
+  async function uploadPdf(file: File) {
+    setUploadingPdf(true);
+    setFeedback("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/admin/uploads/pdf", {
+        body: formData,
+        method: "POST",
+      });
+
+      const payload = (await response.json()) as { message?: string; url?: string };
+
+      if (!response.ok || !payload.url) {
+        setFeedback(payload.message || "Upload PDF thất bại.");
+        return;
+      }
+
+      updateDraft("pdfPath", payload.url);
+      setFeedback(`Đã upload PDF: ${file.name}`);
+    } catch {
+      setFeedback("Upload PDF thất bại. Vui lòng thử lại.");
+    } finally {
+      setUploadingPdf(false);
+    }
   }
 
   function removeProduct(slug: string) {
@@ -384,6 +414,26 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
             <span className="text-xs text-gray-500">
               Bạn có thể dùng link trực tiếp đến PDF/ODF, hoặc giữ route nội bộ /api/catalog/slug.
             </span>
+          </label>
+
+          <label className="grid gap-1 text-sm text-gray-700 md:col-span-2">
+            Upload file PDF từ máy (PC/Mobile)
+            <input
+              type="file"
+              accept="application/pdf,.pdf"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) {
+                  void uploadPdf(file);
+                }
+                event.currentTarget.value = "";
+              }}
+              className="rounded-xl border border-gray-300 px-3 py-2"
+            />
+            <span className="text-xs text-gray-500">
+              Hỗ trợ file tối đa 10MB. Sau khi upload, link tài liệu sẽ tự cập nhật.
+            </span>
+            {uploadingPdf ? <span className="text-xs font-semibold text-blue-600">Đang upload PDF...</span> : null}
           </label>
 
           <label className="grid gap-1 text-sm text-gray-700 md:col-span-2">

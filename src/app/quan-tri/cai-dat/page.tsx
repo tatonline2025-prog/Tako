@@ -3,11 +3,9 @@ import { redirect } from "next/navigation";
 import { AdminSettingsClient } from "@/components/admin-settings-client";
 import { getMailSettings } from "@/lib/admin-settings-repository";
 import {
-  getAdminConfigurationStatus,
   getAuthenticatedAdmin,
 } from "@/lib/admin-auth";
 import { getMailSetupStatus } from "@/lib/mailer";
-import { getContactCount } from "@/lib/contact-repository";
 
 export const metadata: Metadata = {
   title: "Cài đặt hệ thống",
@@ -25,16 +23,8 @@ export default async function AdminSettingsPage() {
     redirect("/quan-tri");
   }
 
-  const adminStatus = getAdminConfigurationStatus();
   const mailStatus = await getMailSetupStatus();
   const storedMailSettings = await getMailSettings();
-  const databaseConfigured = Boolean(process.env.MONGODB_URI && process.env.MONGODB_DB);
-  const missingDatabase = [
-    !process.env.MONGODB_URI ? "MONGODB_URI" : null,
-    !process.env.MONGODB_DB ? "MONGODB_DB" : null,
-  ].filter(Boolean) as string[];
-  
-  const contactCount = await getContactCount();
 
   return (
     <div className="space-y-6">
@@ -44,12 +34,8 @@ export default async function AdminSettingsPage() {
       </div>
 
       <AdminSettingsClient
-        adminStatus={adminStatus}
         mailStatus={mailStatus}
-        databaseConfigured={databaseConfigured}
-        missingDatabase={missingDatabase}
         storedMailSettings={storedMailSettings}
-        contactCount={contactCount}
       />
     </div>
   );

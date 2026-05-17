@@ -5,6 +5,8 @@ import { getSiteMetadata } from "@/data/site";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 import { getAboutContent } from "@/lib/site-content-repository";
 
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Giới thiệu | About",
   description:

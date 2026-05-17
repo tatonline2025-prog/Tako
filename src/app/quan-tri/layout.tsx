@@ -99,8 +99,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <div className="fixed inset-0 z-[999] flex overflow-hidden bg-[radial-gradient(circle_at_top_right,#dbeafe_0%,#f8fbff_45%,#eff6ff_100%)]">
-      <aside className="hidden w-80 flex-col border-r border-slate-200/80 bg-white/90 backdrop-blur lg:flex">
+    <div className="fixed inset-0 z-[999] flex overflow-hidden bg-slate-50">
+      <aside className="hidden w-80 flex-col border-r border-slate-200 bg-white lg:flex">
         <div className="border-b border-slate-200/80 px-5 py-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -164,7 +164,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="flex items-center justify-between border-b border-slate-200/80 bg-white/80 px-4 py-3 backdrop-blur lg:hidden">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
           <span className="font-semibold text-slate-900">TAKO Admin</span>
           <form action="/api/admin/logout" method="post">
             <input type="hidden" name="redirectTo" value="/admin" />
@@ -177,7 +177,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </form>
         </div>
 
-        <div className="flex overflow-x-auto border-b border-slate-200/80 bg-white/80 px-2 backdrop-blur lg:hidden">
+        <div className="flex overflow-x-auto border-b border-slate-200 bg-white px-2 lg:hidden">
           {navItems.map((item) => {
             const active = isActive(item.href, item.exact);
             return (

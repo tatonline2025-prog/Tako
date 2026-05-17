@@ -2,30 +2,18 @@
 
 import { useState, useCallback } from "react";
 import { AdminMailSettingsForm } from "./admin-mail-settings-form";
-import type { MailSettings, AdminConfigStatus, MailSetupStatus } from "@/lib/admin-settings-repository";
+import type { MailSettings, MailSetupStatus } from "@/lib/admin-settings-repository";
 
 type AdminSettingsClientProps = {
-  adminStatus: AdminConfigStatus;
   mailStatus: MailSetupStatus;
-  databaseConfigured: boolean;
-  missingDatabase: string[];
   storedMailSettings: MailSettings | null;
-  contactCount: number;
 };
 
-function statusBadge(configured: boolean) {
-  return configured ? "Đã cấu hình" : "Chưa hoàn tất";
-}
-
 export function AdminSettingsClient({
-  adminStatus,
   mailStatus,
-  databaseConfigured,
-  missingDatabase,
   storedMailSettings,
-  contactCount,
 }: AdminSettingsClientProps) {
-  const [showGuides, setShowGuides] = useState(false);
+  const [showGuides, setShowGuides] = useState(true);
 
   const handleSaveSettings = useCallback(() => {
     // Optionally fetch updated status from server
@@ -36,79 +24,9 @@ export function AdminSettingsClient({
 
   return (
     <div className="space-y-6">
-      {/* Status grid */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Database</div>
-          <div className="mt-2 flex items-center gap-2">
-            <span className={`h-2.5 w-2.5 rounded-full ${databaseConfigured ? "bg-emerald-500" : "bg-red-400"}`} />
-            <span className="font-semibold text-gray-900">{statusBadge(databaseConfigured)}</span>
-          </div>
-          <p className="mt-2 text-xs text-gray-500">
-            MongoDB cần <code className="font-mono">MONGODB_URI</code> và <code className="font-mono">MONGODB_DB</code>.
-          </p>
-          {!databaseConfigured && (
-            <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
-              Thiếu: {missingDatabase.join(", ")}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Admin auth</div>
-          <div className="mt-2 flex items-center gap-2">
-            <span className={`h-2.5 w-2.5 rounded-full ${adminStatus.configured ? "bg-emerald-500" : "bg-amber-400"}`} />
-            <span className="font-semibold text-gray-900">{statusBadge(adminStatus.configured)}</span>
-          </div>
-          <p className="mt-2 text-xs text-gray-500">
-            Cần <code className="font-mono">ADMIN_USERNAME</code>, <code className="font-mono">ADMIN_PASSWORD</code>, <code className="font-mono">ADMIN_SESSION_SECRET</code>.
-          </p>
-          {!adminStatus.configured && (
-            <div className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700">
-              Thiếu: {adminStatus.missing.join(", ")}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email delivery</div>
-          <div className="mt-2 flex items-center gap-2">
-            <span className={`h-2.5 w-2.5 rounded-full ${mailStatus.activeProvider !== null ? "bg-emerald-500" : "bg-red-400"}`} />
-            <span className="font-semibold text-gray-900">
-              {mailStatus.activeProvider === "resend"
-                ? "Đang dùng Resend"
-                : mailStatus.activeProvider === "smtp"
-                  ? "Đang dùng SMTP"
-                  : "Chưa cài đặt"}
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-gray-500">
-            Ưu tiên Resend nếu có <code className="font-mono">RESEND_API_KEY</code>, dự phòng SMTP.
-          </p>
-        </div>
-      </div>
-
-      {/* CRM Contact count */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5">
-        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">CRM Liên hệ</div>
-        <div className="mt-3 flex items-baseline gap-3">
-          <span className="text-4xl font-bold text-blue-600">{contactCount}</span>
-          <span className="text-sm text-gray-500">liên hệ được ghi nhận</span>
-        </div>
-        <p className="mt-2 text-xs text-gray-500">
-          Tất cả yêu cầu liên hệ từ form contact được lưu vào MongoDB để theo dõi gửi mail. Mỗi email gửi qua Resend hoặc SMTP sẽ được ghi nhận.
-        </p>
-      </div>
-
-      {/* Email settings form */}
-      <div className="grid gap-4 lg:grid-cols-1">
-        <AdminMailSettingsForm initialSettings={storedMailSettings} onSave={handleSaveSettings} />
-      </div>
-
-      {/* Guides toggle + accordion */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-gray-900">Hướng dẫn cài đặt email</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Hướng dẫn cài đặt email</h2>
           <button
             type="button"
             onClick={() => setShowGuides(!showGuides)}
@@ -146,6 +64,27 @@ export function AdminSettingsClient({
             </div>
           </div>
         )}
+      </div>
+
+      <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email delivery</div>
+        <div className="mt-2 flex items-center gap-2">
+          <span className={`h-2.5 w-2.5 rounded-full ${mailStatus.activeProvider !== null ? "bg-emerald-500" : "bg-red-400"}`} />
+          <span className="font-semibold text-gray-900">
+            {mailStatus.activeProvider === "resend"
+              ? "Đang dùng Resend"
+              : mailStatus.activeProvider === "smtp"
+                ? "Đang dùng SMTP"
+                : "Chưa cài đặt"}
+          </span>
+        </div>
+        <p className="mt-2 text-xs text-gray-500">
+          Ưu tiên Resend nếu có <code className="font-mono">RESEND_API_KEY</code>, dự phòng SMTP.
+        </p>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-1">
+        <AdminMailSettingsForm initialSettings={storedMailSettings} onSave={handleSaveSettings} />
       </div>
     </div>
   );

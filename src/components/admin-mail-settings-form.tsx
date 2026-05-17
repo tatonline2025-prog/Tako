@@ -20,6 +20,8 @@ export function AdminMailSettingsForm({ initialSettings, onSave }: AdminMailSett
   const [smtpSecure, setSmtpSecure] = useState(Boolean(initialSettings?.smtpSecure));
   const [testRecipient, setTestRecipient] = useState(initialSettings?.mailTo || "");
   const [feedback, setFeedback] = useState("");
+  const [testStatus, setTestStatus] = useState<"idle" | "success" | "error">("idle");
+  const [testUpdatedAt, setTestUpdatedAt] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [isTesting, startTesting] = useTransition();
 
@@ -65,7 +67,10 @@ export function AdminMailSettingsForm({ initialSettings, onSave }: AdminMailSett
       });
 
       const payload = (await response.json()) as { message?: string };
-      setFeedback(payload.message || (response.ok ? "Đã gửi email test." : "Gửi email test thất bại."));
+      const message = payload.message || (response.ok ? "Đã gửi email test." : "Gửi email test thất bại.");
+      setFeedback(message);
+      setTestStatus(response.ok ? "success" : "error");
+      setTestUpdatedAt(new Date().toLocaleString("vi-VN"));
     });
   }
 
@@ -153,6 +158,28 @@ export function AdminMailSettingsForm({ initialSettings, onSave }: AdminMailSett
         >
           {isTesting ? "Đang gửi..." : "Gửi test"}
         </button>
+      </div>
+
+      <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm">
+        <div className="flex items-center gap-2">
+          <span
+            className={`h-2.5 w-2.5 rounded-full ${
+              testStatus === "success"
+                ? "bg-emerald-500"
+                : testStatus === "error"
+                  ? "bg-rose-500"
+                  : "bg-gray-300"
+            }`}
+          />
+          <span className="font-semibold text-gray-800">
+            {testStatus === "success"
+              ? "Gửi test thành công"
+              : testStatus === "error"
+                ? "Gửi test thất bại"
+                : "Chưa chạy test gửi mail"}
+          </span>
+        </div>
+        {testUpdatedAt ? <p className="mt-1 text-xs text-gray-500">Cập nhật lúc: {testUpdatedAt}</p> : null}
       </div>
 
       {feedback ? <p className="mt-3 text-sm text-gray-600">{feedback}</p> : null}

@@ -4,6 +4,8 @@ import { categories, getSiteMetadata } from "@/data/site";
 import { getProductNamesForDropdown, listProducts } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
+export const revalidate = 300;
+
 type ContactPageProps = {
   searchParams: Promise<{ interest?: string | string[] }>;
 };
