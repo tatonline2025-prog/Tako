@@ -20,7 +20,8 @@ export async function GET() {
   try {
     const contacts = await listContacts();
     return NextResponse.json({ contacts });
-  } catch {
+  } catch (error) {
+    console.error("[api/contact][GET] Failed to list contacts", error);
     return NextResponse.json(
       {
         message: "Không thể tải danh sách liên hệ lúc này.",
@@ -63,7 +64,8 @@ export async function POST(request: Request) {
       },
       { status: 201 },
     );
-  } catch {
+  } catch (error) {
+    console.error("[api/contact][POST] Failed to create contact", error);
     return NextResponse.json(
       {
         message: "Không thể lưu yêu cầu vào hệ thống lúc này.",

@@ -34,7 +34,7 @@ export default async function AdminContactsPage() {
 
       {!dbOk && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-800">
-          Chưa kết nối MongoDB. Vui lòng cài đặt <code className="font-mono">MONGODB_URI</code> và <code className="font-mono">MONGODB_DB</code> trên Vercel.
+          Chưa thể kết nối MongoDB hoặc đọc dữ liệu liên hệ. Hãy kiểm tra lại <code className="font-mono">MONGODB_URI</code>, <code className="font-mono">MONGODB_DB</code> và quyền truy cập mạng của MongoDB Atlas.
         </div>
       )}
 

@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient } from "mongodb";
 
 declare global {
   var __takoMongoClientPromise: Promise<MongoClient> | undefined;
@@ -20,13 +20,7 @@ function getMongoDbName() {
 
 export function getMongoClient() {
   if (!global.__takoMongoClientPromise) {
-    const client = new MongoClient(getMongoUri(), {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      },
-    });
+    const client = new MongoClient(getMongoUri());
 
     global.__takoMongoClientPromise = client.connect();
   }
