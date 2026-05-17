@@ -14,15 +14,15 @@ export type Category = {
 
 export type Product = {
   slug: string;
-  name: string;
+  name: { en: string; vi: string };
   category: string;
-  categoryName: string;
+  categoryName: { en: string; vi: string };
   subcategory: string;
   manufacturer: string;
   applications: string[];
-  shortDescription: string;
-  description: string;
-  highlights: string[];
+  shortDescription: { en: string; vi: string };
+  description: { en: string; vi: string };
+  highlights: { en: string; vi: string }[];
   imageLabel: string;
   imageTone: string;
   pdfPath: string;
@@ -186,20 +186,24 @@ export const categories: Category[] = [
 export const products: Product[] = [
   {
     slug: "platinum-pro-protein-sequencer",
-    name: "Hệ thống phân tích protein Platinum Pro",
+    name: { en: "Platinum Pro Protein Analysis System", vi: "Hệ thống phân tích protein Platinum Pro" },
     category: "proteomics",
-    categoryName: "Proteomics",
+    categoryName: { en: "Proteomics", vi: "Proteomics" },
     subcategory: "Hệ thống phân tích protein Platinum Pro",
     manufacturer: "Quantum-Si",
     applications: ["Proteomics", "PTM", "Drug discovery", "Y học chính xác"],
-    shortDescription:
-      "Hệ thống giải trình tự protein đơn phân tử dựa trên chip bán dẫn, tự động hóa và kích thước nhỏ gọn.",
-    description:
-      "Quantum-Si cung cấp công nghệ giải trình tự protein đơn phân tử đầu tiên trên thế giới, cho phép xác định acid amin và các biến đổi sau dịch mã với độ phân giải cao. Nền tảng phù hợp cho phòng nghiên cứu cần dữ liệu protein nhanh, chi phí hợp lý và khả năng mở rộng để phục vụ phát hiện thuốc và chẩn đoán chính xác.",
+    shortDescription: {
+      en: "Single-molecule protein sequencing system based on semiconductor chip, automated and compact.",
+      vi: "Hệ thống giải trình tự protein đơn phân tử dựa trên chip bán dẫn, tự động hóa và kích thước nhỏ gọn.",
+    },
+    description: {
+      en: "Quantum-Si provides the world's first single-molecule protein sequencing technology, enabling amino acid identification and post-translational modifications at high resolution. The platform is ideal for research labs needing fast protein data at an affordable cost, with scalability for drug discovery and precision diagnostics.",
+      vi: "Quantum-Si cung cấp công nghệ giải trình tự protein đơn phân tử đầu tiên trên thế giới, cho phép xác định acid amin và các biến đổi sau dịch mã với độ phân giải cao. Nền tảng phù hợp cho phòng nghiên cứu cần dữ liệu protein nhanh, chi phí hợp lý và khả năng mở rộng để phục vụ phát hiện thuốc và chẩn đoán chính xác.",
+    },
     highlights: [
-      "Chip bán dẫn cho phép đọc dữ liệu protein nhanh",
-      "Hỗ trợ phát hiện PTM ở mức độ chi tiết",
-      "Kích thước nhỏ gọn, dễ đưa vào phòng thí nghiệm hiện hữu",
+      { en: "Semiconductor chip enables fast protein data readout", vi: "Chip bán dẫn cho phép đọc dữ liệu protein nhanh" },
+      { en: "Supports PTM detection at high resolution", vi: "Hỗ trợ phát hiện PTM ở mức độ chi tiết" },
+      { en: "Compact design, easy to integrate into existing labs", vi: "Kích thước nhỏ gọn, dễ đưa vào phòng thí nghiệm hiện hữu" },
     ],
     imageLabel: "Quantum-Si Platinum Pro",
     imageTone: "from-sky-500 to-cyan-300",
@@ -208,20 +212,24 @@ export const products: Product[] = [
   },
   {
     slug: "mgi-sequencer",
-    name: "Máy giải trình tự MGI",
+    name: { en: "MGI DNA Sequencer", vi: "Máy giải trình tự MGI" },
     category: "ngs",
-    categoryName: "Giải trình tự gene thế hệ mới (NGS)",
+    categoryName: { en: "NGS", vi: "Giải trình tự gene thế hệ mới (NGS)" },
     subcategory: "Máy giải trình tự MGI",
     manufacturer: "MGI",
     applications: ["Ung thư", "Di truyền", "Sinh thiết lỏng", "Chẩn đoán thường quy"],
-    shortDescription:
-      "Nền tảng NGS cho chẩn đoán thường quy và phát hiện tổn thương di truyền với ngưỡng phát hiện đến 0,01%.",
-    description:
-      "Hệ thống MGI hướng tới workflow NGS cho phòng xét nghiệm lâm sàng, hỗ trợ phát hiện biến đổi di truyền từ mô ung thư và máu sinh thiết lỏng. Panel chẩn đoán được cập nhật theo khuyến cáo NCCN và ESMO, hỗ trợ đơn vị chẩn đoán mở rộng năng lực genomics thường quy.",
+    shortDescription: {
+      en: "NGS platform for routine diagnostics and genetic variant detection with sensitivity down to 0.01%.",
+      vi: "Nền tảng NGS cho chẩn đoán thường quy và phát hiện tổn thương di truyền với ngưỡng phát hiện đến 0,01%.",
+    },
+    description: {
+      en: "MGI systems target NGS workflows for clinical laboratories, supporting detection of genetic alterations from tumor tissue and liquid biopsy samples. Diagnostic panels are updated per NCCN and ESMO guidelines, helping diagnostic centers expand routine genomics capabilities.",
+      vi: "Hệ thống MGI hướng tới workflow NGS cho phòng xét nghiệm lâm sàng, hỗ trợ phát hiện biến đổi di truyền từ mô ung thư và máu sinh thiết lỏng. Panel chẩn đoán được cập nhật theo khuyến cáo NCCN và ESMO, hỗ trợ đơn vị chẩn đoán mở rộng năng lực genomics thường quy.",
+    },
     highlights: [
-      "Ngưỡng phát hiện xuống đến 0,01%",
-      "Phù hợp cho mẫu mô ung thư và sinh thiết lỏng",
-      "Có thể tích hợp vào quy trình chẩn đoán thường quy",
+      { en: "Detection sensitivity down to 0.01%", vi: "Ngưỡng phát hiện xuống đến 0,01%" },
+      { en: "Compatible with tumor tissue and liquid biopsy samples", vi: "Phù hợp cho mẫu mô ung thư và sinh thiết lỏng" },
+      { en: "Integrable into routine diagnostic workflows", vi: "Có thể tích hợp vào quy trình chẩn đoán thường quy" },
     ],
     imageLabel: "MGI Sequencer",
     imageTone: "from-blue-600 to-indigo-400",
@@ -230,20 +238,24 @@ export const products: Product[] = [
   },
   {
     slug: "ngs-reagents",
-    name: "Hóa chất phục vụ NGS",
+    name: { en: "NGS Reagents & Workflow Kits", vi: "Hóa chất phục vụ NGS" },
     category: "ngs",
-    categoryName: "Giải trình tự gene thế hệ mới (NGS)",
+    categoryName: { en: "NGS", vi: "Giải trình tự gene thế hệ mới (NGS)" },
     subcategory: "Hóa chất phục vụ NGS",
     manufacturer: "NadigmBio / Igenetech",
     applications: ["Ung thư", "Di truyền", "Sàng lọc trước sinh", "Dịch tễ học"],
-    shortDescription:
-      "Hóa chất và workflow toàn diện từ chuẩn bị thư viện đến phân tích dữ liệu NGS.",
-    description:
-      "TAKO Vietnam nhập khẩu trực tiếp hóa chất và bộ kit từ NadigmBio và Igenetech, phục vụ quy trình NGS trọn vẹn. Giải pháp hỗ trợ ứng dụng trong ung thư, bệnh di truyền, sàng lọc trước sinh và giám sát dịch tễ học với mục tiêu tối ưu hóa độ ổn định và tính nhất quán của quy trình.",
+    shortDescription: {
+      en: "Complete reagents and workflow from library preparation to NGS data analysis.",
+      vi: "Hóa chất và workflow toàn diện từ chuẩn bị thư viện đến phân tích dữ liệu NGS.",
+    },
+    description: {
+      en: "TAKO Vietnam directly imports reagents and kits from NadigmBio and Igenetech to support end-to-end NGS workflows. The solution covers oncology, hereditary disease, prenatal screening and epidemiological surveillance, with optimized process stability and consistency.",
+      vi: "TAKO Vietnam nhập khẩu trực tiếp hóa chất và bộ kit từ NadigmBio và Igenetech, phục vụ quy trình NGS trọn vẹn. Giải pháp hỗ trợ ứng dụng trong ung thư, bệnh di truyền, sàng lọc trước sinh và giám sát dịch tễ học với mục tiêu tối ưu hóa độ ổn định và tính nhất quán của quy trình.",
+    },
     highlights: [
-      "Đầy đủ thành phần cho workflow NGS",
-      "Hỗ trợ nhiều bài toán lâm sàng và nghiên cứu",
-      "Thích hợp để chuẩn hóa quy trình phòng xét nghiệm",
+      { en: "Complete components for full NGS workflow", vi: "Đầy đủ thành phần cho workflow NGS" },
+      { en: "Supports diverse clinical and research applications", vi: "Hỗ trợ nhiều bài toán lâm sàng và nghiên cứu" },
+      { en: "Designed for laboratory workflow standardization", vi: "Thích hợp để chuẩn hóa quy trình phòng xét nghiệm" },
     ],
     imageLabel: "NGS Reagents",
     imageTone: "from-cyan-500 to-sky-300",
@@ -252,20 +264,24 @@ export const products: Product[] = [
   },
   {
     slug: "mgisp-library-prep",
-    name: "Máy chuẩn bị thư viện tự động MGISP",
+    name: { en: "MGISP Automated Library Preparation System", vi: "Máy chuẩn bị thư viện tự động MGISP" },
     category: "ngs",
-    categoryName: "Giải trình tự gene thế hệ mới (NGS)",
+    categoryName: { en: "NGS", vi: "Giải trình tự gene thế hệ mới (NGS)" },
     subcategory: "Máy chuẩn bị thư viện tự động (MGISP)",
     manufacturer: "MGI",
     applications: ["NGS", "Tự động hóa", "Phòng xét nghiệm"],
-    shortDescription:
-      "Hệ thống tự động hóa khâu chuẩn bị thư viện cho NGS, giảm sai số và tiết kiệm nhân lực.",
-    description:
-      "MGISP tự động hóa bước chuẩn bị thư viện cho NGS, giúp phòng xét nghiệm nâng cao tính đồng nhất kết quả và giải phóng nhân sự khỏi các thao tác lặp lại. Giải pháp phù hợp cho đơn vị cần mở rộng công suất mà vẫn kiểm soát được chất lượng quy trình.",
+    shortDescription: {
+      en: "Automated library preparation system for NGS, reducing errors and saving lab personnel time.",
+      vi: "Hệ thống tự động hóa khâu chuẩn bị thư viện cho NGS, giảm sai số và tiết kiệm nhân lực.",
+    },
+    description: {
+      en: "MGISP automates the library preparation step for NGS, helping labs improve result consistency and free staff from repetitive manual tasks. Ideal for facilities that need to scale throughput while maintaining quality control.",
+      vi: "MGISP tự động hóa bước chuẩn bị thư viện cho NGS, giúp phòng xét nghiệm nâng cao tính đồng nhất kết quả và giải phóng nhân sự khỏi các thao tác lặp lại. Giải pháp phù hợp cho đơn vị cần mở rộng công suất mà vẫn kiểm soát được chất lượng quy trình.",
+    },
     highlights: [
-      "Đồng nhất hóa thao tác lập thư viện",
-      "Giảm thời gian thao tác thủ công",
-      "Phù hợp cho phòng lab cần mở rộng công suất",
+      { en: "Standardized library preparation process", vi: "Đồng nhất hóa thao tác lập thư viện" },
+      { en: "Reduces manual operation time", vi: "Giảm thời gian thao tác thủ công" },
+      { en: "Suitable for labs scaling up capacity", vi: "Phù hợp cho phòng lab cần mở rộng công suất" },
     ],
     imageLabel: "MGISP Automation",
     imageTone: "from-indigo-500 to-sky-400",
@@ -274,20 +290,24 @@ export const products: Product[] = [
   },
   {
     slug: "microbio-sepsis-qpcr",
-    name: "Giải pháp bệnh truyền nhiễm và sepsis",
+    name: { en: "Infectious Disease & Sepsis Molecular Solution", vi: "Giải pháp bệnh truyền nhiễm và sepsis" },
     category: "sinh-hoc-phan-tu",
-    categoryName: "Giải pháp xét nghiệm sinh học phân tử",
+    categoryName: { en: "Molecular Diagnostics", vi: "Giải pháp xét nghiệm sinh học phân tử" },
     subcategory: "Bệnh truyền nhiễm",
     manufacturer: "Microbio",
     applications: ["Truyền nhiễm", "Sepsis", "Kháng kháng sinh", "Bacteriophage"],
-    shortDescription:
-      "Kit chẩn đoán nhanh sepsis trên hệ thống qPCR, phát hiện trực tiếp tác nhân gây bệnh từ máu toàn phần.",
-    description:
-      "Giải pháp của Microbio giúp rút ngắn thời gian trả kết quả trong bệnh cảnh sepsis bằng cách phát hiện trực tiếp tác nhân gây bệnh từ máu toàn phần trên nền tảng qPCR. Bên cạnh đó, TAKO cung cấp sinh phẩm phục vụ sàng tìm, phân tích và định danh bacteriophage cho nghiên cứu và điều trị.",
+    shortDescription: {
+      en: "Rapid sepsis diagnostic kit on qPCR platform, detecting pathogens directly from whole blood.",
+      vi: "Kit chẩn đoán nhanh sepsis trên hệ thống qPCR, phát hiện trực tiếp tác nhân gây bệnh từ máu toàn phần.",
+    },
+    description: {
+      en: "Microbio's solution shortens turnaround time in sepsis by directly detecting pathogens from whole blood on a qPCR platform. TAKO also provides reagents for bacteriophage isolation, identification and analysis for research and therapeutic applications.",
+      vi: "Giải pháp của Microbio giúp rút ngắn thời gian trả kết quả trong bệnh cảnh sepsis bằng cách phát hiện trực tiếp tác nhân gây bệnh từ máu toàn phần trên nền tảng qPCR. Bên cạnh đó, TAKO cung cấp sinh phẩm phục vụ sàng tìm, phân tích và định danh bacteriophage cho nghiên cứu và điều trị.",
+    },
     highlights: [
-      "Rút ngắn thời gian trả kết quả trong sepsis",
-      "Hỗ trợ ra quyết định kháng sinh kịp thời",
-      "Mở rộng cho nghiên cứu bacteriophage",
+      { en: "Shortened turnaround time for sepsis diagnosis", vi: "Rút ngắn thời gian trả kết quả trong sepsis" },
+      { en: "Supports timely antimicrobial decision-making", vi: "Hỗ trợ ra quyết định kháng sinh kịp thời" },
+      { en: "Extended to bacteriophage research applications", vi: "Mở rộng cho nghiên cứu bacteriophage" },
     ],
     imageLabel: "Microbio Sepsis",
     imageTone: "from-slate-700 to-sky-500",
@@ -296,20 +316,24 @@ export const products: Product[] = [
   },
   {
     slug: "bioer-pcr-realtime-pcr",
-    name: "Máy PCR / Realtime PCR Bioer",
+    name: { en: "Bioer PCR / Real-time PCR System", vi: "Máy PCR / Realtime PCR Bioer" },
     category: "sinh-hoc-phan-tu",
-    categoryName: "Giải pháp xét nghiệm sinh học phân tử",
+    categoryName: { en: "Molecular Diagnostics", vi: "Giải pháp xét nghiệm sinh học phân tử" },
     subcategory: "Máy PCR / Realtime PCR",
     manufacturer: "Bioer",
     applications: ["PCR", "qPCR", "Chẩn đoán lâm sàng", "Phòng lab thường quy"],
-    shortDescription:
-      "Hệ thống PCR và realtime PCR bền bỉ, kinh tế và vận hành ổn định trong nhiều điều kiện phòng lab.",
-    description:
-      "Bioer Technology là nhà sản xuất thiết bị PCR nổi tiếng nhờ độ bền, tính kinh tế và giao diện thân thiện. Giải pháp thích hợp cho phòng xét nghiệm cần một nền tảng vận hành ổn định, dễ đào tạo và dễ tích hợp vào workflow thường quy.",
+    shortDescription: {
+      en: "Durable, cost-effective PCR and real-time PCR system with stable performance across lab conditions.",
+      vi: "Hệ thống PCR và realtime PCR bền bỉ, kinh tế và vận hành ổn định trong nhiều điều kiện phòng lab.",
+    },
+    description: {
+      en: "Bioer Technology is a leading PCR equipment manufacturer known for durability, cost-effectiveness and user-friendly interfaces. Ideal for labs needing a stable, easy-to-train platform that integrates smoothly into routine workflows.",
+      vi: "Bioer Technology là nhà sản xuất thiết bị PCR nổi tiếng nhờ độ bền, tính kinh tế và giao diện thân thiện. Giải pháp thích hợp cho phòng xét nghiệm cần một nền tảng vận hành ổn định, dễ đào tạo và dễ tích hợp vào workflow thường quy.",
+    },
     highlights: [
-      "Độ bền cao trong môi trường vận hành liên tục",
-      "Chi phí đầu tư hợp lý",
-      "Phù hợp cho phòng xét nghiệm và trung tâm nghiên cứu",
+      { en: "High durability for continuous operation environments", vi: "Độ bền cao trong môi trường vận hành liên tục" },
+      { en: "Cost-effective investment", vi: "Chi phí đầu tư hợp lý" },
+      { en: "Suitable for diagnostic labs and research centers", vi: "Phù hợp cho phòng xét nghiệm và trung tâm nghiên cứu" },
     ],
     imageLabel: "Bioer PCR",
     imageTone: "from-blue-500 to-cyan-400",
@@ -318,20 +342,24 @@ export const products: Product[] = [
   },
   {
     slug: "gdsbio-reagents",
-    name: "Sinh phẩm PCR, qPCR, tách chiết GDSBio",
+    name: { en: "GDSBio PCR, qPCR & Extraction Reagents", vi: "Sinh phẩm PCR, qPCR, tách chiết GDSBio" },
     category: "sinh-hoc-phan-tu",
-    categoryName: "Giải pháp xét nghiệm sinh học phân tử",
+    categoryName: { en: "Molecular Diagnostics", vi: "Giải pháp xét nghiệm sinh học phân tử" },
     subcategory: "Sinh phẩm PCR, qPCR, tách chiết",
     manufacturer: "GDSBio",
     applications: ["PCR", "qPCR", "Tách chiết", "NGS"],
-    shortDescription:
-      "Enzyme, kit PCR/qPCR, tách chiết nucleic acid và chuẩn bị thư viện NGS đạt chuẩn ISO 9001 và ISO 13485.",
-    description:
-      "GDSBio cung cấp hệ sinh thái sinh phẩm đa dạng cho sinh học phân tử và chẩn đoán lâm sàng, bao gồm enzyme chất lượng cao, kit PCR/qPCR, kit tách chiết acid nucleic và thành phần chuẩn bị thư viện NGS. Danh mục phù hợp cho đơn vị cần nguồn cung cấp ổn định và dễ chuẩn hóa.",
+    shortDescription: {
+      en: "ISO 9001 and ISO 13485 certified enzymes, PCR/qPCR kits, nucleic acid extraction and NGS library prep components.",
+      vi: "Enzyme, kit PCR/qPCR, tách chiết nucleic acid và chuẩn bị thư viện NGS đạt chuẩn ISO 9001 và ISO 13485.",
+    },
+    description: {
+      en: "GDSBio provides a comprehensive reagent ecosystem for molecular biology and clinical diagnostics, including high-quality enzymes, PCR/qPCR kits, nucleic acid extraction kits and NGS library preparation components. Suitable for labs requiring a stable supply chain and easy workflow standardization.",
+      vi: "GDSBio cung cấp hệ sinh thái sinh phẩm đa dạng cho sinh học phân tử và chẩn đoán lâm sàng, bao gồm enzyme chất lượng cao, kit PCR/qPCR, kit tách chiết acid nucleic và thành phần chuẩn bị thư viện NGS. Danh mục phù hợp cho đơn vị cần nguồn cung cấp ổn định và dễ chuẩn hóa.",
+    },
     highlights: [
-      "Chứng nhận ISO 9001 và ISO 13485",
-      "Danh mục trải dài từ PCR đến NGS",
-      "Phù hợp cho chẩn đoán lâm sàng và nghiên cứu",
+      { en: "ISO 9001 and ISO 13485 certified", vi: "Chứng nhận ISO 9001 và ISO 13485" },
+      { en: "Product range spanning PCR to NGS", vi: "Danh mục trải dài từ PCR đến NGS" },
+      { en: "Suitable for clinical diagnostics and research", vi: "Phù hợp cho chẩn đoán lâm sàng và nghiên cứu" },
     ],
     imageLabel: "GDSBio Reagents",
     imageTone: "from-cyan-600 to-blue-400",
@@ -340,20 +368,24 @@ export const products: Product[] = [
   },
   {
     slug: "esco-lab-equipment",
-    name: "Thiết bị phòng lab cơ bản Esco",
+    name: { en: "Esco Essential Laboratory Equipment", vi: "Thiết bị phòng lab cơ bản Esco" },
     category: "sinh-hoc-phan-tu",
-    categoryName: "Giải pháp xét nghiệm sinh học phân tử",
+    categoryName: { en: "Molecular Diagnostics", vi: "Giải pháp xét nghiệm sinh học phân tử" },
     subcategory: "Thiết bị phòng lab cơ bản",
     manufacturer: "Esco",
     applications: ["Phòng lab", "Tế bào", "An toàn sinh học"],
-    shortDescription:
-      "Máy ly tâm, tủ an toàn sinh học, máy ủ CO₂ và các thiết bị nền tảng cho phòng lab hiện đại.",
-    description:
-      "Danh mục Esco bổ sung các thiết bị cơ bản cho vận hành phòng thí nghiệm và khu vực nuôi cấy tế bào, từ máy ly tâm đến tủ an toàn sinh học và máy ủ CO₂. Giải pháp giúp đơn vị đồng bộ hạ tầng cho xét nghiệm, nghiên cứu và sản xuất quy mô nhỏ.",
+    shortDescription: {
+      en: "Centrifuges, biosafety cabinets, CO₂ incubators and core instruments for modern laboratories.",
+      vi: "Máy ly tâm, tủ an toàn sinh học, máy ủ CO₂ và các thiết bị nền tảng cho phòng lab hiện đại.",
+    },
+    description: {
+      en: "Esco's catalog covers essential equipment for laboratory operations and cell culture areas, from centrifuges to biosafety cabinets and CO₂ incubators. The solution helps facilities synchronize infrastructure for testing, research and small-scale production.",
+      vi: "Danh mục Esco bổ sung các thiết bị cơ bản cho vận hành phòng thí nghiệm và khu vực nuôi cấy tế bào, từ máy ly tâm đến tủ an toàn sinh học và máy ủ CO₂. Giải pháp giúp đơn vị đồng bộ hạ tầng cho xét nghiệm, nghiên cứu và sản xuất quy mô nhỏ.",
+    },
     highlights: [
-      "Đầy đủ các thiết bị nền tảng cho phòng lab",
-      "Phù hợp cho khu vực nuôi cấy tế bào",
-      "Hỗ trợ đồng bộ hạ tầng vận hành",
+      { en: "Complete core equipment for laboratory operations", vi: "Đầy đủ các thiết bị nền tảng cho phòng lab" },
+      { en: "Suitable for cell culture environments", vi: "Phù hợp cho khu vực nuôi cấy tế bào" },
+      { en: "Supports infrastructure synchronization", vi: "Hỗ trợ đồng bộ hạ tầng vận hành" },
     ],
     imageLabel: "Esco Lab",
     imageTone: "from-slate-600 to-cyan-500",
@@ -362,20 +394,24 @@ export const products: Product[] = [
   },
   {
     slug: "hla-typing-panels",
-    name: "Giải pháp HLA typing",
+    name: { en: "HLA Typing Solution", vi: "Giải pháp HLA typing" },
     category: "sinh-hoc-phan-tu",
-    categoryName: "Giải pháp xét nghiệm sinh học phân tử",
+    categoryName: { en: "Molecular Diagnostics", vi: "Giải pháp xét nghiệm sinh học phân tử" },
     subcategory: "HLA typing",
     manufacturer: "Igenetech",
     applications: ["HLA", "Ghép tạng", "Y học cá thể hóa"],
-    shortDescription:
-      "Panel định typ HLA tại mọi locus cho bệnh nhân và người hiến tạng với chi phí cạnh tranh.",
-    description:
-      "Danh mục HLA typing hỗ trợ định typ tại nhiều locus phục vụ ghép tạng và y học cá thể hóa. Giải pháp được định hướng cho đơn vị cần quy trình có độ phủ cao, chi phí cạnh tranh và khả năng triển khai phù hợp với năng lực hiện tại.",
+    shortDescription: {
+      en: "Full-locus HLA typing panels for patients and organ donors at competitive cost.",
+      vi: "Panel định typ HLA tại mọi locus cho bệnh nhân và người hiến tạng với chi phí cạnh tranh.",
+    },
+    description: {
+      en: "The HLA typing catalog supports multi-locus typing for organ transplantation and personalized medicine. The solution is designed for facilities needing high-coverage workflows, competitive pricing and deployment suited to their current capabilities.",
+      vi: "Danh mục HLA typing hỗ trợ định typ tại nhiều locus phục vụ ghép tạng và y học cá thể hóa. Giải pháp được định hướng cho đơn vị cần quy trình có độ phủ cao, chi phí cạnh tranh và khả năng triển khai phù hợp với năng lực hiện tại.",
+    },
     highlights: [
-      "Hỗ trợ đầy đủ locus HLA",
-      "Phục vụ ghép tạng và y học cá thể hóa",
-      "Chi phí cạnh tranh cho đơn vị lâm sàng",
+      { en: "Full HLA locus coverage", vi: "Hỗ trợ đầy đủ locus HLA" },
+      { en: "Supports organ transplantation and personalized medicine", vi: "Phục vụ ghép tạng và y học cá thể hóa" },
+      { en: "Competitive pricing for clinical facilities", vi: "Chi phí cạnh tranh cho đơn vị lâm sàng" },
     ],
     imageLabel: "HLA Typing",
     imageTone: "from-sky-700 to-blue-500",
@@ -384,20 +420,24 @@ export const products: Product[] = [
   },
   {
     slug: "basic-reagents",
-    name: "Enzyme, buffer, kit tách chiết",
+    name: { en: "Enzymes, Buffers & Extraction Kits", vi: "Enzyme, buffer, kit tách chiết" },
     category: "sinh-pham-co-ban",
-    categoryName: "Sinh phẩm cơ bản",
+    categoryName: { en: "Basic Reagents", vi: "Sinh phẩm cơ bản" },
     subcategory: "Enzyme, buffer, kit tách chiết",
     manufacturer: "GDSBio",
     applications: ["PCR", "qPCR", "Tách chiết"],
-    shortDescription:
-      "Enzyme Taq DNA Polymerase và bộ kit PCR chuyên dụng cho sinh học phân tử thường quy.",
-    description:
-      "GDSBio cung cấp enzyme Taq DNA Polymerase chất lượng cao và các bộ kit PCR được thiết kế cho chẩn đoán lâm sàng và nghiên cứu thường quy. Danh mục bao gồm enzyme thường và enzyme hot-start, buffer tối ưu và kit ready-to-use.",
+    shortDescription: {
+      en: "High-quality Taq DNA Polymerase and PCR kits for routine molecular biology applications.",
+      vi: "Enzyme Taq DNA Polymerase và bộ kit PCR chuyên dụng cho sinh học phân tử thường quy.",
+    },
+    description: {
+      en: "GDSBio provides high-quality Taq DNA Polymerase and PCR kits designed for clinical diagnostics and routine research. The catalog includes standard and hot-start enzymes, optimized buffers and ready-to-use kits.",
+      vi: "GDSBio cung cấp enzyme Taq DNA Polymerase chất lượng cao và các bộ kit PCR được thiết kế cho chẩn đoán lâm sàng và nghiên cứu thường quy. Danh mục bao gồm enzyme thường và enzyme hot-start, buffer tối ưu và kit ready-to-use.",
+    },
     highlights: [
-      "Enzyme độ nhạy cao, ít nhiễu nền",
-      "Có lựa chọn hot-start cho PCR đặc hiệu",
-      "Kit ready-to-use, dễ chuẩn hóa quy trình",
+      { en: "High-sensitivity enzyme with low background signal", vi: "Enzyme độ nhạy cao, ít nhiễu nền" },
+      { en: "Hot-start option for specific PCR", vi: "Có lựa chọn hot-start cho PCR đặc hiệu" },
+      { en: "Ready-to-use kits for easy workflow standardization", vi: "Kit ready-to-use, dễ chuẩn hóa quy trình" },
     ],
     imageLabel: "Basic Reagents",
     imageTone: "from-slate-500 to-sky-300",
@@ -406,20 +446,24 @@ export const products: Product[] = [
   },
   {
     slug: "lab-consumables",
-    name: "Phụ kiện, hóa chất, vật tư tiêu hao",
+    name: { en: "Lab Accessories, Chemicals & Consumables", vi: "Phụ kiện, hóa chất, vật tư tiêu hao" },
     category: "khac",
-    categoryName: "Khác",
+    categoryName: { en: "Others", vi: "Khác" },
     subcategory: "Phụ kiện, hóa chất, vật tư tiêu hao",
     manufacturer: "Đa hãng",
     applications: ["Vật tư tiêu hao", "Hóa chất", "Phòng lab"],
-    shortDescription:
-      "Danh mục sản phẩm hỗ trợ phòng lab không thuộc các nhóm chính, phục vụ mua sắm đồng bộ.",
-    description:
-      "TAKO Vietnam duy trì nhóm sản phẩm phụ trợ để đáp ứng nhu cầu đồng bộ vật tư, hóa chất và phụ kiện không nằm trong các nhóm giải pháp chính. Khách hàng có thể liên hệ trực tiếp để được tư vấn danh mục phù hợp với quy trình hiện hữu.",
+    shortDescription: {
+      en: "Supporting lab products outside main categories, for consolidated procurement.",
+      vi: "Danh mục sản phẩm hỗ trợ phòng lab không thuộc các nhóm chính, phục vụ mua sắm đồng bộ.",
+    },
+    description: {
+      en: "TAKO Vietnam maintains a range of auxiliary products to meet consolidated procurement needs for consumables, chemicals and accessories not covered by main solution groups. Contact us for tailored catalog recommendations matching your current workflows.",
+      vi: "TAKO Vietnam duy trì nhóm sản phẩm phụ trợ để đáp ứng nhu cầu đồng bộ vật tư, hóa chất và phụ kiện không nằm trong các nhóm giải pháp chính. Khách hàng có thể liên hệ trực tiếp để được tư vấn danh mục phù hợp với quy trình hiện hữu.",
+    },
     highlights: [
-      "Hỗ trợ mua sắm đồng bộ cho phòng lab",
-      "Tư vấn theo nhu cầu vận hành thực tế",
-      "Bổ sung nhanh theo danh mục hàng hóa phát sinh",
+      { en: "Consolidated procurement for laboratories", vi: "Hỗ trợ mua sắm đồng bộ cho phòng lab" },
+      { en: "Consulting based on actual operational needs", vi: "Tư vấn theo nhu cầu vận hành thực tế" },
+      { en: "Rapid catalog additions for emerging requirements", vi: "Bổ sung nhanh theo danh mục hàng hóa phát sinh" },
     ],
     imageLabel: "Consumables",
     imageTone: "from-zinc-600 to-sky-400",
@@ -435,14 +479,18 @@ export const products: Product[] = [
     subcategory: "Vật tư tiêu hao Platinum®",
     manufacturer: "Quantum-Si",
     applications: ["Proteomics", "Protein sequencing", "PTM"],
-    shortDescription:
-      "Chip bán dẫn và cartridge kit chính hãng cho hệ thống Platinum® Pro, đảm bảo kết quả phân tích protein chính xác.",
-    description:
-      "Chip Platinum® của Quantum-Si là thành phần cốt lõi cho giải trình tự protein đơn phân tử. Mỗi chip được thiết kế để chạy hàng triệu phân tử cùng lúc, cung cấp tín hiệu đơn phân tử thực sự. Cartridge kit đi kèm giúp chuẩn bị mẫu và tải mẫu lên chip một cách ổn định và nhất quán.",
+    shortDescription: {
+      en: "Original semiconductor chip and cartridge kit for the Platinum\u00ae Pro system, ensuring accurate protein analysis.",
+      vi: "Chip bán dẫn và cartridge kit chính hãng cho hệ thống Platinum\u00ae Pro, đảm bảo kết quả phân tích protein chính xác.",
+    },
+    description: {
+      en: "Quantum-Si's Platinum\u00ae Chip is the core component for single-molecule protein sequencing. Each chip is engineered to run millions of molecules simultaneously, providing true single-molecule signals. The cartridge kit enables stable and consistent sample preparation and loading onto the chip.",
+      vi: "Chip Platinum\u00ae của Quantum-Si là thành phần cốt lõi cho giải trình tự protein đơn phân tử. Mỗi chip được thiết kế để chạy hàng triệu phân tử cùng lúc, cung cấp tín hiệu đơn phân tử thực sự. Cartridge kit đi kèm giúp chuẩn bị mẫu và tải mẫu lên chip một cách ổn định và nhất quán.",
+    },
     highlights: [
-      "Chip tích hợp hàng triệu lỗ nanophotonic",
-      "Cartridge giúp tải mẫu ổn định",
-      "Chính hãng Quantum-Si, bảo đảm chất lượng",
+      { en: "Chip integrating millions of nanophotonic wells", vi: "Chip tích hợp hàng triệu lỗ nanophotonic" },
+      { en: "Cartridge ensures stable sample loading", vi: "Cartridge giúp tải mẫu ổn định" },
+      { en: "Genuine Quantum-Si, guaranteed quality", vi: "Chính hãng Quantum-Si, bảo đảm chất lượng" },
     ],
     imageLabel: "Platinum Chip",
     imageTone: "from-sky-400 to-teal-300",
@@ -451,20 +499,24 @@ export const products: Product[] = [
   },
   {
     slug: "proteomics-sample-prep-kit",
-    name: "Kit chuẩn bị mẫu Proteomics",
+    name: { en: "Proteomics Sample Preparation Kit", vi: "Kit chuẩn bị mẫu Proteomics" },
     category: "proteomics",
-    categoryName: "Proteomics",
+    categoryName: { en: "Proteomics", vi: "Proteomics" },
     subcategory: "Chuẩn bị mẫu",
     manufacturer: "Quantum-Si",
     applications: ["Proteomics", "Sample prep", "Drug discovery"],
-    shortDescription:
-      "Bộ kit tách chiết và chuẩn bị mẫu protein tối ưu cho hệ thống giải trình tự Platinum® Pro.",
-    description:
-      "Bộ kit chuẩn bị mẫu của Quantum-Si giúp tách chiết và làm sạch protein từ các loại mẫu sinh học khác nhau, bao gồm mô, tế bào và dịch sinh học. Quy trình được tối ưu cho hệ Platinum® Pro, giảm tối thiểu nhiễu nền và tối đa hóa hiệu suất đọc protein.",
+    shortDescription: {
+      en: "Protein extraction and sample preparation kit optimized for the Platinum\u00ae Pro sequencing system.",
+      vi: "Bộ kit tách chiết và chuẩn bị mẫu protein tối ưu cho hệ thống giải trình tự Platinum\u00ae Pro.",
+    },
+    description: {
+      en: "Quantum-Si's sample preparation kit enables protein extraction and purification from various biological samples including tissue, cells and biological fluids. The workflow is optimized for the Platinum\u00ae Pro system, minimizing background noise and maximizing protein readout efficiency.",
+      vi: "Bộ kit chuẩn bị mẫu của Quantum-Si giúp tách chiết và làm sạch protein từ các loại mẫu sinh học khác nhau, bao gồm mô, tế bào và dịch sinh học. Quy trình được tối ưu cho hệ Platinum\u00ae Pro, giảm tối thiểu nhiễu nền và tối đa hóa hiệu suất đọc protein.",
+    },
     highlights: [
-      "Tương thích tối ưu với Platinum® Pro",
-      "Đa dạng loại mẫu đầu vào",
-      "Quy trình chuẩn hóa, tái lập được",
+      { en: "Optimally compatible with Platinum\u00ae Pro", vi: "Tương thích tối ưu với Platinum\u00ae Pro" },
+      { en: "Wide range of input sample types", vi: "Đa dạng loại mẫu đầu vào" },
+      { en: "Standardized, reproducible workflow", vi: "Quy trình chuẩn hóa, tái lập được" },
     ],
     imageLabel: "Proteomics Prep",
     imageTone: "from-teal-500 to-cyan-300",
@@ -474,20 +526,24 @@ export const products: Product[] = [
   // --- Additional sinh-pham-co-ban products ---
   {
     slug: "rna-extraction-kit",
-    name: "Kit tách chiết RNA",
+    name: { en: "RNA Extraction Kit", vi: "Kit tách chiết RNA" },
     category: "sinh-pham-co-ban",
-    categoryName: "Sinh phẩm cơ bản",
+    categoryName: { en: "Basic Reagents", vi: "Sinh phẩm cơ bản" },
     subcategory: "Kit tách chiết",
     manufacturer: "GDSBio",
     applications: ["Tách chiết RNA", "qRT-PCR", "Nghiên cứu"],
-    shortDescription:
-      "Kit tách chiết RNA tổng số từ máu, mô và tế bào, hiệu suất cao và ổn định.",
-    description:
-      "GDSBio RNA Extraction Kit cung cấp quy trình nhanh và ổn định để tách chiết RNA tổng số từ nhiều loại mẫu sinh học. Sản phẩm sử dụng nguyên lý cột silica kết hợp đệm ức chế RNase, cho sản phẩm RNA toàn vẹn phù hợp cho qRT-PCR, sequencing và các ứng dụng nghiên cứu biểu hiện gen.",
+    shortDescription: {
+      en: "High-performance total RNA extraction kit from blood, tissue and cells with stable yield.",
+      vi: "Kit tách chiết RNA tổng số từ máu, mô và tế bào, hiệu suất cao và ổn định.",
+    },
+    description: {
+      en: "GDSBio RNA Extraction Kit provides a fast and stable workflow for total RNA extraction from multiple biological sample types. The product uses a silica column principle with RNase-inhibiting buffer, yielding intact RNA suitable for qRT-PCR, sequencing and gene expression research.",
+      vi: "GDSBio RNA Extraction Kit cung cấp quy trình nhanh và ổn định để tách chiết RNA tổng số từ nhiều loại mẫu sinh học. Sản phẩm sử dụng nguyên lý cột silica kết hợp đệm ức chế RNase, cho sản phẩm RNA toàn vẹn phù hợp cho qRT-PCR, sequencing và các ứng dụng nghiên cứu biểu hiện gen.",
+    },
     highlights: [
-      "RNA toàn vẹn, OD 260/280 ổn định",
-      "Phù hợp mẫu máu, mô, tế bào nuôi",
-      "Không cần phenol/chloroform, an toàn hơn",
+      { en: "Intact RNA with stable OD 260/280 ratio", vi: "RNA toàn vẹn, OD 260/280 ổn định" },
+      { en: "Compatible with blood, tissue and cultured cells", vi: "Phù hợp mẫu máu, mô, tế bào nuôi" },
+      { en: "No phenol/chloroform required, safer to use", vi: "Không cần phenol/chloroform, an toàn hơn" },
     ],
     imageLabel: "RNA Extraction",
     imageTone: "from-emerald-500 to-cyan-400",
@@ -497,20 +553,24 @@ export const products: Product[] = [
   // --- Additional khac products ---
   {
     slug: "pcr-tubes-tips",
-    name: "Ống PCR và đầu côn",
+    name: { en: "PCR Tubes & Pipette Tips", vi: "Ống PCR và đầu côn" },
     category: "khac",
-    categoryName: "Khác",
+    categoryName: { en: "Others", vi: "Khác" },
     subcategory: "Vật tư tiêu hao",
     manufacturer: "Đa hãng",
     applications: ["PCR", "Phòng lab", "Vật tư tiêu hao"],
-    shortDescription:
-      "Ống PCR 0.2ml, đầu côn các cỡ có và không lọc, phù hợp cho nhiều dòng máy PCR và pipette phổ biến.",
-    description:
-      "TAKO Vietnam cung cấp ống PCR và đầu côn chất lượng từ các nhà cung cấp uy tín, bao gồm ống strip 8 và 12, ống đơn 0.2ml, đầu côn 10µl/200µl/1000µl có lọc và không lọc. Sản phẩm DNase/RNase-free, tương thích với các dòng máy và pipette phổ biến trên thị trường.",
+    shortDescription: {
+      en: "0.2ml PCR tubes, filtered and non-filtered tips in multiple sizes, compatible with popular PCR machines and pipettes.",
+      vi: "Ống PCR 0.2ml, đầu côn các cỡ có và không lọc, phù hợp cho nhiều dòng máy PCR và pipette phổ biến.",
+    },
+    description: {
+      en: "TAKO Vietnam supplies quality PCR tubes and pipette tips from reputable manufacturers, including 8-strip and 12-strip tubes, single 0.2ml tubes, and filtered/non-filtered 10µl/200µl/1000µl tips. All products are DNase/RNase-free and compatible with popular PCR machines and pipettes.",
+      vi: "TAKO Vietnam cung cấp ống PCR và đầu côn chất lượng từ các nhà cung cấp uy tín, bao gồm ống strip 8 và 12, ống đơn 0.2ml, đầu côn 10µl/200µl/1000µl có lọc và không lọc. Sản phẩm DNase/RNase-free, tương thích với các dòng máy và pipette phổ biến trên thị trường.",
+    },
     highlights: [
-      "DNase/RNase-free, không nhiễm DNA/RNA ngoại lai",
-      "Tương thích nhiều dòng máy PCR và pipette",
-      "Có lựa chọn đầu côn có lọc cho thao tác nhạy cảm",
+      { en: "DNase/RNase-free, no exogenous contamination", vi: "DNase/RNase-free, không nhiễm DNA/RNA ngoại lai" },
+      { en: "Compatible with major PCR machines and pipettes", vi: "Tương thích nhiều dòng máy PCR và pipette" },
+      { en: "Filtered tip options for sensitive applications", vi: "Có lựa chọn đầu côn có lọc cho thao tác nhạy cảm" },
     ],
     imageLabel: "PCR Tubes & Tips",
     imageTone: "from-slate-400 to-sky-300",
@@ -519,20 +579,24 @@ export const products: Product[] = [
   },
   {
     slug: "ppe-lab-safety",
-    name: "Vật tư bảo hộ phòng lab",
+    name: { en: "Laboratory Personal Protective Equipment", vi: "Vật tư bảo hộ phòng lab" },
     category: "khac",
-    categoryName: "Khác",
+    categoryName: { en: "Others", vi: "Khác" },
     subcategory: "Vật tư bảo hộ",
     manufacturer: "Đa hãng",
     applications: ["An toàn phòng lab", "Vật tư tiêu hao"],
-    shortDescription:
-      "Găng tay nitrile, khẩu trang, kính bảo hộ và vật tư bảo hộ cá nhân cho phòng thí nghiệm.",
-    description:
-      "TAKO Vietnam cung cấp vật tư bảo hộ cá nhân (PPE) cho phòng thí nghiệm, bao gồm găng tay nitrile không bột, khẩu trang y tế và N95, kính bảo hộ và áo blouse. Sản phẩm đáp ứng tiêu chuẩn an toàn sinh học cho phòng lab cấp độ BSL-1 và BSL-2.",
+    shortDescription: {
+      en: "Nitrile gloves, masks, safety glasses and personal protective equipment for laboratory use.",
+      vi: "Găng tay nitrile, khẩu trang, kính bảo hộ và vật tư bảo hộ cá nhân cho phòng thí nghiệm.",
+    },
+    description: {
+      en: "TAKO Vietnam supplies personal protective equipment (PPE) for laboratories, including powder-free nitrile gloves, medical and N95 masks, safety glasses and lab coats. Products meet biosafety standards for BSL-1 and BSL-2 laboratory environments.",
+      vi: "TAKO Vietnam cung cấp vật tư bảo hộ cá nhân (PPE) cho phòng thí nghiệm, bao gồm găng tay nitrile không bột, khẩu trang y tế và N95, kính bảo hộ và áo blouse. Sản phẩm đáp ứng tiêu chuẩn an toàn sinh học cho phòng lab cấp độ BSL-1 và BSL-2.",
+    },
     highlights: [
-      "Đáp ứng tiêu chuẩn BSL-1 và BSL-2",
-      "Găng tay nitrile không bột, ít gây dị ứng",
-      "Đa dạng kích cỡ và số lượng đặt hàng",
+      { en: "Meets BSL-1 and BSL-2 standards", vi: "Đáp ứng tiêu chuẩn BSL-1 và BSL-2" },
+      { en: "Powder-free nitrile gloves, low allergenicity", vi: "Găng tay nitrile không bột, ít gây dị ứng" },
+      { en: "Range of sizes and order quantities available", vi: "Đa dạng kích cỡ và số lượng đặt hàng" },
     ],
     imageLabel: "Lab Safety",
     imageTone: "from-amber-500 to-orange-300",

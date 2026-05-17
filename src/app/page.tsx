@@ -9,6 +9,7 @@ import {
   partnerManufacturers,
 } from "@/data/site";
 import { getRequestLocale, localizeText, type Locale } from "@/lib/i18n";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 const homeCopy = {
   eyebrow: {
@@ -204,6 +205,7 @@ export default async function Home() {
       </section>
 
       <section className="section-shell pb-16">
+        <ScrollReveal variant="book">
         <div className="panel grid gap-8 px-6 py-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.devDirection, locale)}</span>
@@ -220,6 +222,7 @@ export default async function Home() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       <section className="section-shell pb-16">
@@ -272,6 +275,7 @@ export default async function Home() {
             );
           })}
         </div>
+        </ScrollReveal>
       </section>
 
       <section className="section-shell pb-16">
@@ -283,8 +287,9 @@ export default async function Home() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredProducts.slice(0, 6).map((product) => (
-            <article key={product.slug} className="panel group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5">
+          {featuredProducts.slice(0, 6).map((product, i) => (
+            <ScrollReveal key={product.slug} delay={i * 80}>
+            <article className="panel group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5">
               <div className={`h-48 bg-gradient-to-br ${product.imageTone} p-6 text-white`}>
                 <div className="inline-flex rounded-full border border-white/22 bg-white/14 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-white/90">
                   {product.manufacturer}
@@ -296,14 +301,14 @@ export default async function Home() {
               <div className="space-y-3 px-6 py-5">
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-primary)]">
-                    {product.categoryName}
+                    {localizeText(product.categoryName, locale)}
                   </div>
                   <h3 className="mt-1.5 font-[family:var(--font-display)] text-xl font-semibold text-[var(--color-ink)]">
-                    {product.name}
+                    {localizeText(product.name, locale)}
                   </h3>
                 </div>
                 <p className="text-sm leading-6 text-[var(--color-muted)] line-clamp-2">
-                  {product.shortDescription}
+                  {localizeText(product.shortDescription, locale)}
                 </p>
                 <div className="flex gap-2.5 pt-1">
                   <Link
@@ -321,11 +326,13 @@ export default async function Home() {
                 </div>
               </div>
             </article>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       <section className="section-shell pb-16">
+        <ScrollReveal>
         <div className="panel overflow-hidden px-6 py-8 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-3">
@@ -344,6 +351,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       <section className="section-shell pb-16">
@@ -358,8 +366,9 @@ export default async function Home() {
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {newsArticles.map((article) => (
-            <article key={article.slug} className="panel group flex flex-col overflow-hidden px-6 py-6 transition hover:shadow-lg hover:-translate-y-0.5">
+          {newsArticles.map((article, i) => (
+            <ScrollReveal key={article.slug} delay={i * 80}>
+            <article className="panel group flex flex-col overflow-hidden px-6 py-6 transition hover:shadow-lg hover:-translate-y-0.5">
               <div className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-[var(--color-primary)]">
                 <span className="rounded-full bg-[rgba(13,78,166,0.1)] px-2.5 py-1 font-semibold">{article.tag}</span>
                 <span className="text-[var(--color-muted)]">{article.date}</span>
@@ -371,6 +380,7 @@ export default async function Home() {
                 {localizeText(article.excerpt, locale)}
               </p>
             </article>
+            </ScrollReveal>
           ))}
         </div>
       </section>

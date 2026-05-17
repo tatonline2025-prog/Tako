@@ -25,8 +25,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: product.name,
-    description: product.shortDescription,
+    title: product.name.vi,
+    description: product.shortDescription.vi,
   };
 }
 
@@ -61,20 +61,20 @@ export default async function ProductDetailPage({
             {product.imageLabel}
           </div>
           <p className="mt-6 max-w-xl text-sm leading-7 text-white/82">
-            {product.shortDescription}
+            {localizeText(product.shortDescription, locale)}
           </p>
         </div>
 
         <div className="panel space-y-6 px-6 py-8 lg:px-8">
           <div>
             <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
-              {product.categoryName}
+              {localizeText(product.categoryName, locale)}
             </div>
             <h1 className="mt-3 font-[family:var(--font-display)] text-4xl font-semibold text-[var(--color-ink)]">
-              {product.name}
+              {localizeText(product.name, locale)}
             </h1>
             <p className="mt-5 text-base leading-8 text-[var(--color-muted)]">
-              {product.description}
+              {localizeText(product.description, locale)}
             </p>
           </div>
 
@@ -102,11 +102,14 @@ export default async function ProductDetailPage({
               {copy.highlightsLabel}
             </h2>
             <div className="mt-4 grid gap-3">
-              {product.highlights.map((highlight) => (
-                <div key={highlight} className="rounded-[1.5rem] border border-[var(--color-line)] bg-white px-5 py-4 text-sm leading-7 text-[var(--color-muted)]">
-                  {highlight}
-                </div>
-              ))}
+              {product.highlights.map((highlight) => {
+                const text = localizeText(highlight, locale);
+                return (
+                  <div key={text} className="rounded-[1.5rem] border border-[var(--color-line)] bg-white px-5 py-4 text-sm leading-7 text-[var(--color-muted)]">
+                    {text}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

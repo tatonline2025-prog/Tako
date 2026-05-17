@@ -62,3 +62,22 @@ a {
 .section-copy {
   @apply max-w-3xl text-base leading-8 text-[var(--color-muted)] sm:text-lg;
 }
+
+/* ── Scroll reveal animations ── */
+.sr-hidden-fade {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.sr-hidden-book {
+  opacity: 0;
+  transform: perspective(900px) rotateX(14deg) translateY(24px) scale(0.98);
+  transform-origin: top center;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.sr-visible {
+  opacity: 1;
+  transform: none;
+}

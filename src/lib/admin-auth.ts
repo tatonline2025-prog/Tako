@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
 export const ADMIN_SESSION_COOKIE = "tako_admin_session";
-const ADMIN_SESSION_MAX_AGE = 60 * 60 * 12;
+const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 type AdminIdentity = {
   username: string;
@@ -120,10 +120,10 @@ export async function isAdminAuthenticated() {
   return Boolean(await getAuthenticatedAdmin());
 }
 
-export function getAdminSessionCookieOptions() {
+export function getAdminSessionCookieOptions(maxAge: number = 60 * 60 * 12) {
   return {
     httpOnly: true,
-    maxAge: ADMIN_SESSION_MAX_AGE,
+    maxAge,
     path: "/",
     sameSite: "lax" as const,
     secure: process.env.NODE_ENV === "production",

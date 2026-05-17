@@ -12,6 +12,7 @@ import {
 const loginSchema = z.object({
   password: z.string().min(1),
   redirectTo: z.string().optional(),
+  rememberMe: z.boolean().optional().default(false),
   username: z.string().trim().min(1),
 });
 
@@ -57,7 +58,9 @@ export async function POST(request: Request) {
   response.cookies.set(
     ADMIN_SESSION_COOKIE,
     createAdminSessionToken(parsed.data.username),
-    getAdminSessionCookieOptions(),
+    getAdminSessionCookieOptions(
+      parsed.data.rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 12,
+    ),
   );
 
   return response;

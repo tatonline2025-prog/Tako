@@ -68,8 +68,8 @@ export default async function AdminProductsPage() {
               {products.map((product) => (
                 <tr key={product.slug} className="hover:bg-gray-50 transition">
                   <td className="px-5 py-4">
-                    <div className="font-medium text-gray-900">{product.name}</div>
-                    <div className="text-xs text-gray-400 mt-0.5 line-clamp-1">{product.shortDescription}</div>
+                    <div className="font-medium text-gray-900">{product.name.vi}</div>
+                    <div className="text-xs text-gray-400 mt-0.5 line-clamp-1">{product.shortDescription.vi}</div>
                   </td>
                   <td className="px-5 py-4 text-gray-600">{product.manufacturer}</td>
                   <td className="px-5 py-4">

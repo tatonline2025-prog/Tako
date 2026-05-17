@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
 import type { Category, Product } from "@/data/site";
-import type { Locale } from "@/lib/i18n";
+import { localizeText, type Locale } from "@/lib/i18n";
 
 type ProductCatalogProps = {
   locale?: Locale;
@@ -35,10 +35,13 @@ export function ProductCatalog({
     const matchesApplication =
       applicationFilter === "all" || product.applications.includes(applicationFilter);
     const haystack = [
-      product.name,
+      product.name.en,
+      product.name.vi,
       product.subcategory,
-      product.shortDescription,
-      product.description,
+      product.shortDescription.en,
+      product.shortDescription.vi,
+      product.description.en,
+      product.description.vi,
       product.manufacturer,
       ...product.applications,
     ]
@@ -168,15 +171,15 @@ export function ProductCatalog({
             <div className="space-y-4 px-6 py-6">
               <div>
                 <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
-                  {product.categoryName}
+                  {localizeText(product.categoryName, locale)}
                 </div>
                 <h2 className="mt-2 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-                  {product.name}
+                  {localizeText(product.name, locale)}
                 </h2>
               </div>
 
               <p className="text-sm leading-7 text-[var(--color-muted)]">
-                {product.shortDescription}
+                {localizeText(product.shortDescription, locale)}
               </p>
 
               <div className="flex flex-wrap gap-2">

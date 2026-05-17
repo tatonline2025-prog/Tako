@@ -17,6 +17,7 @@ export function AdminLoginForm({
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -52,7 +53,7 @@ export function AdminLoginForm({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ password, redirectTo, username }),
+          body: JSON.stringify({ password, redirectTo, rememberMe, username }),
         });
 
         const payload = (await response.json()) as {
@@ -118,6 +119,16 @@ export function AdminLoginForm({
           {feedback}
         </div>
       ) : null}
+
+      <label className="flex cursor-pointer items-center gap-2.5 text-sm text-[var(--color-muted)]">
+        <input
+          type="checkbox"
+          checked={rememberMe}
+          onChange={(e) => setRememberMe(e.target.checked)}
+          className="h-4 w-4 rounded border-[var(--color-line)] accent-[var(--color-primary)]"
+        />
+        {locale === "en" ? "Remember me for 30 days" : "Ghi nhớ đăng nhập (30 ngày)"}
+      </label>
 
       <button
         type="submit"
