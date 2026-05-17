@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 export const localeCookieName = "tako_locale";
 export const supportedLocales = ["vi", "en"] as const;
 
@@ -46,6 +44,7 @@ export function isLocale(value: string | null | undefined): value is Locale {
 }
 
 export async function getRequestLocale(): Promise<Locale> {
+  const { cookies } = await import("next/headers");
   const cookieStore = await cookies();
   const locale = cookieStore.get(localeCookieName)?.value;
 

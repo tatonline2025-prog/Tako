@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-              { label: "Quản lý nội dung", href: "/quan-tri/noi-dung" },
 
 export default async function AdminDashboardPage() {
   const admin = await getAuthenticatedAdmin();
