@@ -23,7 +23,10 @@ const productSchema = z.object({
   imageTone: z.string().trim().min(1),
   manufacturer: z.string().trim().min(1),
   name: localizedTextSchema,
-  pdfPath: z.string().trim().min(1),
+  pdfPath: z.string().trim().min(1).refine(
+    (value) => value.startsWith("/") || /^https?:\/\//i.test(value),
+    "Link tài liệu phải là đường dẫn nội bộ hoặc URL http/https",
+  ),
   shortDescription: localizedTextSchema,
   slug: z.string().trim().min(1),
   subcategory: z.string().trim().min(1),
@@ -51,7 +54,10 @@ export async function POST(request: Request) {
 
   if (!parsed.success) {
     return NextResponse.json(
-      { message: "Dữ liệu sản phẩm không hợp lệ." },
+      {
+        message: "Dữ liệu sản phẩm không hợp lệ.",
+        errors: parsed.error.flatten().fieldErrors,
+      },
       { status: 400 },
     );
   }

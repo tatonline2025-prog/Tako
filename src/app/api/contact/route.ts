@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { contactSubmissionSchema } from "@/lib/contact-schema";
+import { createContact } from "@/lib/contact-repository";
 import { sendContactNotification } from "@/lib/mailer";
 
 export const runtime = "nodejs";
@@ -30,12 +31,14 @@ export async function POST(request: Request) {
     }
 
     try {
+      const contactId = await createContact(parsed.data);
       const notification = await sendContactNotification(parsed.data);
 
       if (notification.status !== "sent") {
         return NextResponse.json(
           {
-            message: "Hiện hộp thư chưa sẵn sàng. Bạn vui lòng thử lại sau ít phút nhé.",
+            contactId,
+            message: "Yêu cầu đã được lưu vào CRM. Hiện hộp thư chưa sẵn sàng, vui lòng kiểm tra cấu hình email.",
           },
           { status: 503 },
         );
@@ -43,14 +46,15 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         {
+          contactId,
           message: "TAKO Vietnam đã nhận yêu cầu của bạn và sẽ phản hồi sớm qua email.",
         },
         { status: 201 },
       );
-    } catch {
+    } catch (error) {
       return NextResponse.json(
         {
-          message: "Hiện tại hộp thư đang bận. Bạn vui lòng gửi lại sau ít phút.",
+          message: `Yêu cầu đã lưu CRM nhưng gửi email thất bại: ${error instanceof Error ? error.message : "unknown error"}`,
         },
         { status: 503 },
       );

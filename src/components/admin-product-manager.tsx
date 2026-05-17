@@ -374,12 +374,16 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
           </label>
 
           <label className="grid gap-1 text-sm text-gray-700 md:col-span-2">
-            Link PDF
+            Link tài liệu (PDF/ODF/Google Drive)
             <input
               value={draft.pdfPath}
               onChange={(event) => updateDraft("pdfPath", event.target.value)}
               className="rounded-xl border border-gray-300 px-3 py-2"
+              placeholder="https://... hoặc /api/catalog/slug"
             />
+            <span className="text-xs text-gray-500">
+              Bạn có thể dùng link trực tiếp đến PDF/ODF, hoặc giữ route nội bộ /api/catalog/slug.
+            </span>
           </label>
 
           <label className="grid gap-1 text-sm text-gray-700 md:col-span-2">

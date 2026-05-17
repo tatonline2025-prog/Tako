@@ -49,10 +49,11 @@ export default async function AdminDashboardPage() {
 
       <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
         <h2 className="text-sm font-semibold text-slate-900">Truy cập nhanh</h2>
-        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+        <div className="mt-3 grid gap-2 sm:grid-cols-4">
           <Link href="/quan-tri/san-pham" className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 hover:border-blue-200 hover:bg-blue-50">Sản phẩm</Link>
           <Link href="/quan-tri/tin-tuc" className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 hover:border-blue-200 hover:bg-blue-50">Tin tức</Link>
           <Link href="/quan-tri/noi-dung" className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 hover:border-blue-200 hover:bg-blue-50">Nội dung</Link>
+          <Link href="/quan-tri/lien-he" className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 hover:border-blue-200 hover:bg-blue-50">CRM liên hệ</Link>
         </div>
       </div>
     </div>

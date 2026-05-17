@@ -55,6 +55,17 @@ const navItems = [
     tone: "from-amber-500 to-orange-600",
   },
   {
+    href: "/quan-tri/lien-he",
+    label: "CRM liên hệ",
+    icon: (
+      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}>
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    exact: false,
+    tone: "from-indigo-500 to-blue-700",
+  },
+  {
     href: "/quan-tri/nguoi-dung",
     label: "Người dùng",
     icon: (
@@ -89,7 +100,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="fixed inset-0 z-[999] flex overflow-hidden bg-[radial-gradient(circle_at_top_right,#dbeafe_0%,#f8fbff_45%,#eff6ff_100%)]">
-      <aside className="hidden w-72 flex-col border-r border-slate-200/80 bg-white/90 backdrop-blur lg:flex">
+      <aside className="hidden w-80 flex-col border-r border-slate-200/80 bg-white/90 backdrop-blur lg:flex">
         <div className="border-b border-slate-200/80 px-5 py-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -100,8 +111,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 </svg>
               </div>
               <div>
-                <div className="text-sm font-semibold text-slate-900">TAKO Admin</div>
-                <div className="text-xs text-slate-500">Bảng điều khiển nội dung</div>
+                <div className="text-base font-semibold text-slate-900">TAKO Admin</div>
+                <div className="text-sm text-slate-500">Bảng điều khiển nội dung</div>
               </div>
             </div>
             <form action="/api/admin/logout" method="post">
@@ -122,14 +133,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <nav className="flex-1 space-y-2 p-3">
+        <nav className="flex-1 space-y-2 p-3 text-[15px]">
           {navItems.map((item) => {
             const active = isActive(item.href, item.exact);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition ${
+                className={`group flex items-center gap-3 rounded-2xl px-3 py-2 text-base font-medium transition ${
                   active
                     ? "bg-blue-50 text-blue-700 border border-blue-200"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
@@ -185,7 +196,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           })}
         </div>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 text-[15px] lg:p-6">{children}</main>
       </div>
 
       <FloatingHomeShortcut label="Trang chủ" bottom compact />

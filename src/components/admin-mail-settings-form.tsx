@@ -70,9 +70,9 @@ export function AdminMailSettingsForm({ initialSettings, onSave }: AdminMailSett
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6">
-      <h2 className="font-semibold text-gray-900">Cấu hình gửi email</h2>
-      <p className="mt-1 text-xs text-gray-500">Thiết lập này lưu trong MongoDB và ghi đè env khi gửi mail.</p>
+    <div className="rounded-2xl border border-gray-200 bg-white p-5">
+      <h2 className="text-lg font-semibold text-gray-900">Cấu hình gửi email</h2>
+      <p className="mt-1 text-sm text-gray-600">Thiết lập này lưu trong MongoDB và ghi đè env khi gửi mail.</p>
 
       <div className="mt-4 overflow-x-auto">
         <div className="inline-flex min-w-full gap-2 rounded-xl bg-slate-100 p-1">
@@ -135,7 +135,7 @@ export function AdminMailSettingsForm({ initialSettings, onSave }: AdminMailSett
         )}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-4 grid gap-3 md:grid-cols-[auto_1fr_auto] md:items-end">
         <button type="button" onClick={handleSave} disabled={isPending} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60">
           {isPending ? "Đang lưu..." : "Lưu cài đặt"}
         </button>

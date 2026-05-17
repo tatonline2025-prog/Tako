@@ -35,9 +35,11 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: `Đã gửi email test qua ${result.provider?.toUpperCase() || "MAIL"}.`,
     });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
-      { message: "Gửi email test thất bại. Kiểm tra thông tin SMTP/Resend." },
+      {
+        message: `Gửi email test thất bại: ${error instanceof Error ? error.message : "Không xác định"}`,
+      },
       { status: 502 },
     );
   }

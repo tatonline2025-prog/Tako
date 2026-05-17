@@ -106,6 +106,38 @@ function getResendConfig(config: EffectiveMailConfig) {
   };
 }
 
+async function sendViaSmtp(options: {
+  config: EffectiveMailConfig;
+  html: string;
+  replyTo?: string;
+  subject: string;
+  text: string;
+  toOverride?: string;
+}) {
+  const smtpConfig = getSmtpConfig(options.config);
+  if (!smtpConfig) {
+    return { status: "skipped" } as MailDispatchResult;
+  }
+
+  const transporter = nodemailer.createTransport({
+    auth: smtpConfig.auth,
+    host: smtpConfig.host,
+    port: smtpConfig.port,
+    secure: smtpConfig.secure,
+  });
+
+  await transporter.sendMail({
+    from: smtpConfig.from,
+    html: options.html,
+    replyTo: options.replyTo,
+    subject: options.subject,
+    text: options.text,
+    to: options.toOverride || smtpConfig.to,
+  });
+
+  return { status: "sent", provider: "smtp" } as MailDispatchResult;
+}
+
 export async function getMailSetupStatus(): Promise<MailSetupStatus> {
   const config = await getEffectiveMailConfig();
   const resendMissing: string[] = [];
@@ -222,6 +254,11 @@ async function sendSimpleMail(options: {
   const resendConfig = getResendConfig(options.config);
 
   if (resendConfig) {
+    // Resend test mode: use onboarding sender if current MAIL_FROM is not accepted.
+    const resendFrom = options.subject.includes("Test email")
+      ? "onboarding@resend.dev"
+      : resendConfig.from;
+
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -229,7 +266,7 @@ async function sendSimpleMail(options: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: resendConfig.from,
+        from: resendFrom,
         html: options.html,
         reply_to: options.replyTo,
         subject: options.subject,
@@ -246,28 +283,7 @@ async function sendSimpleMail(options: {
     return { status: "sent", provider: "resend" } as MailDispatchResult;
   }
 
-  const smtpConfig = getSmtpConfig(options.config);
-  if (!smtpConfig) {
-    return { status: "skipped" } as MailDispatchResult;
-  }
-
-  const transporter = nodemailer.createTransport({
-    auth: smtpConfig.auth,
-    host: smtpConfig.host,
-    port: smtpConfig.port,
-    secure: smtpConfig.secure,
-  });
-
-  await transporter.sendMail({
-    from: smtpConfig.from,
-    html: options.html,
-    replyTo: options.replyTo,
-    subject: options.subject,
-    text: options.text,
-    to: options.toOverride || smtpConfig.to,
-  });
-
-  return { status: "sent", provider: "smtp" } as MailDispatchResult;
+  return sendViaSmtp(options);
 }
 
 export async function sendContactNotification(
@@ -275,11 +291,15 @@ export async function sendContactNotification(
 ): Promise<MailDispatchResult> {
   const config = await getEffectiveMailConfig();
 
-  if (await sendViaResend(payload, config)) {
-    return { provider: "resend", status: "sent" };
+  try {
+    if (await sendViaResend(payload, config)) {
+      return { provider: "resend", status: "sent" };
+    }
+  } catch {
+    // Fall through to SMTP backup.
   }
 
-  return sendSimpleMail({
+  return sendViaSmtp({
     config,
     html: `
       <h2>Yêu cầu liên hệ mới từ website TAKO Vietnam</h2>
