@@ -39,6 +39,10 @@ export const metadata: Metadata = {
     "Sinh học phân tử",
     "Chẩn đoán lâm sàng",
   ],
+  icons: {
+    icon: "/icon",
+    shortcut: "/icon",
+  },
 };
 
 export default async function RootLayout({
@@ -72,9 +76,22 @@ export default async function RootLayout({
           <footer className="border-t border-[var(--color-line)] bg-white/90">
             <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 lg:grid-cols-[1.3fr_0.8fr_0.9fr] lg:px-8">
               <div className="space-y-4">
-                <h2 className="font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-                  {siteMetadata.legalName}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <svg width="36" height="36" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="ftLg" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#0d2d62" />
+                        <stop offset="1" stopColor="#2e7ef7" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="38" height="38" rx="11" fill="url(#ftLg)" />
+                    <rect x="9" y="10" width="20" height="4.5" rx="2.25" fill="white" />
+                    <rect x="15.5" y="14.5" width="7" height="14.5" rx="3.5" fill="white" />
+                  </svg>
+                  <h2 className="font-[family:var(--font-display)] text-xl font-semibold text-[var(--color-ink)]">
+                    {siteMetadata.legalName}
+                  </h2>
+                </div>
                 <p className="max-w-xl text-sm leading-7 text-[var(--color-muted)]">
                   {localizeText(chromeCopy.footerDescription, locale)}
                 </p>
