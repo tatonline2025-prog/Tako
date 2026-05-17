@@ -2,9 +2,16 @@ import type { MetadataRoute } from "next";
 import { navigationItems } from "@/data/site";
 import { listNewsArticles, listProducts } from "@/lib/catalog-repository";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://takob.vercel.app");
+const normalizedConfiguredSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "").trim();
+const useConfiguredSiteUrl =
+  normalizedConfiguredSiteUrl.length > 0 &&
+  !normalizedConfiguredSiteUrl.includes("localhost");
+
+const baseUrl = useConfiguredSiteUrl
+  ? normalizedConfiguredSiteUrl
+  : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://takob.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
