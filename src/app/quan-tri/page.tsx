@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthenticatedAdmin } from "@/lib/admin-auth";
-import { listNewsArticles, listProducts } from "@/lib/catalog-repository";
+import { getNewsCount, getProductCount } from "@/lib/catalog-repository";
 
 export const metadata: Metadata = {
   title: "Quản trị — TAKO Vietnam",
@@ -17,9 +17,9 @@ export default async function AdminDashboardPage() {
     redirect("/admin?redirectTo=/quan-tri");
   }
 
-  const [products, newsArticles] = await Promise.all([
-    listProducts(),
-    listNewsArticles(),
+  const [productCount, newsCount] = await Promise.all([
+    getProductCount(),
+    getNewsCount(),
   ]);
 
   return (
@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">Sản phẩm</div>
-          <div className="mt-2 text-2xl font-bold text-slate-900">{products.length}</div>
+          <div className="mt-2 text-2xl font-bold text-slate-900">{productCount}</div>
           <Link href="/quan-tri/san-pham" className="mt-4 inline-flex text-sm font-semibold text-blue-600 hover:text-blue-700">
             Mở quản lý sản phẩm
           </Link>
@@ -40,7 +40,7 @@ export default async function AdminDashboardPage() {
 
         <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">Tin tức</div>
-          <div className="mt-2 text-2xl font-bold text-slate-900">{newsArticles.length}</div>
+          <div className="mt-2 text-2xl font-bold text-slate-900">{newsCount}</div>
           <Link href="/quan-tri/tin-tuc" className="mt-4 inline-flex text-sm font-semibold text-blue-600 hover:text-blue-700">
             Mở quản lý tin tức
           </Link>

@@ -5,9 +5,10 @@ import type { MailSettings } from "@/lib/admin-settings-repository";
 
 type AdminMailSettingsFormProps = {
   initialSettings: MailSettings | null;
+  onSave?: () => void;
 };
 
-export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsFormProps) {
+export function AdminMailSettingsForm({ initialSettings, onSave }: AdminMailSettingsFormProps) {
   const [provider, setProvider] = useState<"resend" | "smtp">(initialSettings?.provider || "resend");
   const [mailFrom, setMailFrom] = useState(initialSettings?.mailFrom || "");
   const [mailTo, setMailTo] = useState(initialSettings?.mailTo || "");
@@ -49,6 +50,7 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
       }
 
       setFeedback("Đã lưu cấu hình email vào MongoDB.");
+      onSave?.();
     });
   }
 
@@ -63,19 +65,14 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
       });
 
       const payload = (await response.json()) as { message?: string };
-      if (!response.ok) {
-        setFeedback(payload.message || "Gửi email test thất bại.");
-        return;
-      }
-
-      setFeedback(payload.message || "Đã gửi email test.");
+      setFeedback(payload.message || (response.ok ? "Đã gửi email test." : "Gửi email test thất bại."));
     });
   }
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6">
-      <h2 className="font-semibold text-gray-900">Cấu hình gửi email (lưu trong MongoDB)</h2>
-      <p className="mt-1 text-xs text-gray-500">Thiết lập này ghi đè env server khi gửi mail lead.</p>
+      <h2 className="font-semibold text-gray-900">Cấu hình gửi email</h2>
+      <p className="mt-1 text-xs text-gray-500">Thiết lập này lưu trong MongoDB và ghi đè env khi gửi mail.</p>
 
       <div className="mt-4 overflow-x-auto">
         <div className="inline-flex min-w-full gap-2 rounded-xl bg-slate-100 p-1">
@@ -145,8 +142,8 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
         <input
           value={testRecipient}
           onChange={(event) => setTestRecipient(event.target.value)}
-          className="w-72 rounded-lg border border-gray-300 px-3 py-2 text-sm"
-          placeholder="Email nhận test (mặc định MAIL_TO)"
+          className="flex-1 min-w-[200px] rounded-lg border border-gray-300 px-3 py-2 text-sm"
+          placeholder="Email test (mặc định MAIL_TO)"
         />
         <button
           type="button"
@@ -154,10 +151,11 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
           disabled={isTesting}
           className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 disabled:opacity-60"
         >
-          {isTesting ? "Đang gửi test..." : "Gửi email test"}
+          {isTesting ? "Đang gửi..." : "Gửi test"}
         </button>
-        {feedback ? <span className="text-sm text-gray-600">{feedback}</span> : null}
       </div>
+
+      {feedback ? <p className="mt-3 text-sm text-gray-600">{feedback}</p> : null}
     </div>
   );
 }

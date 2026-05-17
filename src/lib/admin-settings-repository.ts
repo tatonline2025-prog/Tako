@@ -2,6 +2,22 @@ import { getMongoDatabase } from "@/lib/mongodb";
 
 export type MailProvider = "resend" | "smtp";
 
+export type AdminConfigStatus = {
+  configured: boolean;
+  missing: string[];
+};
+
+type ProviderStatus = {
+  configured: boolean;
+  missing: string[];
+};
+
+export type MailSetupStatus = {
+  activeProvider: "resend" | "smtp" | null;
+  resend: ProviderStatus;
+  smtp: ProviderStatus;
+};
+
 export type MailSettings = {
   provider: MailProvider;
   resendApiKey?: string;

@@ -2,21 +2,11 @@ import nodemailer from "nodemailer";
 import { siteMetadata } from "@/data/site";
 import { getMailSettings } from "@/lib/admin-settings-repository";
 import type { ContactSubmissionInput } from "@/lib/contact-schema";
+import type { MailSetupStatus } from "@/lib/admin-settings-repository";
 
 type MailDispatchResult = {
   status: "sent" | "skipped";
   provider?: "resend" | "smtp";
-};
-
-type ProviderStatus = {
-  configured: boolean;
-  missing: string[];
-};
-
-export type MailSetupStatus = {
-  activeProvider: "resend" | "smtp" | null;
-  resend: ProviderStatus;
-  smtp: ProviderStatus;
 };
 
 type EffectiveMailConfig = {
@@ -214,7 +204,8 @@ async function sendViaResend(payload: ContactSubmissionInput, config: EffectiveM
   });
 
   if (!response.ok) {
-    throw new Error("Resend delivery failed.");
+    const error = await response.json().catch(() => ({})) as Record<string, unknown>;
+    throw new Error(`Resend error: ${response.status} - ${error.message || response.statusText}`);
   }
 
   return true;
@@ -248,7 +239,8 @@ async function sendSimpleMail(options: {
     });
 
     if (!response.ok) {
-      throw new Error("Resend delivery failed.");
+      const error = await response.json().catch(() => ({})) as Record<string, unknown>;
+      throw new Error(`Resend error: ${response.status} - ${error.message || response.statusText}`);
     }
 
     return { status: "sent", provider: "resend" } as MailDispatchResult;

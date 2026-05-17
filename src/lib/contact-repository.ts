@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import type { ContactSubmissionInput } from "@/lib/contact-schema";
-import { getMongoDatabase } from "@/lib/mongodb";
+import { ensureMongoIndexes, getMongoDatabase } from "@/lib/mongodb";
 
 type ContactDocument = ContactSubmissionInput & {
   _id?: ObjectId;
@@ -15,6 +15,7 @@ export type StoredContact = ContactSubmissionInput & {
 };
 
 async function getContactsCollection() {
+  await ensureMongoIndexes();
   const database = await getMongoDatabase();
   return database.collection<ContactDocument>("contacts");
 }
@@ -48,4 +49,9 @@ export async function listContacts(limit = 50): Promise<StoredContact[]> {
     createdAt: record.createdAt.toISOString(),
     status: record.status,
   }));
+}
+
+export async function getContactCount(): Promise<number> {
+  const collection = await getContactsCollection();
+  return await collection.countDocuments();
 }

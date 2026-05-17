@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { RichContent } from "@/components/rich-content";
 import {
   getNewsArticleBySlug,
   listNewsArticles,
 } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
+
+export const revalidate = 600;
+
+const getCachedNewsBySlug = cache(async (slug: string) => getNewsArticleBySlug(slug));
 
 type NewsDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -27,7 +32,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: NewsDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getRequestLocale();
-  const article = await getNewsArticleBySlug(slug);
+  const article = await getCachedNewsBySlug(slug);
 
   if (!article) {
     return { title: "Bài viết không tồn tại" };
@@ -42,7 +47,7 @@ export async function generateMetadata({ params }: NewsDetailPageProps): Promise
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   const { slug } = await params;
   const locale = await getRequestLocale();
-  const article = await getNewsArticleBySlug(slug);
+  const article = await getCachedNewsBySlug(slug);
 
   if (!article) {
     notFound();

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
 import { categories, getSiteMetadata } from "@/data/site";
-import { listProducts } from "@/lib/catalog-repository";
+import { getProductNamesForDropdown, listProducts } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 type ContactPageProps = {
@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 export default async function ContactPage({ searchParams }: ContactPageProps) {
   const locale = await getRequestLocale();
   const siteMetadata = getSiteMetadata(locale);
-  const products = await listProducts();
+  const productNames = await getProductNamesForDropdown();
+  const products = await listProducts(100);
   const query = await searchParams;
   const interestValue = Array.isArray(query.interest)
     ? query.interest[0]
@@ -31,7 +32,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
   const interestOptions = Array.from(
     new Set([
       ...categories.map((category) => category.name),
-      ...products.map((product) => localizeText(product.name, locale)),
+      ...productNames.map((product) => localizeText(product.name, locale)),
     ]),
   );
 

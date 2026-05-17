@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { Pagination } from "./pagination";
 import type { Category, Product } from "@/data/site";
 
 type AdminProductManagerProps = {
@@ -42,6 +43,9 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
   const [products, setProducts] = useState(initialProducts.map(normalizeProduct));
   const [selectedSlug, setSelectedSlug] = useState(initialProducts[0]?.slug || "");
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchFilter, setSearchFilter] = useState("");
+  const itemsPerPage = 10;
   const [draft, setDraft] = useState<Product>(
     normalizeProduct(initialProducts[0] || templateProduct()),
   );
@@ -53,6 +57,16 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
   const selectedProduct = useMemo(
     () => products.find((item) => item.slug === selectedSlug) || null,
     [products, selectedSlug],
+  );
+
+  const filteredProducts = useMemo(
+    () => products.filter((p) => p.slug.toLowerCase().includes(searchFilter.toLowerCase()) || p.name.vi.toLowerCase().includes(searchFilter.toLowerCase())),
+    [products, searchFilter],
+  );
+
+  const paginatedProducts = useMemo(
+    () => filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredProducts, currentPage],
   );
 
   function applyDraft(product: Product) {
@@ -204,20 +218,33 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
       <div className="rounded-2xl border border-gray-200 bg-white p-4">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">Danh sách sản phẩm</h2>
-            <p className="text-xs text-gray-500">{products.length} sản phẩm</p>
+            <h2 className="text-sm font-semibold text-gray-900">Danh sách sản phẩm ({filteredProducts.length})</h2>
+            <p className="text-xs text-gray-500">Phân trang mỗi {itemsPerPage} sản phẩm</p>
           </div>
           <button
             type="button"
             onClick={startNewProduct}
-            className="rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700"
+            className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700"
           >
             + Thêm mới
           </button>
         </div>
 
-        <div className="max-h-[760px] space-y-2 overflow-y-auto pr-1">
-          {products.map((product) => (
+        <input
+          type="text"
+          value={searchFilter}
+          onChange={(e) => {
+            setSearchFilter(e.target.value);
+            setCurrentPage(1);
+          }}
+          placeholder="Tìm kiếm slug hoặc tên..."
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm mb-3"
+        />
+
+        <Pagination currentPage={currentPage} totalItems={filteredProducts.length} itemsPerPage={itemsPerPage} onPageChange={setCurrentPage} />
+
+        <div className="space-y-2 my-3">
+          {paginatedProducts.map((product) => (
             <div
               key={product.slug}
               className="rounded-xl border border-gray-200 bg-white px-3 py-3"
@@ -246,7 +273,7 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
             </div>
           ))}
         </div>
-
+        <Pagination currentPage={currentPage} totalItems={filteredProducts.length} itemsPerPage={itemsPerPage} onPageChange={setCurrentPage} />
         {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
       </div>
     );
@@ -459,7 +486,9 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
           </div>
         </div>
 
-      {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
+        <Pagination currentPage={currentPage} totalItems={filteredProducts.length} itemsPerPage={itemsPerPage} onPageChange={setCurrentPage} />
+
+        {feedback ? <p className="mt-3 text-sm text-gray-700">{feedback}</p> : null}
     </div>
   );
 }

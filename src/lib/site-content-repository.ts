@@ -1,4 +1,4 @@
-import { getMongoDatabase } from "@/lib/mongodb";
+import { ensureMongoIndexes, getMongoDatabase } from "@/lib/mongodb";
 
 export type LocalizedText = { en: string; vi: string };
 
@@ -81,6 +81,7 @@ export const defaultAboutContent: AboutContent = {
 };
 
 async function getCollection() {
+  await ensureMongoIndexes();
   const database = await getMongoDatabase();
   return database.collection<SiteContentDocument>("site_content");
 }

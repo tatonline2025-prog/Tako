@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { RichContent } from "@/components/rich-content";
 import type { Category, Product } from "@/data/site";
 import { localizeText, type Locale } from "@/lib/i18n";
@@ -21,14 +21,16 @@ export function ProductCatalog({
   applications,
   products,
 }: ProductCatalogProps) {
+  const itemsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [manufacturerFilter, setManufacturerFilter] = useState("all");
   const [applicationFilter, setApplicationFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const normalizedQuery = deferredSearchTerm.trim().toLowerCase();
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = useMemo(() => products.filter((product) => {
     const matchesCategory =
       categoryFilter === "all" || product.category === categoryFilter;
     const matchesManufacturer =
@@ -41,8 +43,6 @@ export function ProductCatalog({
       product.subcategory,
       product.shortDescription.en,
       product.shortDescription.vi,
-      product.description.en,
-      product.description.vi,
       product.manufacturer,
       ...product.applications,
     ]
@@ -56,7 +56,13 @@ export function ProductCatalog({
       matchesApplication &&
       matchesSearch
     );
-  });
+  }), [applicationFilter, categoryFilter, manufacturerFilter, normalizedQuery, products]);
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage));
+  const pagedProducts = useMemo(() => {
+    const safePage = Math.min(currentPage, totalPages);
+    const start = (safePage - 1) * itemsPerPage;
+    return filteredProducts.slice(start, start + itemsPerPage);
+  }, [currentPage, filteredProducts, totalPages]);
 
   const copy = {
     allApplications: locale === "en" ? "All applications" : "Tất cả ứng dụng",
@@ -84,7 +90,10 @@ export function ProductCatalog({
           {copy.search}
           <input
             value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
+            onChange={(event) => {
+              setSearchTerm(event.target.value);
+              setCurrentPage(1);
+            }}
             placeholder={copy.searchPlaceholder}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           />
@@ -94,7 +103,10 @@ export function ProductCatalog({
           {copy.category}
           <select
             value={categoryFilter}
-            onChange={(event) => setCategoryFilter(event.target.value)}
+            onChange={(event) => {
+              setCategoryFilter(event.target.value);
+              setCurrentPage(1);
+            }}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
             <option value="all">{copy.allCategories}</option>
@@ -110,7 +122,10 @@ export function ProductCatalog({
           {copy.manufacturer}
           <select
             value={manufacturerFilter}
-            onChange={(event) => setManufacturerFilter(event.target.value)}
+            onChange={(event) => {
+              setManufacturerFilter(event.target.value);
+              setCurrentPage(1);
+            }}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
             <option value="all">{copy.allManufacturers}</option>
@@ -126,7 +141,10 @@ export function ProductCatalog({
           {copy.application}
           <select
             value={applicationFilter}
-            onChange={(event) => setApplicationFilter(event.target.value)}
+            onChange={(event) => {
+              setApplicationFilter(event.target.value);
+              setCurrentPage(1);
+            }}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
             <option value="all">{copy.allApplications}</option>
@@ -149,6 +167,7 @@ export function ProductCatalog({
               setCategoryFilter("all");
               setManufacturerFilter("all");
               setApplicationFilter("all");
+              setCurrentPage(1);
             }}
             className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
           >
@@ -158,7 +177,7 @@ export function ProductCatalog({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-        {filteredProducts.map((product) => (
+        {pagedProducts.map((product) => (
           <article key={product.slug} className="panel overflow-hidden">
             <div className={`h-44 bg-gradient-to-br ${product.imageTone} p-6 text-white`}>
               <div className="inline-flex rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em]">
@@ -219,6 +238,30 @@ export function ProductCatalog({
           </article>
         ))}
       </div>
+
+      {filteredProducts.length > 0 ? (
+        <div className="flex items-center justify-between rounded-[1.5rem] border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-muted)]">
+          <span>{locale === "en" ? "Page" : "Trang"} {Math.min(currentPage, totalPages)}/{totalPages}</span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setCurrentPage((value) => Math.max(1, value - 1))}
+              disabled={currentPage <= 1}
+              className="rounded-full border border-[var(--color-line)] px-3 py-1.5 font-semibold text-[var(--color-ink)] disabled:opacity-45"
+            >
+              {locale === "en" ? "Previous" : "Trước"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCurrentPage((value) => Math.min(totalPages, value + 1))}
+              disabled={currentPage >= totalPages}
+              className="rounded-full border border-[var(--color-line)] px-3 py-1.5 font-semibold text-[var(--color-ink)] disabled:opacity-45"
+            >
+              {locale === "en" ? "Next" : "Sau"}
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       {filteredProducts.length === 0 ? (
         <div className="panel px-6 py-10 text-center text-sm leading-7 text-[var(--color-muted)]">

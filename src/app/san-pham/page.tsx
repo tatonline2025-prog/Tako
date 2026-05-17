@@ -6,6 +6,8 @@ import { ProductCatalog } from "@/components/product-catalog";
 import { listProducts } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Sản phẩm / Giải pháp",
   description:

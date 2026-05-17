@@ -1,3 +1,5 @@
+import { memo, useMemo } from "react";
+
 type RichContentProps = {
   html: string;
   className?: string;
@@ -9,11 +11,15 @@ function safeHtml(raw: string) {
     .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "");
 }
 
-export function RichContent({ html, className }: RichContentProps) {
+const RichContentComponent = ({ html, className }: RichContentProps) => {
+  const sanitizedHtml = useMemo(() => safeHtml(html || ""), [html]);
+
   return (
     <div
       className={["rich-content", className].filter(Boolean).join(" ")}
-      dangerouslySetInnerHTML={{ __html: safeHtml(html || "") }}
+      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
     />
   );
-}
+};
+
+export const RichContent = memo(RichContentComponent);

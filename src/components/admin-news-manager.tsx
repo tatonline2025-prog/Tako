@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { Pagination } from "./pagination";
 import type { NewsArticle } from "@/data/site";
 
 type AdminNewsManagerProps = {
@@ -32,6 +33,9 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
   const [articles, setArticles] = useState(initialArticles.map(normalizeArticle));
   const [selectedSlug, setSelectedSlug] = useState(initialArticles[0]?.slug || "");
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchFilter, setSearchFilter] = useState("");
+  const itemsPerPage = 10;
   const [draft, setDraft] = useState<NewsArticle>(
     normalizeArticle(initialArticles[0] || templateArticle()),
   );
@@ -39,6 +43,21 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
   const [feedback, setFeedback] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const filteredArticles = useMemo(
+    () =>
+      articles.filter(
+        (a) =>
+          a.slug.toLowerCase().includes(searchFilter.toLowerCase()) ||
+          a.title.vi.toLowerCase().includes(searchFilter.toLowerCase()),
+      ),
+    [articles, searchFilter],
+  );
+
+  const paginatedArticles = useMemo(
+    () => filteredArticles.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredArticles, currentPage],
+  );
 
   function openArticle(article: NewsArticle) {
     setSelectedSlug(article.slug);
@@ -193,8 +212,21 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
           </button>
         </div>
 
-        <div className="max-h-[760px] space-y-2 overflow-y-auto pr-1">
-          {articles.map((article) => (
+        <input
+          type="text"
+          value={searchFilter}
+          onChange={(e) => {
+            setSearchFilter(e.target.value);
+            setCurrentPage(1);
+          }}
+          placeholder="Tìm kiếm tin tức..."
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm mb-3"
+        />
+
+        <Pagination currentPage={currentPage} totalItems={filteredArticles.length} itemsPerPage={itemsPerPage} onPageChange={setCurrentPage} />
+
+        <div className="space-y-2 my-3">
+          {paginatedArticles.map((article) => (
             <div
               key={article.slug}
               className="rounded-xl border border-gray-200 bg-white px-3 py-3"

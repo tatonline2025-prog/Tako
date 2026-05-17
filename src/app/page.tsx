@@ -9,11 +9,13 @@ import {
 } from "@/data/site";
 import {
   listFeaturedProducts,
-  listNewsArticles,
+  listRecentArticles,
 } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText, type Locale } from "@/lib/i18n";
 import { getHomeContent } from "@/lib/site-content-repository";
 import { ScrollReveal } from "@/components/scroll-reveal";
+
+export const revalidate = 300;
 
 const homeCopy = {
   eyebrow: {
@@ -127,7 +129,7 @@ export default async function Home() {
   const siteMetadata = getSiteMetadata(locale);
   const homeContent = await getHomeContent();
   const featuredProducts = await listFeaturedProducts(6);
-  const newsArticles = await listNewsArticles();
+  const newsArticles = await listRecentArticles(6);
 
   return (
     <div className="pb-20">

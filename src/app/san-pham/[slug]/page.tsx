@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { RichContent } from "@/components/rich-content";
 import {
   getProductBySlug,
   listProducts,
 } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
+
+export const revalidate = 600;
+
+const getCachedProductBySlug = cache(async (slug: string) => getProductBySlug(slug));
 
 type ProductDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -22,7 +27,7 @@ export async function generateMetadata({
 }: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getRequestLocale();
-  const product = await getProductBySlug(slug);
+  const product = await getCachedProductBySlug(slug);
 
   if (!product) {
     return {
@@ -40,7 +45,7 @@ export default async function ProductDetailPage({
   params,
 }: ProductDetailPageProps) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getCachedProductBySlug(slug);
   const locale = await getRequestLocale();
 
   if (!product) {
