@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RichContent } from "@/components/rich-content";
 import { listNewsArticles } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
@@ -43,9 +44,10 @@ export default async function NewsPage() {
             <h2 className="mt-4 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
               {localizeText(article.title, locale)}
             </h2>
-            <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
-              {localizeText(article.excerpt, locale)}
-            </p>
+            <RichContent
+              html={localizeText(article.excerpt, locale)}
+              className="mt-4 text-sm text-[var(--color-muted)]"
+            />
           </article>
         ))}
       </div>

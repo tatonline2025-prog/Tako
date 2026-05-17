@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RichContent } from "@/components/rich-content";
 import {
   categories,
   companyHighlights,
@@ -138,9 +139,10 @@ export default async function Home() {
               <h1 className="max-w-4xl font-[family:var(--font-display)] text-5xl font-bold tracking-tight text-[var(--color-ink)] sm:text-6xl lg:text-7xl">
                 {siteMetadata.tagline}
               </h1>
-              <p className="max-w-2xl text-lg leading-8 text-[var(--color-muted)] sm:text-xl">
-                {localizeText(homeContent.subhead, locale)}
-              </p>
+              <RichContent
+                html={localizeText(homeContent.subhead, locale)}
+                className="max-w-2xl text-lg text-[var(--color-muted)] sm:text-xl"
+              />
             </div>
 
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -190,9 +192,10 @@ export default async function Home() {
                 <div className="mt-3 font-[family:var(--font-display)] text-3xl font-semibold">
                   {localizeText(homeCopy.heroPartnerDesc, locale)}
                 </div>
-                <p className="mt-4 text-sm leading-7 text-white/80">
-                  {localizeText(homeContent.heroDesc, locale)}
-                </p>
+                <RichContent
+                  html={localizeText(homeContent.heroDesc, locale)}
+                  className="mt-4 text-sm text-white/80"
+                />
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
@@ -289,7 +292,10 @@ export default async function Home() {
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.featuredProducts, locale)}</span>
-            <h2 className="section-title">{localizeText(homeContent.featuredProductsTitle, locale)}</h2>
+            <RichContent
+              html={localizeText(homeContent.featuredProductsTitle, locale)}
+              className="section-title"
+            />
           </div>
         </div>
 
@@ -314,9 +320,10 @@ export default async function Home() {
                     {localizeText(product.name, locale)}
                   </h3>
                 </div>
-                <p className="text-sm leading-6 text-[var(--color-muted)] line-clamp-2">
-                  {localizeText(product.shortDescription, locale)}
-                </p>
+                <RichContent
+                  html={localizeText(product.shortDescription, locale)}
+                  className="line-clamp-2 text-sm text-[var(--color-muted)]"
+                />
                 <div className="flex gap-2.5 pt-1">
                   <Link
                     href={`/san-pham/${product.slug}`}

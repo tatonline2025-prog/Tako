@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
+import { RichContent } from "@/components/rich-content";
 import type { Category, Product } from "@/data/site";
 import { localizeText, type Locale } from "@/lib/i18n";
 
@@ -178,9 +179,10 @@ export function ProductCatalog({
                 </h2>
               </div>
 
-              <p className="text-sm leading-7 text-[var(--color-muted)]">
-                {localizeText(product.shortDescription, locale)}
-              </p>
+              <RichContent
+                html={localizeText(product.shortDescription, locale)}
+                className="text-sm text-[var(--color-muted)]"
+              />
 
               <div className="flex flex-wrap gap-2">
                 {product.applications.slice(0, 3).map((application) => (

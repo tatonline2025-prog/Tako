@@ -1,34 +1,17 @@
 import { NextResponse } from "next/server";
 import { contactSubmissionSchema } from "@/lib/contact-schema";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { createContact, listContacts } from "@/lib/contact-repository";
 import { sendContactNotification } from "@/lib/mailer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdminAuthenticated())) {
-    return NextResponse.json(
-      {
-        message: "Bạn cần đăng nhập quản trị để xem dữ liệu này.",
-      },
-      { status: 401 },
-    );
-  }
-
-  try {
-    const contacts = await listContacts();
-    return NextResponse.json({ contacts });
-  } catch (error) {
-    console.error("[api/contact][GET] Failed to list contacts", error);
-    return NextResponse.json(
-      {
-        message: "Không thể tải danh sách liên hệ lúc này.",
-      },
-      { status: 500 },
-    );
-  }
+  return NextResponse.json(
+    {
+      message: "Đường dẫn này chỉ nhận yêu cầu gửi từ form liên hệ.",
+    },
+    { status: 405 },
+  );
 }
 
 export async function POST(request: Request) {
@@ -46,29 +29,37 @@ export async function POST(request: Request) {
       );
     }
 
-    const contactId = await createContact(parsed.data);
-    let notificationStatus: "sent" | "skipped" | "failed" = "skipped";
-
     try {
       const notification = await sendContactNotification(parsed.data);
-      notificationStatus = notification.status;
-    } catch {
-      notificationStatus = "failed";
-    }
 
-    return NextResponse.json(
-      {
-        id: contactId,
-        message: "TAKO Vietnam đã nhận yêu cầu. Chúng tôi sẽ liên hệ sớm.",
-        notificationStatus,
-      },
-      { status: 201 },
-    );
+      if (notification.status !== "sent") {
+        return NextResponse.json(
+          {
+            message: "Hiện hộp thư chưa sẵn sàng. Bạn vui lòng thử lại sau ít phút nhé.",
+          },
+          { status: 503 },
+        );
+      }
+
+      return NextResponse.json(
+        {
+          message: "TAKO Vietnam đã nhận yêu cầu của bạn và sẽ phản hồi sớm qua email.",
+        },
+        { status: 201 },
+      );
+    } catch {
+      return NextResponse.json(
+        {
+          message: "Hiện tại hộp thư đang bận. Bạn vui lòng gửi lại sau ít phút.",
+        },
+        { status: 503 },
+      );
+    }
   } catch (error) {
     console.error("[api/contact][POST] Failed to create contact", error);
     return NextResponse.json(
       {
-        message: "Không thể lưu yêu cầu vào hệ thống lúc này.",
+        message: "Hiện chưa thể gửi yêu cầu. Bạn vui lòng thử lại sau.",
       },
       { status: 500 },
     );

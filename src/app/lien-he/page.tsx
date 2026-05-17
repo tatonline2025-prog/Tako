@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
-import { categories, getProductBySlug, getSiteMetadata } from "@/data/site";
-import { contactInterestOptions } from "@/lib/contact-schema";
+import { categories, getSiteMetadata } from "@/data/site";
+import { listProducts } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 type ContactPageProps = {
@@ -17,14 +17,23 @@ export const metadata: Metadata = {
 export default async function ContactPage({ searchParams }: ContactPageProps) {
   const locale = await getRequestLocale();
   const siteMetadata = getSiteMetadata(locale);
+  const products = await listProducts();
   const query = await searchParams;
   const interestValue = Array.isArray(query.interest)
     ? query.interest[0]
     : query.interest || "";
-  const requestedProduct = interestValue ? getProductBySlug(interestValue) : undefined;
+  const requestedProduct = interestValue
+    ? products.find((item) => item.slug === interestValue)
+    : undefined;
   const defaultInterest = requestedProduct
     ? localizeText(requestedProduct.name, locale)
     : interestValue;
+  const interestOptions = Array.from(
+    new Set([
+      ...categories.map((category) => category.name),
+      ...products.map((product) => localizeText(product.name, locale)),
+    ]),
+  );
 
   return (
     <div className="section-shell py-12 sm:py-16">
@@ -33,7 +42,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           <span className="eyebrow">{localizeText({ en: "Contact", vi: "Liên hệ" }, locale)}</span>
           <h1 className="section-title">{localizeText({ en: "Request quotations, technical documents, or solution consulting", vi: "Yêu cầu báo giá, tài liệu kỹ thuật hoặc tư vấn giải pháp" }, locale)}</h1>
           <p className="section-copy">
-            {localizeText({ en: "The contact form is connected directly to the database so your team can review requests in one place. The system is also ready to send notifications to the company inbox once SMTP or Resend is configured.", vi: "Form liên hệ được kết nối trực tiếp với database để đội ngũ có thể xem danh sách yêu cầu từ một đầu mối. Hệ thống cũng đã sẵn sàng gửi email thông báo về hộp thư công ty khi SMTP hoặc Resend được cấu hình." }, locale)}
+            {localizeText({ en: "Every request is sent directly to your company mailbox via Resend or SMTP, helping your team reply quickly without missing opportunities.", vi: "Mỗi yêu cầu sẽ được gửi trực tiếp về email công ty qua Resend hoặc SMTP để đội ngũ phản hồi nhanh và không bỏ sót cơ hội." }, locale)}
           </p>
 
           <div className="grid gap-4">
@@ -74,7 +83,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
 
         <div className="space-y-4">
           <ContactForm
-            interestOptions={contactInterestOptions}
+            interestOptions={interestOptions}
             defaultInterest={defaultInterest}
             locale={locale}
           />

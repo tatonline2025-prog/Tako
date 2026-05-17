@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { RichContent } from "@/components/rich-content";
 import {
   getProductBySlug,
   listProducts,
@@ -20,6 +21,7 @@ export async function generateMetadata({
   params,
 }: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const locale = await getRequestLocale();
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -29,8 +31,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: product.name.vi,
-    description: product.shortDescription.vi,
+    title: localizeText(product.name, locale),
+    description: localizeText(product.shortDescription, locale).replace(/<[^>]+>/g, " ").trim(),
   };
 }
 
@@ -64,9 +66,10 @@ export default async function ProductDetailPage({
           <div className="mt-10 font-[family:var(--font-display)] text-5xl font-semibold leading-tight">
             {product.imageLabel}
           </div>
-          <p className="mt-6 max-w-xl text-sm leading-7 text-white/82">
-            {localizeText(product.shortDescription, locale)}
-          </p>
+          <RichContent
+            html={localizeText(product.shortDescription, locale)}
+            className="mt-6 max-w-xl text-sm text-white/82"
+          />
         </div>
 
         <div className="panel space-y-6 px-6 py-8 lg:px-8">
@@ -77,9 +80,10 @@ export default async function ProductDetailPage({
             <h1 className="mt-3 font-[family:var(--font-display)] text-4xl font-semibold text-[var(--color-ink)]">
               {localizeText(product.name, locale)}
             </h1>
-            <p className="mt-5 text-base leading-8 text-[var(--color-muted)]">
-              {localizeText(product.description, locale)}
-            </p>
+            <RichContent
+              html={localizeText(product.description, locale)}
+              className="mt-5 text-base text-[var(--color-muted)]"
+            />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -109,8 +113,8 @@ export default async function ProductDetailPage({
               {product.highlights.map((highlight) => {
                 const text = localizeText(highlight, locale);
                 return (
-                  <div key={text} className="rounded-[1.5rem] border border-[var(--color-line)] bg-white px-5 py-4 text-sm leading-7 text-[var(--color-muted)]">
-                    {text}
+                  <div key={text} className="rounded-[1.5rem] border border-[var(--color-line)] bg-white px-5 py-4 text-sm text-[var(--color-muted)]">
+                    <RichContent html={text} />
                   </div>
                 );
               })}

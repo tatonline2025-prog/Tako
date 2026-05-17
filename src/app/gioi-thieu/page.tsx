@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
+import { RichContent } from "@/components/rich-content";
 import { getSiteMetadata } from "@/data/site";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 import { getAboutContent } from "@/lib/site-content-repository";
@@ -120,9 +121,12 @@ export default async function AboutPage() {
       <section className="panel grid gap-8 px-6 py-8 lg:grid-cols-[1fr_0.9fr] lg:px-8 lg:py-10">
         <div className="space-y-5">
           <span className="eyebrow">{localizeText(copy.eyebrow, locale)}</span>
-          <h1 className="section-title">{localizeText(aboutContent.h1, locale)}</h1>
-          <p className="section-copy">{siteMetadata.legalName} — {localizeText(aboutContent.intro1, locale)}</p>
-          <p className="section-copy">{localizeText(aboutContent.intro2, locale)}</p>
+          <RichContent html={localizeText(aboutContent.h1, locale)} className="section-title" />
+          <RichContent
+            html={`${siteMetadata.legalName} - ${localizeText(aboutContent.intro1, locale)}`}
+            className="section-copy"
+          />
+          <RichContent html={localizeText(aboutContent.intro2, locale)} className="section-copy" />
         </div>
 
         <div className="rounded-[2rem] bg-[linear-gradient(160deg,#0d2d62,#165cbb)] p-6 text-white shadow-[0_30px_90px_rgba(13,45,98,0.24)]">
@@ -132,11 +136,11 @@ export default async function AboutPage() {
           <div className="mt-5 space-y-5">
             <div className="rounded-[1.5rem] border border-white/14 bg-white/8 p-5">
               <h2 className="font-[family:var(--font-display)] text-2xl font-semibold">{localizeText(copy.visionTitle, locale)}</h2>
-              <p className="mt-3 text-sm leading-7 text-white/82">{localizeText(aboutContent.visionText, locale)}</p>
+              <RichContent html={localizeText(aboutContent.visionText, locale)} className="mt-3 text-sm text-white/82" />
             </div>
             <div className="rounded-[1.5rem] border border-white/14 bg-white/8 p-5">
               <h2 className="font-[family:var(--font-display)] text-2xl font-semibold">{localizeText(copy.missionTitle, locale)}</h2>
-              <p className="mt-3 text-sm leading-7 text-white/82">{localizeText(aboutContent.missionText, locale)}</p>
+              <RichContent html={localizeText(aboutContent.missionText, locale)} className="mt-3 text-sm text-white/82" />
             </div>
           </div>
         </div>
@@ -161,8 +165,8 @@ export default async function AboutPage() {
       <section className="panel grid gap-8 px-6 py-8 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
         <div className="space-y-4">
           <span className="eyebrow">{localizeText(copy.capabilityEyebrow, locale)}</span>
-          <h2 className="section-title">{localizeText(aboutContent.capabilityTitle, locale)}</h2>
-          <p className="section-copy">{localizeText(aboutContent.capabilityDesc, locale)}</p>
+          <RichContent html={localizeText(aboutContent.capabilityTitle, locale)} className="section-title" />
+          <RichContent html={localizeText(aboutContent.capabilityDesc, locale)} className="section-copy" />
           <Link
             href="/lien-he"
             className="inline-flex rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white"

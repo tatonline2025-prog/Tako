@@ -30,7 +30,7 @@ export default async function AdminContentPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Quản lý nội dung</h1>
-        <p className="mt-1 text-sm text-gray-500">Biên tập text cho Trang chủ và Giới thiệu bằng JSON editor.</p>
+        <p className="mt-1 text-sm text-gray-500">Biên tập Trang chủ và Giới thiệu bằng trình soạn thảo trực quan.</p>
       </div>
 
       <AdminContentManager initialHome={initialHome} initialAbout={initialAbout} />

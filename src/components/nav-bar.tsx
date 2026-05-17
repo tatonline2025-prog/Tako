@@ -33,9 +33,9 @@ function LogoMark() {
         </linearGradient>
       </defs>
       <rect width="38" height="38" rx="11" fill="url(#nbLg)" />
-      {/* T â€” horizontal bar */}
+      {/* T horizontal bar */}
       <rect x="9" y="10" width="20" height="4.5" rx="2.25" fill="white" />
-      {/* T â€” vertical bar */}
+      {/* T vertical bar */}
       <rect x="15.5" y="14.5" width="7" height="14.5" rx="3.5" fill="white" />
     </svg>
   );
@@ -109,10 +109,10 @@ export function NavBar({
             {ctaLabel}
           </Link>
 
-          {/* Hamburger â€” mobile only */}
+          {/* Hamburger mobile only */}
           <button
             type="button"
-            aria-label={open ? "ÄÃ³ng menu" : "Má»Ÿ menu"}
+            aria-label={open ? "Đóng menu" : "Mở menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-line)] bg-white text-[var(--color-ink)] transition hover:bg-[rgba(13,78,166,0.06)] lg:hidden"

@@ -46,8 +46,8 @@ export function ContactForm({
     company: locale === "en" ? "Company" : "Công ty",
     email: "Email",
     error: locale === "en"
-      ? "Unable to submit your request right now."
-      : "Không thể gửi yêu cầu lúc này.",
+      ? "We could not send your request right now."
+      : "Hiện chưa gửi được yêu cầu của bạn.",
     fullName: locale === "en" ? "Full name" : "Họ tên",
     interest: locale === "en" ? "Product / category of interest" : "Sản phẩm / danh mục quan tâm",
     message: locale === "en" ? "Request details" : "Nội dung yêu cầu",
@@ -59,8 +59,8 @@ export function ContactForm({
       ? "Your information has been submitted successfully."
       : "Thông tin đã được gửi thành công.",
     systemError: locale === "en"
-      ? "Unable to connect to the system. Please try again later."
-      : "Không thể kết nối đến hệ thống. Vui lòng thử lại sau.",
+      ? "Please try again in a moment."
+      : "Bạn thử lại sau ít phút nhé.",
   };
 
   function updateField<Key extends keyof FormState>(

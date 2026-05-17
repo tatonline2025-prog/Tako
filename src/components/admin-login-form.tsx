@@ -24,14 +24,14 @@ export function AdminLoginForm({
   const copy = {
     button: locale === "en" ? "Sign in" : "Đăng nhập",
     description: locale === "en"
-      ? "Sign in to view contact leads and internal admin data."
-      : "Đăng nhập để xem danh sách liên hệ và các dữ liệu quản trị nội bộ.",
+      ? "Sign in to continue."
+      : "Đăng nhập để tiếp tục.",
     failed: locale === "en" ? "Sign-in failed." : "Đăng nhập thất bại.",
     password: locale === "en" ? "Password" : "Mật khẩu",
-    pending: locale === "en" ? "Processing..." : "Đang xử lý...",
+    pending: locale === "en" ? "Signing in..." : "Đang đăng nhập...",
     systemError: locale === "en"
-      ? "Unable to connect to the sign-in system."
-      : "Không thể kết nối đến hệ thống đăng nhập.",
+      ? "Please try again in a moment."
+      : "Bạn thử lại sau ít phút nhé.",
     title: locale === "en" ? "Admin sign in" : "Đăng nhập quản trị",
     username: locale === "en" ? "Admin username" : "Tài khoản quản trị",
   };
@@ -40,7 +40,7 @@ export function AdminLoginForm({
     event.preventDefault();
 
     if (!isConfigured) {
-      setFeedback("Khu vực quản trị chưa được cấu hình thông tin đăng nhập.");
+      setFeedback(locale === "en" ? "Admin credentials are not ready yet." : "Khu vực quản trị chưa sẵn sàng thông tin đăng nhập.");
       return;
     }
 
@@ -87,7 +87,7 @@ export function AdminLoginForm({
 
       {!isConfigured ? (
         <div className="rounded-[1.5rem] bg-[rgba(201,60,60,0.12)] px-4 py-4 text-sm leading-7 text-[#a12d2d]">
-          Chưa có `ADMIN_USERNAME`, `ADMIN_PASSWORD` hoặc `ADMIN_SESSION_SECRET` trong môi trường.
+          Tài khoản quản trị chưa được thiết lập đầy đủ.
         </div>
       ) : null}
 
