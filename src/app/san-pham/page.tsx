@@ -3,7 +3,10 @@ import {
   categories,
 } from "@/data/site";
 import { ProductCatalog } from "@/components/product-catalog";
-import { listProducts } from "@/lib/catalog-repository";
+import {
+  listProductFilterOptions,
+  listProductsFilteredPage,
+} from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 export const revalidate = 300;
@@ -14,15 +17,35 @@ export const metadata: Metadata = {
     "Tra cứu danh mục sản phẩm, lọc theo lĩnh vực, hãng sản xuất và ứng dụng, tải tài liệu kỹ thuật và liên hệ báo giá.",
 };
 
-export default async function ProductsPage() {
+type ProductsPageProps = {
+  searchParams: Promise<{
+    q?: string | string[];
+    category?: string | string[];
+    manufacturer?: string | string[];
+    application?: string | string[];
+    page?: string | string[];
+  }>;
+};
+
+function asSingle(value?: string | string[]) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const locale = await getRequestLocale();
-  const products = await listProducts();
-  const manufacturers = Array.from(
-    new Set(products.map((product) => product.manufacturer)),
-  );
-  const applications = Array.from(
-    new Set(products.flatMap((product) => product.applications)),
-  );
+  const query = await searchParams;
+
+  const q = asSingle(query.q) || "";
+  const category = asSingle(query.category) || "all";
+  const manufacturer = asSingle(query.manufacturer) || "all";
+  const application = asSingle(query.application) || "all";
+  const rawPage = Number(asSingle(query.page) || "1");
+  const page = Number.isFinite(rawPage) ? Math.max(1, rawPage) : 1;
+
+  const [{ items, totalItems, totalPages }, { manufacturers, applications }] = await Promise.all([
+    listProductsFilteredPage({ query: q, category, manufacturer, application }, page, 10),
+    listProductFilterOptions(),
+  ]);
 
   return (
     <div className="section-shell py-12 sm:py-16">
@@ -35,11 +58,21 @@ export default async function ProductsPage() {
       </section>
 
       <ProductCatalog
+        key={`${q}|${category}|${manufacturer}|${application}|${page}`}
         locale={locale}
         categories={categories}
         manufacturers={manufacturers}
         applications={applications}
-        products={products}
+        products={items}
+        page={page}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        filters={{
+          q,
+          category,
+          manufacturer,
+          application,
+        }}
       />
     </div>
   );

@@ -48,7 +48,7 @@ a {
 }
 
 .panel {
-  @apply rounded-[2rem] border border-[var(--color-line)] bg-white/90 shadow-[0_24px_80px_rgba(16,32,63,0.08)] backdrop-blur;
+  @apply rounded-[2rem] border border-[var(--color-line)] bg-white/90 shadow-[0_24px_80px_rgba(16,32,63,0.08)];
 }
 
 .eyebrow {
@@ -103,9 +103,54 @@ a {
   transform: perspective(900px) rotateX(14deg) translateY(24px) scale(0.98);
   transform-origin: top center;
   transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: transform, opacity;
+}
+
+.sr-hidden-page {
+  opacity: 0;
+  transform: perspective(1400px) rotateY(-16deg) translateY(30px) scale(0.985);
+  transform-origin: left center;
+  transition: opacity 0.78s cubic-bezier(0.22, 0.8, 0.2, 1), transform 0.78s cubic-bezier(0.22, 0.8, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 .sr-visible {
   opacity: 1;
   transform: none;
+}
+
+.modern-card {
+  position: relative;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.modern-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.14) 45%, transparent 100%);
+  transform: translateX(-130%);
+  transition: transform 420ms ease;
+}
+
+.modern-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(16, 32, 63, 0.16);
+}
+
+.modern-card:hover::before {
+  transform: translateX(130%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-hidden-fade,
+  .sr-hidden-book,
+  .sr-hidden-page,
+  .modern-card,
+  .modern-card::before {
+    transition: none !important;
+    transform: none !important;
+  }
 }

@@ -60,6 +60,10 @@ async function main() {
         { key: { featured: -1, updatedAt: -1 }, name: "products_featured_updatedAt" },
         { key: { category: 1 }, name: "products_category" },
         { key: { manufacturer: 1 }, name: "products_manufacturer" },
+        { key: { applications: 1 }, name: "products_applications" },
+        { key: { category: 1, featured: -1, updatedAt: -1 }, name: "products_category_featured_updatedAt" },
+        { key: { manufacturer: 1, featured: -1, updatedAt: -1 }, name: "products_manufacturer_featured_updatedAt" },
+        { key: { applications: 1, featured: -1, updatedAt: -1 }, name: "products_applications_featured_updatedAt" },
       ]),
       db.collection("news_articles").createIndexes([
         { key: { slug: 1 }, name: "news_slug_uq", unique: true },

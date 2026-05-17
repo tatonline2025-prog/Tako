@@ -6,7 +6,7 @@ type ScrollRevealProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
-  variant?: "fade" | "book";
+  variant?: "fade" | "book" | "page";
 };
 
 export function ScrollReveal({
@@ -25,7 +25,7 @@ export function ScrollReveal({
       ([entry]) => {
         if (entry.isIntersecting) {
           el.style.transitionDelay = `${delay}ms`;
-          el.classList.remove("sr-hidden-fade", "sr-hidden-book");
+          el.classList.remove("sr-hidden-fade", "sr-hidden-book", "sr-hidden-page");
           el.classList.add("sr-visible");
           observer.unobserve(el);
         }
@@ -37,7 +37,12 @@ export function ScrollReveal({
     return () => observer.disconnect();
   }, [delay]);
 
-  const hiddenClass = variant === "book" ? "sr-hidden-book" : "sr-hidden-fade";
+  const hiddenClass =
+    variant === "book"
+      ? "sr-hidden-book"
+      : variant === "page"
+        ? "sr-hidden-page"
+        : "sr-hidden-fade";
 
   return (
     <div ref={ref} className={`${hiddenClass} ${className}`}>

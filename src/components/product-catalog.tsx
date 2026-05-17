@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RichContent } from "@/components/rich-content";
 import type { Category, Product } from "@/data/site";
 import { localizeText, type Locale } from "@/lib/i18n";
@@ -12,6 +13,15 @@ type ProductCatalogProps = {
   manufacturers: string[];
   applications: string[];
   products: Product[];
+  page: number;
+  totalPages: number;
+  totalItems: number;
+  filters: {
+    q: string;
+    category: string;
+    manufacturer: string;
+    application: string;
+  };
 };
 
 export function ProductCatalog({
@@ -20,49 +30,89 @@ export function ProductCatalog({
   manufacturers,
   applications,
   products,
+  page,
+  totalPages,
+  totalItems,
+  filters,
 }: ProductCatalogProps) {
-  const itemsPerPage = 10;
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [manufacturerFilter, setManufacturerFilter] = useState("all");
-  const [applicationFilter, setApplicationFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-  const normalizedQuery = deferredSearchTerm.trim().toLowerCase();
-  const filteredProducts = useMemo(() => products.filter((product) => {
-    const matchesCategory =
-      categoryFilter === "all" || product.category === categoryFilter;
-    const matchesManufacturer =
-      manufacturerFilter === "all" || product.manufacturer === manufacturerFilter;
-    const matchesApplication =
-      applicationFilter === "all" || product.applications.includes(applicationFilter);
-    const haystack = [
-      product.name.en,
-      product.name.vi,
-      product.subcategory,
-      product.shortDescription.en,
-      product.shortDescription.vi,
-      product.manufacturer,
-      ...product.applications,
-    ]
-      .join(" ")
-      .toLowerCase();
-    const matchesSearch = !normalizedQuery || haystack.includes(normalizedQuery);
+  const [searchTerm, setSearchTerm] = useState(filters.q);
+  const [categoryFilter, setCategoryFilter] = useState(filters.category || "all");
+  const [manufacturerFilter, setManufacturerFilter] = useState(filters.manufacturer || "all");
+  const [applicationFilter, setApplicationFilter] = useState(filters.application || "all");
 
-    return (
-      matchesCategory &&
-      matchesManufacturer &&
-      matchesApplication &&
-      matchesSearch
-    );
-  }), [applicationFilter, categoryFilter, manufacturerFilter, normalizedQuery, products]);
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage));
-  const pagedProducts = useMemo(() => {
-    const safePage = Math.min(currentPage, totalPages);
-    const start = (safePage - 1) * itemsPerPage;
-    return filteredProducts.slice(start, start + itemsPerPage);
-  }, [currentPage, filteredProducts, totalPages]);
+  const pushFilters = useCallback((next: {
+    q?: string;
+    category?: string;
+    manufacturer?: string;
+    application?: string;
+    page?: string;
+  }) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    const upsert = (key: string, value?: string) => {
+      if (!value || value === "all") {
+        params.delete(key);
+        return;
+      }
+      params.set(key, value);
+    };
+
+    upsert("q", next.q ?? searchTerm.trim());
+    upsert("category", next.category ?? categoryFilter);
+    upsert("manufacturer", next.manufacturer ?? manufacturerFilter);
+    upsert("application", next.application ?? applicationFilter);
+
+    if (next.page && next.page !== "1") {
+      params.set("page", next.page);
+    } else {
+      params.delete("page");
+    }
+
+    const query = params.toString();
+
+    startTransition(() => {
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    });
+  }, [applicationFilter, categoryFilter, manufacturerFilter, pathname, router, searchParams, searchTerm]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (searchTerm !== filters.q) {
+        pushFilters({ q: searchTerm.trim(), page: "1" });
+      }
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [filters.q, pushFilters, searchTerm]);
+
+  const pageLinks = useMemo(() => {
+    const current = Math.max(1, Math.min(page, totalPages));
+    const links: number[] = [];
+    const start = Math.max(1, current - 2);
+    const end = Math.min(totalPages, current + 2);
+
+    for (let p = start; p <= end; p += 1) {
+      links.push(p);
+    }
+
+    return links;
+  }, [page, totalPages]);
+
+  function buildPageHref(targetPage: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (targetPage <= 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(targetPage));
+    }
+    const query = params.toString();
+    return query ? `${pathname}?${query}` : pathname;
+  }
 
   const copy = {
     allApplications: locale === "en" ? "All applications" : "Tất cả ứng dụng",
@@ -90,10 +140,7 @@ export function ProductCatalog({
           {copy.search}
           <input
             value={searchTerm}
-            onChange={(event) => {
-              setSearchTerm(event.target.value);
-              setCurrentPage(1);
-            }}
+            onChange={(event) => setSearchTerm(event.target.value)}
             placeholder={copy.searchPlaceholder}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           />
@@ -104,8 +151,9 @@ export function ProductCatalog({
           <select
             value={categoryFilter}
             onChange={(event) => {
-              setCategoryFilter(event.target.value);
-              setCurrentPage(1);
+              const next = event.target.value;
+              setCategoryFilter(next);
+              pushFilters({ category: next, page: "1" });
             }}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
@@ -123,8 +171,9 @@ export function ProductCatalog({
           <select
             value={manufacturerFilter}
             onChange={(event) => {
-              setManufacturerFilter(event.target.value);
-              setCurrentPage(1);
+              const next = event.target.value;
+              setManufacturerFilter(next);
+              pushFilters({ manufacturer: next, page: "1" });
             }}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
@@ -142,8 +191,9 @@ export function ProductCatalog({
           <select
             value={applicationFilter}
             onChange={(event) => {
-              setApplicationFilter(event.target.value);
-              setCurrentPage(1);
+              const next = event.target.value;
+              setApplicationFilter(next);
+              pushFilters({ application: next, page: "1" });
             }}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
@@ -158,27 +208,32 @@ export function ProductCatalog({
 
         <div className="lg:col-span-4 flex items-center justify-between gap-4 rounded-[1.5rem] border border-[var(--color-line)] bg-[rgba(13,78,166,0.04)] px-4 py-4">
           <p className="text-sm leading-7 text-[var(--color-muted)]">
-            Tìm thấy <strong className="text-[var(--color-ink)]">{filteredProducts.length}</strong> {copy.results}.
+            Tìm thấy <strong className="text-[var(--color-ink)]">{totalItems}</strong> {copy.results}.
           </p>
-          <button
-            type="button"
-            onClick={() => {
-              setSearchTerm("");
-              setCategoryFilter("all");
-              setManufacturerFilter("all");
-              setApplicationFilter("all");
-              setCurrentPage(1);
-            }}
-            className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
-          >
-            {copy.reset}
-          </button>
+          <div className="flex items-center gap-3">
+            {isPending ? <span className="text-xs font-semibold text-[var(--color-primary)]">Đang tải...</span> : null}
+            <button
+              type="button"
+              onClick={() => {
+                setSearchTerm("");
+                setCategoryFilter("all");
+                setManufacturerFilter("all");
+                setApplicationFilter("all");
+                startTransition(() => {
+                  router.replace(pathname, { scroll: false });
+                });
+              }}
+              className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
+            >
+              {copy.reset}
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-        {pagedProducts.map((product) => (
-          <article key={product.slug} className="panel overflow-hidden">
+        {products.map((product) => (
+          <article key={product.slug} className="panel modern-card overflow-hidden">
             <div className={`h-44 bg-gradient-to-br ${product.imageTone} p-6 text-white`}>
               <div className="inline-flex rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em]">
                 {product.manufacturer}
@@ -217,7 +272,8 @@ export function ProductCatalog({
               <div className="flex flex-wrap gap-3 pt-1">
                 <Link
                   href={`/san-pham/${product.slug}`}
-                  className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white"
+                  prefetch={false}
+                  className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-primary-strong)]"
                 >
                   {copy.details}
                 </Link>
@@ -229,6 +285,7 @@ export function ProductCatalog({
                 </Link>
                 <Link
                   href={`/lien-he?interest=${product.slug}`}
+                  prefetch={false}
                   className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
                 >
                   {copy.quote}
@@ -239,31 +296,50 @@ export function ProductCatalog({
         ))}
       </div>
 
-      {filteredProducts.length > 0 ? (
+      {totalItems > 0 ? (
         <div className="flex items-center justify-between rounded-[1.5rem] border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-muted)]">
-          <span>{locale === "en" ? "Page" : "Trang"} {Math.min(currentPage, totalPages)}/{totalPages}</span>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setCurrentPage((value) => Math.max(1, value - 1))}
-              disabled={currentPage <= 1}
+          <span>{locale === "en" ? "Page" : "Trang"} {Math.min(page, totalPages)}/{totalPages}</span>
+          <div className="flex items-center gap-2">
+            <Link
+              href={buildPageHref(Math.max(1, page - 1))}
+              prefetch={false}
+              scroll={false}
+              aria-disabled={page <= 1}
               className="rounded-full border border-[var(--color-line)] px-3 py-1.5 font-semibold text-[var(--color-ink)] disabled:opacity-45"
             >
               {locale === "en" ? "Previous" : "Trước"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setCurrentPage((value) => Math.min(totalPages, value + 1))}
-              disabled={currentPage >= totalPages}
+            </Link>
+
+            {pageLinks.map((target) => (
+              <Link
+                key={target}
+                href={buildPageHref(target)}
+                prefetch={false}
+                scroll={false}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  target === page
+                    ? "bg-[var(--color-primary)] text-white"
+                    : "border border-[var(--color-line)] text-[var(--color-ink)]"
+                }`}
+              >
+                {target}
+              </Link>
+            ))}
+
+            <Link
+              href={buildPageHref(Math.min(totalPages, page + 1))}
+              prefetch={false}
+              scroll={false}
+              aria-disabled={page >= totalPages}
               className="rounded-full border border-[var(--color-line)] px-3 py-1.5 font-semibold text-[var(--color-ink)] disabled:opacity-45"
             >
               {locale === "en" ? "Next" : "Sau"}
-            </button>
+            </Link>
           </div>
         </div>
       ) : null}
 
-      {filteredProducts.length === 0 ? (
+      {totalItems === 0 ? (
         <div className="panel px-6 py-10 text-center text-sm leading-7 text-[var(--color-muted)]">
           {copy.empty}
         </div>

@@ -140,6 +140,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 className={`group flex items-center gap-3 rounded-2xl px-3 py-2 text-base font-medium transition ${
                   active
                     ? "bg-blue-50 text-blue-700 border border-blue-200"
@@ -184,6 +185,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 className={`shrink-0 border-b-2 px-3 py-2 text-xs font-semibold transition ${
                   active
                     ? "border-blue-600 text-blue-700"

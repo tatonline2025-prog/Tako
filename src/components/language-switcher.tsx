@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import type { Locale } from "@/lib/i18n";
 
@@ -20,14 +20,13 @@ export function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const redirectTo = searchParams.toString()
-    ? `${pathname}?${searchParams.toString()}`
-    : pathname;
-
   function setLocale(locale: Locale) {
+    const redirectTo = typeof window === "undefined"
+      ? pathname
+      : `${window.location.pathname}${window.location.search}`;
+
     startTransition(async () => {
       await fetch("/api/preferences/locale", {
         body: JSON.stringify({ locale, redirectTo }),

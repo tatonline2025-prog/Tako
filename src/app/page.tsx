@@ -237,7 +237,7 @@ export default async function Home() {
       </section>
 
       <section className="section-shell pb-16">
-        <ScrollReveal>
+        <ScrollReveal variant="page">
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.fieldOverview, locale)}</span>
@@ -262,7 +262,8 @@ export default async function Home() {
               <Link
                 key={category.slug}
                 href={`/san-pham`}
-                className="panel group flex h-full flex-col px-5 py-6 transition hover:shadow-lg hover:-translate-y-0.5"
+                prefetch={false}
+                className="panel modern-card group flex h-full flex-col px-5 py-6 transition hover:shadow-lg hover:-translate-y-0.5"
               >
                 <div className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl ${color.bg}`}>
                   <span className={`h-2.5 w-2.5 rounded-full ${color.dot}`} />
@@ -329,12 +330,14 @@ export default async function Home() {
                 <div className="flex gap-2.5 pt-1">
                   <Link
                     href={`/san-pham/${product.slug}`}
+                    prefetch={false}
                     className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[var(--color-primary-strong)]"
                   >
                     {localizeText(homeCopy.viewDetail, locale)}
                   </Link>
                   <Link
                     href={`/lien-he?interest=${product.slug}`}
+                    prefetch={false}
                     className="rounded-full border border-[var(--color-line)] px-4 py-2 text-xs font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
                   >
                     {localizeText(homeCopy.requestQuote, locale)}
@@ -348,7 +351,7 @@ export default async function Home() {
       </section>
 
       <section className="section-shell pb-16">
-        <ScrollReveal>
+        <ScrollReveal variant="page">
         <div className="panel overflow-hidden px-6 py-8 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-3">

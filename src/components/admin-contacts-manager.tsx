@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { Pagination } from "@/components/pagination";
 import type { StoredContact } from "@/lib/contact-repository";
 
@@ -18,9 +18,10 @@ export function AdminContactsManager({ initialContacts }: AdminContactsManagerPr
   const [saving, setSaving] = useState(false);
   const [draft, setDraft] = useState<StoredContact | null>(null);
   const itemsPerPage = 10;
+  const deferredSearchFilter = useDeferredValue(searchFilter);
 
   const filteredContacts = useMemo(() => {
-    const query = searchFilter.trim().toLowerCase();
+    const query = deferredSearchFilter.trim().toLowerCase();
     if (!query) {
       return contacts;
     }
@@ -31,17 +32,43 @@ export function AdminContactsManager({ initialContacts }: AdminContactsManagerPr
         .toLowerCase()
         .includes(query);
     });
-  }, [contacts, searchFilter]);
+  }, [contacts, deferredSearchFilter]);
 
   const paginatedContacts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
     return filteredContacts.slice(start, start + itemsPerPage);
   }, [currentPage, filteredContacts]);
 
+  const allFilteredIds = useMemo(
+    () => filteredContacts.map((item) => item.id),
+    [filteredContacts],
+  );
+
+  const selectedCountInFilter = useMemo(
+    () => allFilteredIds.filter((id) => selectedIds.includes(id)).length,
+    [allFilteredIds, selectedIds],
+  );
+
+  const isAllFilteredSelected =
+    allFilteredIds.length > 0 && selectedCountInFilter === allFilteredIds.length;
+
   function toggleSelect(id: string) {
     setSelectedIds((current) =>
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
     );
+  }
+
+  function toggleSelectAllFiltered() {
+    setSelectedIds((current) => {
+      const currentSet = new Set(current);
+
+      if (isAllFilteredSelected) {
+        return current.filter((id) => !allFilteredIds.includes(id));
+      }
+
+      allFilteredIds.forEach((id) => currentSet.add(id));
+      return Array.from(currentSet);
+    });
   }
 
   function startEdit(contact: StoredContact) {
@@ -138,19 +165,30 @@ export function AdminContactsManager({ initialContacts }: AdminContactsManagerPr
 
   return (
     <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Danh sách liên hệ ({filteredContacts.length})</h2>
           <p className="text-sm text-gray-600">Mỗi liên hệ đều được lưu trong CRM, kể cả khi gửi email bị lỗi.</p>
         </div>
-        <button
-          type="button"
-          onClick={removeSelected}
-          disabled={selectedIds.length === 0}
-          className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 disabled:opacity-50"
-        >
-          Xóa đã chọn ({selectedIds.length})
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleSelectAllFiltered}
+            disabled={filteredContacts.length === 0}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 disabled:opacity-50"
+          >
+            {isAllFilteredSelected ? "Bỏ chọn tất cả" : "Chọn tất cả"} ({selectedCountInFilter}/{filteredContacts.length})
+          </button>
+
+          <button
+            type="button"
+            onClick={removeSelected}
+            disabled={selectedIds.length === 0}
+            className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 disabled:opacity-50"
+          >
+            Xóa đã chọn ({selectedIds.length})
+          </button>
+        </div>
       </div>
 
       <input

@@ -55,6 +55,25 @@ export async function getContactCount(): Promise<number> {
   return await collection.countDocuments();
 }
 
+export async function getContactStatusCounts(): Promise<{
+  total: number;
+  newCount: number;
+  handledCount: number;
+}> {
+  const collection = await getContactsCollection();
+  const [total, newCount, handledCount] = await Promise.all([
+    collection.countDocuments(),
+    collection.countDocuments({ status: "new" }),
+    collection.countDocuments({ status: "handled" }),
+  ]);
+
+  return {
+    total,
+    newCount,
+    handledCount,
+  };
+}
+
 export async function updateContact(
   id: string,
   payload: Partial<ContactSubmissionInput> & { status?: "new" | "handled" },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { AdminMailSettingsForm } from "./admin-mail-settings-form";
 import type { MailSettings, MailSetupStatus } from "@/lib/admin-settings-repository";
 
@@ -13,14 +14,12 @@ export function AdminSettingsClient({
   mailStatus,
   storedMailSettings,
 }: AdminSettingsClientProps) {
-  const [showGuides, setShowGuides] = useState(true);
+  const router = useRouter();
+  const [showGuides, setShowGuides] = useState(false);
 
   const handleSaveSettings = useCallback(() => {
-    // Optionally fetch updated status from server
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
-  }, []);
+    router.refresh();
+  }, [router]);
 
   return (
     <div className="space-y-6">

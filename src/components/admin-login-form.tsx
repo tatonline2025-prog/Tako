@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type AdminLoginFormProps = {
   isConfigured: boolean;
@@ -14,12 +13,11 @@ export function AdminLoginForm({
   locale = "vi",
   redirectTo,
 }: AdminLoginFormProps) {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const copy = {
     button: locale === "en" ? "Sign in" : "Đăng nhập",
@@ -45,17 +43,16 @@ export function AdminLoginForm({
     }
 
     setFeedback("");
+    setIsPending(true);
 
-    startTransition(async () => {
-      try {
-        const response = await fetch("/api/admin/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ password, redirectTo, rememberMe, username }),
-        });
-
+    fetch("/api/admin/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password, redirectTo, rememberMe, username }),
+    })
+      .then(async (response) => {
         const payload = (await response.json()) as {
           message?: string;
           redirectTo?: string;
@@ -66,16 +63,19 @@ export function AdminLoginForm({
           return;
         }
 
-        router.push(payload.redirectTo || redirectTo);
-        router.refresh();
-      } catch {
+        // Navigate directly after cookie is set to avoid extra client refresh work.
+        window.location.assign(payload.redirectTo || redirectTo);
+      })
+      .catch(() => {
         setFeedback(copy.systemError);
-      }
-    });
+      })
+      .finally(() => {
+        setIsPending(false);
+      });
   }
 
   return (
-    <form onSubmit={handleSubmit} className="panel space-y-5 px-6 py-6 lg:px-8">
+    <form onSubmit={handleSubmit} className="space-y-5 rounded-[1.5rem] border border-[var(--color-line)] bg-white px-6 py-6 shadow-[0_12px_36px_rgba(16,32,63,0.08)] lg:px-8">
       <div className="space-y-2">
         <h1 className="font-[family:var(--font-display)] text-3xl font-semibold text-[var(--color-ink)]">
           {copy.title}
