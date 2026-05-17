@@ -78,17 +78,28 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <div className="fixed inset-0 z-[999] flex overflow-hidden bg-[radial-gradient(circle_at_top_right,#dbeafe_0%,#f8fbff_45%,#eff6ff_100%)]">
       <aside className="hidden w-72 flex-col border-r border-slate-200/80 bg-white/90 backdrop-blur lg:flex">
         <div className="border-b border-slate-200/80 px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#0d2d62,#2e7ef7)] text-white">
-              <svg width="22" height="22" viewBox="0 0 38 38" fill="none">
-                <rect x="9" y="10" width="20" height="4.5" rx="2.25" fill="white" />
-                <rect x="15.5" y="14.5" width="7" height="14.5" rx="3.5" fill="white" />
-              </svg>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#0d2d62,#2e7ef7)] text-white">
+                <svg width="22" height="22" viewBox="0 0 38 38" fill="none">
+                  <rect x="9" y="10" width="20" height="4.5" rx="2.25" fill="white" />
+                  <rect x="15.5" y="14.5" width="7" height="14.5" rx="3.5" fill="white" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-slate-900">TAKO Admin</div>
+                <div className="text-xs text-slate-500">Bảng điều khiển nội dung</div>
+              </div>
             </div>
-            <div>
-              <div className="text-sm font-semibold text-slate-900">TAKO Admin</div>
-              <div className="text-xs text-slate-500">Bảng điều khiển nội dung</div>
-            </div>
+            <form action="/api/admin/logout" method="post">
+              <input type="hidden" name="redirectTo" value="/admin" />
+              <button
+                type="submit"
+                className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+              >
+                Đăng xuất
+              </button>
+            </form>
           </div>
         </div>
 
@@ -101,14 +112,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 href={item.href}
                 className={`group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition ${
                   active
-                    ? "bg-slate-900 text-white shadow-[0_18px_28px_rgba(15,23,42,0.2)]"
+                    ? "bg-blue-50 text-blue-700 border border-blue-200"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <span
                   className={`flex h-9 w-9 items-center justify-center rounded-xl ${
                     active
-                      ? "bg-white/20"
+                      ? "bg-blue-100 text-blue-700"
                       : `bg-gradient-to-br ${item.tone} text-white`
                   }`}
                 >
@@ -169,7 +180,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <main className="flex-1 overflow-y-auto p-4 lg:p-8">{children}</main>
       </div>
 
-      <FloatingHomeShortcut label="Trang chủ" />
+      <FloatingHomeShortcut label="Trang chủ" bottom compact />
     </div>
   );
 }

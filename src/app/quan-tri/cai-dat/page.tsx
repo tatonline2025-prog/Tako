@@ -98,9 +98,10 @@ export default async function AdminSettingsPage() {
           <h2 className="font-semibold text-gray-900">Gmail SMTP</h2>
           <div className="mt-3 space-y-2 text-sm text-gray-500">
             <p>1. Bật xác minh hai bước cho tài khoản Gmail gửi mail.</p>
-            <p>2. Tạo App Password tại Google Account → Security → App passwords.</p>
+            <p>2. Vào Google Account → Security → App passwords → chọn Mail để lấy mật khẩu 16 ký tự.</p>
             <p>3. Biến: <code className="font-mono text-xs">SMTP_HOST=smtp.gmail.com</code>, <code className="font-mono text-xs">SMTP_PORT=465</code>, <code className="font-mono text-xs">SMTP_SECURE=true</code>.</p>
             <p>4. <code className="font-mono text-xs">SMTP_USER</code> = Gmail, <code className="font-mono text-xs">SMTP_PASS</code> = App Password 16 ký tự.</p>
+            <p>5. Lưu cấu hình, sau đó bấm &quot;Gửi email test&quot; để xác nhận kết nối SMTP.</p>
           </div>
           {!mailStatus.smtp.configured ? (
             <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
@@ -116,10 +117,12 @@ export default async function AdminSettingsPage() {
         <div className="rounded-2xl border border-gray-200 bg-white p-6">
           <h2 className="font-semibold text-gray-900">Resend API</h2>
           <div className="mt-3 space-y-2 text-sm text-gray-500">
-            <p>1. Tạo tài khoản Resend và xác minh domain gửi mail.</p>
-            <p>2. Tạo API key rồi gán vào <code className="font-mono text-xs">RESEND_API_KEY</code>.</p>
-            <p>3. <code className="font-mono text-xs">MAIL_FROM</code> bằng địa chỉ đã xác minh.</p>
-            <p>4. <code className="font-mono text-xs">MAIL_TO</code> là địa chỉ nhận lead nội bộ.</p>
+            <p>1. Tạo tài khoản Resend và thêm domain gửi mail ở mục Domains.</p>
+            <p>2. Cấu hình DNS theo hướng dẫn của Resend đến khi domain hiển thị trạng thái Verified.</p>
+            <p>3. Tạo API key ở mục API Keys rồi gán vào <code className="font-mono text-xs">RESEND_API_KEY</code>.</p>
+            <p>4. <code className="font-mono text-xs">MAIL_FROM</code> bằng địa chỉ đã xác minh.</p>
+            <p>5. <code className="font-mono text-xs">MAIL_TO</code> là địa chỉ nhận lead nội bộ.</p>
+            <p>6. Bấm &quot;Gửi email test&quot; để kiểm tra key và domain đã hoạt động.</p>
           </div>
           {!mailStatus.resend.configured ? (
             <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">

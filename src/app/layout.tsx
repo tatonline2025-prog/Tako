@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
-import { FloatingHomeShortcut } from "@/components/floating-home-shortcut";
+import { FloatingFrontActions } from "@/components/floating-front-actions";
 import { NavBar } from "@/components/nav-bar";
 import {
   getNavigationItems,
@@ -74,7 +74,11 @@ export default async function RootLayout({
 
           <main className="flex-1">{children}</main>
 
-          <FloatingHomeShortcut label={locale === "en" ? "Home" : "Trang chủ"} />
+          <FloatingFrontActions
+            homeLabel={locale === "en" ? "Home" : "Trang chủ"}
+            zaloLabel={locale === "en" ? "Zalo chat" : "Chat Zalo"}
+            zaloUrl={siteMetadata.zaloUrl}
+          />
 
           <footer className="border-t border-[var(--color-line)] bg-white/90">
             <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 lg:grid-cols-[1.3fr_0.8fr_0.9fr] lg:px-8">

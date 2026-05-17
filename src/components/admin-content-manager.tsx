@@ -63,9 +63,9 @@ export function AdminContentManager({ initialAbout, initialHome }: AdminContentM
   return (
     <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
       <div className="rounded-2xl border border-gray-200 bg-white p-5">
-        <h2 className="text-base font-semibold text-gray-900">Phạm vi biên tập</h2>
+        <h2 className="text-base font-semibold text-gray-900">Danh sách trang</h2>
         <p className="mt-1 text-sm text-gray-500">
-          Chỉnh nội dung cho trang chủ và giới thiệu bằng giao diện biên tập trực quan.
+          Chọn trang cần sửa rồi cập nhật nhanh nội dung.
         </p>
 
         <div className="mt-4 space-y-2">
@@ -74,14 +74,16 @@ export function AdminContentManager({ initialAbout, initialHome }: AdminContentM
             onClick={() => setScope("home")}
             className={`w-full rounded-xl border px-4 py-3 text-left text-sm ${scope === "home" ? "border-blue-300 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-700 hover:bg-gray-50"}`}
           >
-            Trang chủ
+            <div className="font-semibold">Trang chủ</div>
+            <div className="mt-0.5 text-xs">Sửa phần hero, sản phẩm nổi bật, tiêu đề tin tức</div>
           </button>
           <button
             type="button"
             onClick={() => setScope("about")}
             className={`w-full rounded-xl border px-4 py-3 text-left text-sm ${scope === "about" ? "border-violet-300 bg-violet-50 text-violet-700" : "border-gray-200 text-gray-700 hover:bg-gray-50"}`}
           >
-            Giới thiệu
+            <div className="font-semibold">Giới thiệu</div>
+            <div className="mt-0.5 text-xs">Sửa tầm nhìn, sứ mệnh và năng lực</div>
           </button>
         </div>
 
@@ -89,7 +91,7 @@ export function AdminContentManager({ initialAbout, initialHome }: AdminContentM
           <div className="font-semibold text-gray-700">Gợi ý:</div>
           <div>- Dùng nút B/I/list để định dạng nhanh.</div>
           <div>- Có thể chèn ảnh bằng URL trong trình soạn thảo.</div>
-          <div>- Nhớ cập nhật cả tiếng Việt và tiếng Anh.</div>
+          <div>- Có thể viết tiếng Việt trước, sau đó bổ sung tiếng Anh sau.</div>
         </div>
       </div>
 

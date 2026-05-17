@@ -218,19 +218,26 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
               key={product.slug}
               className={`rounded-xl border px-3 py-3 ${selectedSlug === product.slug ? "border-blue-300 bg-blue-50" : "border-gray-200 bg-white"}`}
             >
-              <button type="button" onClick={() => loadProduct(product)} className="w-full text-left">
-                <div className="text-sm font-semibold text-gray-900">{product.name.vi || "(Chưa đặt tên)"}</div>
-                <div className="mt-1 text-xs text-gray-500">{product.slug}</div>
-              </button>
+              <div className="text-sm font-semibold text-gray-900">{product.name.vi || "(Chưa đặt tên)"}</div>
+              <div className="mt-1 text-xs text-gray-500">{product.slug}</div>
               <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
                 <span>{product.manufacturer || "Chưa có hãng"}</span>
-                <button
-                  type="button"
-                  onClick={() => removeProduct(product.slug)}
-                  className="font-semibold text-rose-600 hover:underline"
-                >
-                  Xóa
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => loadProduct(product)}
+                    className="font-semibold text-blue-600 hover:underline"
+                  >
+                    Sửa
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeProduct(product.slug)}
+                    className="font-semibold text-rose-600 hover:underline"
+                  >
+                    Xóa
+                  </button>
+                </div>
               </div>
             </div>
           ))}

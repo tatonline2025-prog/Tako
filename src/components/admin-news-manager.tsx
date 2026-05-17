@@ -36,6 +36,7 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
   );
   const [activeLocale, setActiveLocale] = useState<LocaleField>("vi");
   const [feedback, setFeedback] = useState("");
+  const [isTranslating, setIsTranslating] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function openArticle(article: NewsArticle) {
@@ -94,6 +95,56 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
     });
   }
 
+  function translateEnglish() {
+    setIsTranslating(true);
+    setFeedback("");
+
+    const translateField = async (text: string) => {
+      const response = await fetch("/api/admin/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      const payload = (await response.json()) as { text?: string; message?: string };
+      if (!response.ok) {
+        throw new Error(payload.message || "Translate failed");
+      }
+
+      return payload.text || "";
+    };
+
+    Promise.all([
+      translateField(draft.title.vi),
+      translateField(draft.excerpt.vi),
+      translateField(draft.content.vi),
+    ])
+      .then(([title, excerpt, content]) => {
+        setDraft((current) => ({
+          ...current,
+          title: {
+            en: title || current.title.en,
+            vi: current.title.vi,
+          },
+          excerpt: {
+            en: excerpt || current.excerpt.en,
+            vi: current.excerpt.vi,
+          },
+          content: {
+            en: content || current.content.en,
+            vi: current.content.vi,
+          },
+        }));
+        setFeedback("Đã dịch nhanh sang tiếng Anh bằng Google Translate.");
+      })
+      .catch(() => {
+        setFeedback("Chưa dịch tự động được lúc này. Bạn thử lại sau nhé.");
+      })
+      .finally(() => {
+        setIsTranslating(false);
+      });
+  }
+
   function deleteArticle(slug: string) {
     if (!confirm(`Xóa bài viết ${slug}?`)) {
       return;
@@ -144,15 +195,18 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
               key={article.slug}
               className={`rounded-xl border px-3 py-3 ${selectedSlug === article.slug ? "border-violet-300 bg-violet-50" : "border-gray-200 bg-white"}`}
             >
-              <button type="button" onClick={() => openArticle(article)} className="w-full text-left">
-                <div className="text-sm font-semibold text-gray-900">{article.title.vi || "(Chưa đặt tiêu đề)"}</div>
-                <div className="mt-1 text-xs text-gray-500">{article.slug}</div>
-              </button>
+              <div className="text-sm font-semibold text-gray-900">{article.title.vi || "(Chưa đặt tiêu đề)"}</div>
+              <div className="mt-1 text-xs text-gray-500">{article.slug}</div>
               <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
                 <span>{article.date}</span>
-                <button type="button" onClick={() => deleteArticle(article.slug)} className="font-semibold text-rose-600 hover:underline">
-                  Xóa
-                </button>
+                <div className="flex items-center gap-3">
+                  <button type="button" onClick={() => openArticle(article)} className="font-semibold text-blue-600 hover:underline">
+                    Sửa
+                  </button>
+                  <button type="button" onClick={() => deleteArticle(article.slug)} className="font-semibold text-rose-600 hover:underline">
+                    Xóa
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -164,14 +218,24 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
           <h2 className="text-sm font-semibold text-gray-900">
             {selectedSlug ? `Đang sửa: ${selectedSlug}` : "Bài viết mới"}
           </h2>
-          <button
-            type="button"
-            onClick={saveArticle}
-            disabled={isPending}
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
-          >
-            {isPending ? "Đang lưu..." : "Lưu bài viết"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={translateEnglish}
+              disabled={isTranslating}
+              className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100 disabled:opacity-60"
+            >
+              {isTranslating ? "Đang dịch EN..." : "Dịch EN bằng Google"}
+            </button>
+            <button
+              type="button"
+              onClick={saveArticle}
+              disabled={isPending}
+              className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            >
+              {isPending ? "Đang lưu..." : "Lưu bài viết"}
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">

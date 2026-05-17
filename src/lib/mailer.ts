@@ -5,6 +5,7 @@ import type { ContactSubmissionInput } from "@/lib/contact-schema";
 
 type MailDispatchResult = {
   status: "sent" | "skipped";
+  provider?: "resend" | "smtp";
 };
 
 type ProviderStatus = {
@@ -219,30 +220,75 @@ async function sendViaResend(payload: ContactSubmissionInput, config: EffectiveM
   return true;
 }
 
+async function sendSimpleMail(options: {
+  config: EffectiveMailConfig;
+  html: string;
+  replyTo?: string;
+  subject: string;
+  text: string;
+  toOverride?: string;
+}) {
+  const resendConfig = getResendConfig(options.config);
+
+  if (resendConfig) {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendConfig.apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: resendConfig.from,
+        html: options.html,
+        reply_to: options.replyTo,
+        subject: options.subject,
+        text: options.text,
+        to: options.toOverride || resendConfig.to,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Resend delivery failed.");
+    }
+
+    return { status: "sent", provider: "resend" } as MailDispatchResult;
+  }
+
+  const smtpConfig = getSmtpConfig(options.config);
+  if (!smtpConfig) {
+    return { status: "skipped" } as MailDispatchResult;
+  }
+
+  const transporter = nodemailer.createTransport({
+    auth: smtpConfig.auth,
+    host: smtpConfig.host,
+    port: smtpConfig.port,
+    secure: smtpConfig.secure,
+  });
+
+  await transporter.sendMail({
+    from: smtpConfig.from,
+    html: options.html,
+    replyTo: options.replyTo,
+    subject: options.subject,
+    text: options.text,
+    to: options.toOverride || smtpConfig.to,
+  });
+
+  return { status: "sent", provider: "smtp" } as MailDispatchResult;
+}
+
 export async function sendContactNotification(
   payload: ContactSubmissionInput,
 ): Promise<MailDispatchResult> {
   const config = await getEffectiveMailConfig();
 
   if (await sendViaResend(payload, config)) {
-    return { status: "sent" };
+    return { provider: "resend", status: "sent" };
   }
 
-  const mailConfig = getSmtpConfig(config);
-
-  if (!mailConfig) {
-    return { status: "skipped" };
-  }
-
-  const transporter = nodemailer.createTransport({
-    auth: mailConfig.auth,
-    host: mailConfig.host,
-    port: mailConfig.port,
-    secure: mailConfig.secure,
-  });
-
-  await transporter.sendMail({
-    from: mailConfig.from,
+  return sendSimpleMail({
+    config,
     html: `
       <h2>Yêu cầu liên hệ mới từ website TAKO Vietnam</h2>
       <p><strong>Họ tên:</strong> ${payload.fullName}</p>
@@ -264,8 +310,21 @@ export async function sendContactNotification(
       "Nội dung:",
       payload.message,
     ].join("\n"),
-    to: mailConfig.to,
   });
+}
 
-  return { status: "sent" };
+export async function sendTestEmail(toOverride?: string): Promise<MailDispatchResult> {
+  const config = await getEffectiveMailConfig();
+
+  return sendSimpleMail({
+    config,
+    html: `
+      <h2>Test email từ bảng quản trị TAKO Vietnam</h2>
+      <p>Nếu bạn nhận được email này, cấu hình gửi mail đang hoạt động tốt.</p>
+      <p><strong>Thời gian:</strong> ${new Date().toISOString()}</p>
+    `,
+    subject: `[${siteMetadata.companyName}] Test email cấu hình`,
+    text: "Test email từ bảng quản trị TAKO Vietnam. Cấu hình gửi mail đang hoạt động tốt.",
+    toOverride,
+  });
 }

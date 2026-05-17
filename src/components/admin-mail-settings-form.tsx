@@ -17,8 +17,10 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
   const [smtpUser, setSmtpUser] = useState(initialSettings?.smtpUser || "");
   const [smtpPass, setSmtpPass] = useState(initialSettings?.smtpPass || "");
   const [smtpSecure, setSmtpSecure] = useState(Boolean(initialSettings?.smtpSecure));
+  const [testRecipient, setTestRecipient] = useState(initialSettings?.mailTo || "");
   const [feedback, setFeedback] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [isTesting, startTesting] = useTransition();
 
   function handleSave() {
     startTransition(async () => {
@@ -47,6 +49,26 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
       }
 
       setFeedback("Đã lưu cấu hình email vào MongoDB.");
+    });
+  }
+
+  function handleTestMail() {
+    startTesting(async () => {
+      const response = await fetch("/api/admin/settings/mail/test", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to: testRecipient }),
+      });
+
+      const payload = (await response.json()) as { message?: string };
+      if (!response.ok) {
+        setFeedback(payload.message || "Gửi email test thất bại.");
+        return;
+      }
+
+      setFeedback(payload.message || "Đã gửi email test.");
     });
   }
 
@@ -105,9 +127,23 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
         )}
       </div>
 
-      <div className="mt-4 flex items-center gap-3">
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <button type="button" onClick={handleSave} disabled={isPending} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60">
           {isPending ? "Đang lưu..." : "Lưu cài đặt"}
+        </button>
+        <input
+          value={testRecipient}
+          onChange={(event) => setTestRecipient(event.target.value)}
+          className="w-72 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+          placeholder="Email nhận test (mặc định MAIL_TO)"
+        />
+        <button
+          type="button"
+          onClick={handleTestMail}
+          disabled={isTesting}
+          className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 disabled:opacity-60"
+        >
+          {isTesting ? "Đang gửi test..." : "Gửi email test"}
         </button>
         {feedback ? <span className="text-sm text-gray-600">{feedback}</span> : null}
       </div>

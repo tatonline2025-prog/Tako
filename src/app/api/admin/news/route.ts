@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { hasAdminRole } from "@/lib/admin-auth";
+import { translateViToEn } from "@/lib/google-translate";
 import {
   deleteNewsArticle,
   listNewsArticles,
@@ -8,7 +9,7 @@ import {
 } from "@/lib/catalog-repository";
 
 const localizedTextSchema = z.object({
-  en: z.string().trim().min(1),
+  en: z.string().trim().optional().default(""),
   vi: z.string().trim().min(1),
 });
 
@@ -48,7 +49,26 @@ export async function POST(request: Request) {
     );
   }
 
-  await upsertNewsArticle(parsed.data);
+  const payload = parsed.data;
+  const titleEn = payload.title.en || (await translateViToEn(payload.title.vi)).text;
+  const excerptEn = payload.excerpt.en || (await translateViToEn(payload.excerpt.vi)).text;
+  const contentEn = payload.content.en || (await translateViToEn(payload.content.vi)).text;
+
+  await upsertNewsArticle({
+    ...payload,
+    content: {
+      en: contentEn,
+      vi: payload.content.vi,
+    },
+    excerpt: {
+      en: excerptEn,
+      vi: payload.excerpt.vi,
+    },
+    title: {
+      en: titleEn,
+      vi: payload.title.vi,
+    },
+  });
   return NextResponse.json({ message: "Đã lưu bài viết." });
 }
 
