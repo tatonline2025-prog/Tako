@@ -13,7 +13,9 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  return new Response(file.content, {
+  const body = new Uint8Array(file.content);
+
+  return new Response(body, {
     headers: {
       "Content-Type": file.mimeType || "application/pdf",
       "Content-Disposition": `inline; filename="${file.fileName}"`,
