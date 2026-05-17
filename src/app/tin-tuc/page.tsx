@@ -12,10 +12,9 @@ export default function NewsPage() {
     <div className="section-shell py-12 sm:py-16">
       <section className="space-y-4 pb-10">
         <span className="eyebrow">Tin tức</span>
-        <h1 className="section-title">Nội dung được thiết kế cho lãnh đạo phòng lab, khối R&amp;D và đơn vị lâm sàng</h1>
+        <h1 className="section-title">Cập nhật xu hướng công nghệ sinh học, chính sách và sự kiện từ TAKO Vietnam</h1>
         <p className="section-copy">
-          Giai đoạn demo tập trung vào khung tin tức để sau này có thể đăng bài viết
-          về xu hướng công nghệ sinh học, chính sách và sự kiện của TAKO Vietnam.
+          Theo dõi các bài viết về NGS, proteomics, chẩn đoán phân tử, sepsis và ứng dụng lâm sàng — dành cho lãnh đạo phòng lab, khối R&amp;D và đơn vị y tế.
         </p>
       </section>
 
@@ -33,9 +32,7 @@ export default function NewsPage() {
             <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
               {article.excerpt}
             </p>
-            <div className="mt-6 rounded-[1.5rem] border border-dashed border-[var(--color-line)] px-4 py-4 text-sm leading-7 text-[var(--color-muted)]">
-              Khung bài viết đã sẵn sàng để kết nối với hệ quản trị tin tức sau này.
-            </div>
+
           </article>
         ))}
       </div>

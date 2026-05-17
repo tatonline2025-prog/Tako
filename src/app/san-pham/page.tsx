@@ -21,9 +21,9 @@ export default async function ProductsPage() {
     <div className="section-shell py-12 sm:py-16">
       <section className="space-y-4 pb-10">
         <span className="eyebrow">{localizeText({ en: "Products / Solutions", vi: "Sản phẩm / Giải pháp" }, locale)}</span>
-        <h1 className="section-title">{localizeText({ en: "A catalog organized in tiered structure with ready-to-use search and filters", vi: "Danh mục được tổ chức theo cấu trúc cấp 1, cấp 2 và có sẵn công cụ filter tìm kiếm" }, locale)}</h1>
+        <h1 className="section-title">{localizeText({ en: "Product catalog organized by technology field, manufacturer and application", vi: "Danh mục sản phẩm được tổ chức theo lĩnh vực, hãng sản xuất và ứng dụng" }, locale)}</h1>
         <p className="section-copy">
-          {localizeText({ en: "Each product includes a short overview, detailed description, placeholder PDF, and quotation CTA. The structure is ready to connect with a real management system later.", vi: "Mỗi sản phẩm đều có mô tả ngắn, mô tả chi tiết, tài liệu PDF placeholder và nút liên hệ báo giá. Cấu trúc này sẵn sàng để kết nối với hệ quản trị thực tế sau này." }, locale)}
+          {localizeText({ en: "Each product includes technical overview, detailed description, downloadable documents, and a direct quotation request link.", vi: "Mỗi sản phẩm bao gồm mô tả kỹ thuật, tài liệu tải xuống và liên kết gửi yêu cầu báo giá trực tiếp." }, locale)}
         </p>
       </section>
 

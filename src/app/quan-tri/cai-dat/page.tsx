@@ -20,7 +20,7 @@ export default async function AdminSettingsPage() {
   const admin = await getAuthenticatedAdmin();
 
   if (!admin) {
-    redirect("/dang-nhap?redirectTo=/quan-tri/cai-dat");
+    redirect("/admin?redirectTo=/quan-tri/cai-dat");
   }
 
   const adminStatus = getAdminConfigurationStatus();
@@ -36,10 +36,9 @@ export default async function AdminSettingsPage() {
       <section className="flex flex-col gap-5 pb-10 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-4">
           <span className="eyebrow">Cấu hình hệ thống</span>
-          <h1 className="section-title">Theo dõi trạng thái môi trường, email và hướng dẫn triển khai</h1>
+          <h1 className="section-title">Trạng thái cấu hình hệ thống</h1>
           <p className="section-copy">
-            Trang này không ghi trực tiếp vào biến môi trường. Nó giúp bạn biết còn thiếu gì để cấu hình Gmail SMTP,
-            Resend và deploy ổn định trên Vercel.
+            Theo dõi kết nối database, cấu hình email và trạng thái triển khai.
           </p>
         </div>
 
@@ -51,7 +50,7 @@ export default async function AdminSettingsPage() {
             Xem danh sách liên hệ
           </Link>
           <form action="/api/admin/logout" method="post">
-            <input type="hidden" name="redirectTo" value="/dang-nhap" />
+            <input type="hidden" name="redirectTo" value="/admin" />
             <button
               type="submit"
               className="rounded-full border border-[var(--color-line)] bg-white px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"

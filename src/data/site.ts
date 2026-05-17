@@ -372,13 +372,13 @@ export const products: Product[] = [
     manufacturer: "GDSBio",
     applications: ["PCR", "qPCR", "Tách chiết"],
     shortDescription:
-      "Danh mục đang được bổ sung để đồng bộ hóa nguồn cung cấp sinh phẩm cơ bản cho phòng lab.",
+      "Enzyme Taq DNA Polymerase và bộ kit PCR chuyên dụng cho sinh học phân tử thường quy.",
     description:
-      "Danh mục sinh phẩm cơ bản được giữ sẵn cấu trúc để cập nhật thêm thông tin sản phẩm, thông số và tài liệu khi dữ liệu catalog chính thức được cung cấp. Giai đoạn demo tập trung vào khả năng phân loại và tìm kiếm.",
+      "GDSBio cung cấp enzyme Taq DNA Polymerase chất lượng cao và các bộ kit PCR được thiết kế cho chẩn đoán lâm sàng và nghiên cứu thường quy. Danh mục bao gồm enzyme thường và enzyme hot-start, buffer tối ưu và kit ready-to-use.",
     highlights: [
-      "Sẵn sàng để bổ sung theo catalog thực tế",
-      "Phù hợp cho workflow sinh học phân tử cơ bản",
-      "Cho phép mở rộng nhanh khi có thêm dữ liệu",
+      "Enzyme độ nhạy cao, ít nhiễu nền",
+      "Có lựa chọn hot-start cho PCR đặc hiệu",
+      "Kit ready-to-use, dễ chuẩn hóa quy trình",
     ],
     imageLabel: "Basic Reagents",
     imageTone: "from-slate-500 to-sky-300",
@@ -405,6 +405,119 @@ export const products: Product[] = [
     imageLabel: "Consumables",
     imageTone: "from-zinc-600 to-sky-400",
     pdfPath: "/api/catalog/lab-consumables",
+    featured: false,
+  },
+  // --- Additional proteomics products ---
+  {
+    slug: "quantum-si-chip-cartridge",
+    name: "Chip Platinum® & Cartridge Kit",
+    category: "proteomics",
+    categoryName: "Proteomics",
+    subcategory: "Vật tư tiêu hao Platinum®",
+    manufacturer: "Quantum-Si",
+    applications: ["Proteomics", "Protein sequencing", "PTM"],
+    shortDescription:
+      "Chip bán dẫn và cartridge kit chính hãng cho hệ thống Platinum® Pro, đảm bảo kết quả phân tích protein chính xác.",
+    description:
+      "Chip Platinum® của Quantum-Si là thành phần cốt lõi cho giải trình tự protein đơn phân tử. Mỗi chip được thiết kế để chạy hàng triệu phân tử cùng lúc, cung cấp tín hiệu đơn phân tử thực sự. Cartridge kit đi kèm giúp chuẩn bị mẫu và tải mẫu lên chip một cách ổn định và nhất quán.",
+    highlights: [
+      "Chip tích hợp hàng triệu lỗ nanophotonic",
+      "Cartridge giúp tải mẫu ổn định",
+      "Chính hãng Quantum-Si, bảo đảm chất lượng",
+    ],
+    imageLabel: "Platinum Chip",
+    imageTone: "from-sky-400 to-teal-300",
+    pdfPath: "/api/catalog/quantum-si-chip-cartridge",
+    featured: false,
+  },
+  {
+    slug: "proteomics-sample-prep-kit",
+    name: "Kit chuẩn bị mẫu Proteomics",
+    category: "proteomics",
+    categoryName: "Proteomics",
+    subcategory: "Chuẩn bị mẫu",
+    manufacturer: "Quantum-Si",
+    applications: ["Proteomics", "Sample prep", "Drug discovery"],
+    shortDescription:
+      "Bộ kit tách chiết và chuẩn bị mẫu protein tối ưu cho hệ thống giải trình tự Platinum® Pro.",
+    description:
+      "Bộ kit chuẩn bị mẫu của Quantum-Si giúp tách chiết và làm sạch protein từ các loại mẫu sinh học khác nhau, bao gồm mô, tế bào và dịch sinh học. Quy trình được tối ưu cho hệ Platinum® Pro, giảm tối thiểu nhiễu nền và tối đa hóa hiệu suất đọc protein.",
+    highlights: [
+      "Tương thích tối ưu với Platinum® Pro",
+      "Đa dạng loại mẫu đầu vào",
+      "Quy trình chuẩn hóa, tái lập được",
+    ],
+    imageLabel: "Proteomics Prep",
+    imageTone: "from-teal-500 to-cyan-300",
+    pdfPath: "/api/catalog/proteomics-sample-prep-kit",
+    featured: false,
+  },
+  // --- Additional sinh-pham-co-ban products ---
+  {
+    slug: "rna-extraction-kit",
+    name: "Kit tách chiết RNA",
+    category: "sinh-pham-co-ban",
+    categoryName: "Sinh phẩm cơ bản",
+    subcategory: "Kit tách chiết",
+    manufacturer: "GDSBio",
+    applications: ["Tách chiết RNA", "qRT-PCR", "Nghiên cứu"],
+    shortDescription:
+      "Kit tách chiết RNA tổng số từ máu, mô và tế bào, hiệu suất cao và ổn định.",
+    description:
+      "GDSBio RNA Extraction Kit cung cấp quy trình nhanh và ổn định để tách chiết RNA tổng số từ nhiều loại mẫu sinh học. Sản phẩm sử dụng nguyên lý cột silica kết hợp đệm ức chế RNase, cho sản phẩm RNA toàn vẹn phù hợp cho qRT-PCR, sequencing và các ứng dụng nghiên cứu biểu hiện gen.",
+    highlights: [
+      "RNA toàn vẹn, OD 260/280 ổn định",
+      "Phù hợp mẫu máu, mô, tế bào nuôi",
+      "Không cần phenol/chloroform, an toàn hơn",
+    ],
+    imageLabel: "RNA Extraction",
+    imageTone: "from-emerald-500 to-cyan-400",
+    pdfPath: "/api/catalog/rna-extraction-kit",
+    featured: false,
+  },
+  // --- Additional khac products ---
+  {
+    slug: "pcr-tubes-tips",
+    name: "Ống PCR và đầu côn",
+    category: "khac",
+    categoryName: "Khác",
+    subcategory: "Vật tư tiêu hao",
+    manufacturer: "Đa hãng",
+    applications: ["PCR", "Phòng lab", "Vật tư tiêu hao"],
+    shortDescription:
+      "Ống PCR 0.2ml, đầu côn các cỡ có và không lọc, phù hợp cho nhiều dòng máy PCR và pipette phổ biến.",
+    description:
+      "TAKO Vietnam cung cấp ống PCR và đầu côn chất lượng từ các nhà cung cấp uy tín, bao gồm ống strip 8 và 12, ống đơn 0.2ml, đầu côn 10µl/200µl/1000µl có lọc và không lọc. Sản phẩm DNase/RNase-free, tương thích với các dòng máy và pipette phổ biến trên thị trường.",
+    highlights: [
+      "DNase/RNase-free, không nhiễm DNA/RNA ngoại lai",
+      "Tương thích nhiều dòng máy PCR và pipette",
+      "Có lựa chọn đầu côn có lọc cho thao tác nhạy cảm",
+    ],
+    imageLabel: "PCR Tubes & Tips",
+    imageTone: "from-slate-400 to-sky-300",
+    pdfPath: "/api/catalog/pcr-tubes-tips",
+    featured: false,
+  },
+  {
+    slug: "ppe-lab-safety",
+    name: "Vật tư bảo hộ phòng lab",
+    category: "khac",
+    categoryName: "Khác",
+    subcategory: "Vật tư bảo hộ",
+    manufacturer: "Đa hãng",
+    applications: ["An toàn phòng lab", "Vật tư tiêu hao"],
+    shortDescription:
+      "Găng tay nitrile, khẩu trang, kính bảo hộ và vật tư bảo hộ cá nhân cho phòng thí nghiệm.",
+    description:
+      "TAKO Vietnam cung cấp vật tư bảo hộ cá nhân (PPE) cho phòng thí nghiệm, bao gồm găng tay nitrile không bột, khẩu trang y tế và N95, kính bảo hộ và áo blouse. Sản phẩm đáp ứng tiêu chuẩn an toàn sinh học cho phòng lab cấp độ BSL-1 và BSL-2.",
+    highlights: [
+      "Đáp ứng tiêu chuẩn BSL-1 và BSL-2",
+      "Găng tay nitrile không bột, ít gây dị ứng",
+      "Đa dạng kích cỡ và số lượng đặt hàng",
+    ],
+    imageLabel: "Lab Safety",
+    imageTone: "from-amber-500 to-orange-300",
+    pdfPath: "/api/catalog/ppe-lab-safety",
     featured: false,
   },
 ];

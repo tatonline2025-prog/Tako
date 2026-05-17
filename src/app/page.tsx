@@ -48,18 +48,62 @@ const homeCopy = {
     vi: "Xem tất cả bài viết",
   },
   solutionSystem: {
-    en: "A platform shaped to present a manageable, searchable product system",
-    vi: "Nền tảng được xây dựng để gợi mở một hệ thống sản phẩm dễ quản trị và dễ tra cứu",
+    en: "Enabling effective management and precise product discovery for B2B biotech buyers",
+    vi: "Hỗ trợ quản lý hiệu quả và tra cứu sản phẩm chính xác cho khách hàng B2B công nghệ sinh học",
+  },
+  devDirection: {
+    en: "Development direction",
+    vi: "Định hướng phát triển",
+  },
+  viewAllCatalog: {
+    en: "View full catalog",
+    vi: "Xem toàn bộ danh mục",
+  },
+  featuredProductsTitle: {
+    en: "Highlighted solutions presented in technical catalog format",
+    vi: "Các giải pháp nổi bật được trình bày theo catalog kỹ thuật",
+  },
+  partnersTitle: {
+    en: "A partner network suited for both clinical and research settings",
+    vi: "Mạng lưới đối tác phù hợp với cả lâm sàng và nghiên cứu",
+  },
+  newsTitle: {
+    en: "Content for lab leaders, hospitals and R&D units",
+    vi: "Nội dung dành cho lãnh đạo phòng lab, bệnh viện và đơn vị R&D",
+  },
+  heroLabel: {
+    en: "Core capabilities",
+    vi: "Năng lực cốt lõi",
+  },
+  heroPartner: {
+    en: "Partnering with",
+    vi: "Đồng hành cùng",
+  },
+  heroPartnerDesc: {
+    en: "Labs, hospitals and research centers",
+    vi: "Phòng xét nghiệm, bệnh viện và trung tâm nghiên cứu",
+  },
+  heroDesc: {
+    en: "Our catalog-first approach focuses on technical descriptions, downloadable documents, and direct quote requests — built for B2B biotech procurement.",
+    vi: "Hướng tiếp cận tập trung vào mô tả kỹ thuật, tài liệu tải xuống và liên hệ báo giá — xây dựng cho mua sắm B2B công nghệ sinh học.",
+  },
+  viewDetail: {
+    en: "View detail",
+    vi: "Xem chi tiết",
+  },
+  requestQuote: {
+    en: "Request quote",
+    vi: "Báo giá",
   },
   stats: {
     en: [
       ["05", "Core solution groups"],
-      ["10+", "Demo catalog items"],
+      ["10+", "Featured products"],
       ["08", "Key manufacturing partners"],
     ],
     vi: [
       ["05", "Nhóm giải pháp chính"],
-      ["10+", "Danh mục sản phẩm demo"],
+      ["10+", "Sản phẩm tiêu biểu"],
       ["08", "Hãng đối tác tiêu biểu"],
     ],
   },
@@ -125,19 +169,19 @@ export default async function Home() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(70,184,245,0.28),_transparent_46%),linear-gradient(160deg,_rgba(13,45,98,0.98),_rgba(22,92,187,0.92))]" />
             <div className="relative z-10 grid gap-6 text-white">
               <div className="flex items-center justify-between text-sm uppercase tracking-[0.24em] text-white/74">
-                <span>Năng lực cốt lõi</span>
+                <span>{localizeText(homeCopy.heroLabel, locale)}</span>
                 <span>Since 2025</span>
               </div>
 
               <div className="rounded-[1.75rem] border border-white/14 bg-white/10 p-6 backdrop-blur">
                 <div className="text-sm uppercase tracking-[0.2em] text-white/70">
-                  Đồng hành cùng
+                  {localizeText(homeCopy.heroPartner, locale)}
                 </div>
                 <div className="mt-3 font-[family:var(--font-display)] text-3xl font-semibold">
-                  Phòng xét nghiệm, bệnh viện và trung tâm nghiên cứu
+                  {localizeText(homeCopy.heroPartnerDesc, locale)}
                 </div>
                 <p className="mt-4 text-sm leading-7 text-white/80">
-                  Hướng tiếp cận tập trung vào giao diện catalog, mô tả kỹ thuật, tài liệu PDF và liên hệ báo giá thay vì mô hình thương mại điện tử.
+                  {localizeText(homeCopy.heroDesc, locale)}
                 </p>
               </div>
 
@@ -159,7 +203,7 @@ export default async function Home() {
       <section className="section-shell pb-16">
         <div className="panel grid gap-8 px-6 py-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
           <div className="space-y-4">
-            <span className="eyebrow">Định hướng phát triển</span>
+            <span className="eyebrow">{localizeText(homeCopy.devDirection, locale)}</span>
             <h2 className="section-title">{localizeText(homeCopy.solutionSystem, locale)}</h2>
           </div>
           <div className="grid gap-4">
@@ -182,7 +226,7 @@ export default async function Home() {
             <h2 className="section-title">{localizeText(homeCopy.workflows, locale)}</h2>
           </div>
           <Link href="/san-pham" className="text-sm font-semibold text-[var(--color-primary)]">
-            Xem toàn bộ danh mục
+            {localizeText(homeCopy.viewAllCatalog, locale)}
           </Link>
         </div>
 
@@ -214,7 +258,7 @@ export default async function Home() {
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.featuredProducts, locale)}</span>
-            <h2 className="section-title">4-6 giải pháp được trình bày theo mô hình catalog kỹ thuật</h2>
+            <h2 className="section-title">{localizeText(homeCopy.featuredProductsTitle, locale)}</h2>
           </div>
         </div>
 
@@ -246,13 +290,13 @@ export default async function Home() {
                     href={`/san-pham/${product.slug}`}
                     className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white"
                   >
-                    Xem chi tiết
+                    {localizeText(homeCopy.viewDetail, locale)}
                   </Link>
                   <Link
                     href={`/lien-he?interest=${product.slug}`}
                     className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
                   >
-                    Báo giá
+                    {localizeText(homeCopy.requestQuote, locale)}
                   </Link>
                 </div>
               </div>
@@ -266,7 +310,7 @@ export default async function Home() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-4">
               <span className="eyebrow">{localizeText(homeCopy.partners, locale)}</span>
-              <h2 className="section-title">Mạng lưới đối tác phù hợp với cả lâm sàng và nghiên cứu</h2>
+              <h2 className="section-title">{localizeText(homeCopy.partnersTitle, locale)}</h2>
             </div>
             <div className="grid gap-3 text-sm font-semibold text-[var(--color-muted)] sm:grid-cols-4">
               {partnerManufacturers.map((partner) => (
@@ -286,7 +330,7 @@ export default async function Home() {
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.featuredNews, locale)}</span>
-            <h2 className="section-title">Nội dung dành cho lãnh đạo phòng lab, bệnh viện và đơn vị R&amp;D</h2>
+            <h2 className="section-title">{localizeText(homeCopy.newsTitle, locale)}</h2>
           </div>
           <Link href="/tin-tuc" className="text-sm font-semibold text-[var(--color-primary)]">
             {localizeText(homeCopy.readAllNews, locale)}

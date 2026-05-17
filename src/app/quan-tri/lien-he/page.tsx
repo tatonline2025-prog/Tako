@@ -16,7 +16,7 @@ export default async function AdminContactsPage() {
   const admin = await getAuthenticatedAdmin();
 
   if (!admin) {
-    redirect("/dang-nhap?redirectTo=/quan-tri/lien-he");
+    redirect("/admin?redirectTo=/quan-tri/lien-he");
   }
 
   const contacts = await listContacts();
@@ -25,8 +25,8 @@ export default async function AdminContactsPage() {
     <div className="section-shell py-12 sm:py-16">
       <section className="flex flex-col gap-5 pb-10 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-4">
-          <span className="eyebrow">Quản trị demo</span>
-          <h1 className="section-title">Danh sách liên hệ đã lưu vào database</h1>
+          <span className="eyebrow">Quản trị</span>
+          <h1 className="section-title">Danh sách liên hệ</h1>
           <p className="section-copy">
             Khu vực này đã được bảo vệ bằng đăng nhập quản trị và chỉ hiển thị cho phiên đã xác thực.
           </p>
@@ -40,7 +40,7 @@ export default async function AdminContactsPage() {
             Cài đặt hệ thống
           </Link>
           <form action="/api/admin/logout" method="post">
-            <input type="hidden" name="redirectTo" value="/dang-nhap" />
+            <input type="hidden" name="redirectTo" value="/admin" />
             <button
               type="submit"
               className="rounded-full border border-[var(--color-line)] bg-white px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"

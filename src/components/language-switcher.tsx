@@ -9,9 +9,9 @@ type LanguageSwitcherProps = {
   label: string;
 };
 
-const options: Array<{ locale: Locale; flag: string; label: string }> = [
-  { locale: "vi", flag: "🇻🇳", label: "Tiếng Việt" },
-  { locale: "en", flag: "🇬🇧", label: "English" },
+const options: Array<{ locale: Locale; flag: string; text: string; label: string }> = [
+  { locale: "vi", flag: "🇻🇳", text: "VI", label: "Tiếng Việt" },
+  { locale: "en", flag: "🇺🇸", text: "EN", label: "English" },
 ];
 
 export function LanguageSwitcher({
@@ -55,13 +55,14 @@ export function LanguageSwitcher({
             aria-pressed={isActive}
             aria-label={option.label}
             title={option.label}
-            className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-base transition ${
+            className={`inline-flex h-8 items-center justify-center gap-1 rounded-full px-2.5 text-xs font-semibold tracking-wide transition ${
               isActive
-                ? "bg-[var(--color-primary)] shadow-sm"
-                : "hover:bg-[rgba(13,78,166,0.08)]"
+                ? "bg-[var(--color-primary)] text-white shadow-sm"
+                : "text-[var(--color-muted)] hover:bg-[rgba(13,78,166,0.08)] hover:text-[var(--color-ink)]"
             } disabled:cursor-default`}
           >
-            <span>{option.flag}</span>
+            <span className="text-sm leading-none">{option.flag}</span>
+            <span>{option.text}</span>
           </button>
         );
       })}

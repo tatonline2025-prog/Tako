@@ -76,14 +76,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
             defaultInterest={defaultInterest}
             locale={locale}
           />
-          <div className="panel px-6 py-5 text-sm leading-7 text-[var(--color-muted)] lg:px-8">
-            {localizeText({ en: "This demo already stores contacts in MongoDB and protects the internal view with admin login.", vi: "Bản demo đã lưu liên hệ vào MongoDB và bảo vệ khu vực xem dữ liệu bằng đăng nhập quản trị." }, locale)}
-            <span className="font-semibold text-[var(--color-ink)]"> /dang-nhap</span>
-            {localizeText({ en: " to access ", vi: " để vào " }, locale)}
-            <span className="font-semibold text-[var(--color-ink)]">/quan-tri/lien-he</span>
-            {localizeText({ en: " and ", vi: " và " }, locale)}
-            <span className="font-semibold text-[var(--color-ink)]">/quan-tri/cai-dat</span>.
-          </div>
+
         </div>
       </section>
     </div>

@@ -10,8 +10,8 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   const formData = await request.formData();
   const redirectTo = normalizeRedirectPath(
-    String(formData.get("redirectTo") || "/dang-nhap"),
-    "/dang-nhap",
+    String(formData.get("redirectTo") || "/admin"),
+    "/admin",
   );
   const response = NextResponse.redirect(new URL(redirectTo, request.url), 303);
 

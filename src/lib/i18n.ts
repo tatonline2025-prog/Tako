@@ -21,7 +21,7 @@ export const chromeCopy = {
   },
   footerDescription: {
     en: "A B2B catalog website for biotechnology equipment, reagents, consumables, molecular biomedicine, and clinical diagnostics solutions.",
-    vi: "Website demo định hướng catalog B2B cho thiết bị, sinh phẩm, vật tư tiêu hao và giải pháp công nghệ sinh học, y sinh phân tử, chẩn đoán lâm sàng.",
+    vi: "Danh mục B2B cho thiết bị, sinh phẩm, vật tư tiêu hao và giải pháp công nghệ sinh học, y sinh phân tử, chẩn đoán lâm sàng.",
   },
   language: {
     en: "Language",
