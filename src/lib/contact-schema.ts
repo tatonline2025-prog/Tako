@@ -4,7 +4,7 @@ import { categories, products } from "@/data/site";
 export const contactInterestOptions = Array.from(
   new Set([
     ...categories.map((category) => category.name),
-    ...products.map((product) => product.name),
+    ...products.map((product) => product.name.vi),
   ]),
 );
 
