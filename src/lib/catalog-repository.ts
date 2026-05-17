@@ -304,7 +304,8 @@ export async function listProductFilterOptions(): Promise<{ manufacturers: strin
 export async function getProductCount(): Promise<number> {
   try {
     const collection = await getProductsCollection();
-    return await collection.countDocuments();
+    const count = await collection.countDocuments();
+    return count === 0 ? staticProducts.length : count;
   } catch {
     return staticProducts.length;
   }
@@ -415,7 +416,8 @@ export async function listNewsArticlesPage(page = 1, pageSize = 10): Promise<Pag
 export async function getNewsCount(): Promise<number> {
   try {
     const collection = await getNewsCollection();
-    return await collection.countDocuments();
+    const count = await collection.countDocuments();
+    return count === 0 ? staticNewsArticles.length : count;
   } catch {
     return staticNewsArticles.length;
   }
