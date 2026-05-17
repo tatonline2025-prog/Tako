@@ -13,6 +13,7 @@ const localizedTextSchema = z.object({
 });
 
 const newsSchema = z.object({
+  content: localizedTextSchema,
   date: z.string().trim().min(1),
   excerpt: localizedTextSchema,
   slug: z.string().trim().min(1),

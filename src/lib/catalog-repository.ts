@@ -18,6 +18,14 @@ type NewsDocument = NewsArticle & {
   updatedAt: Date;
 };
 
+function normalizeNewsArticle(article: NewsArticle): NewsArticle {
+  return {
+    ...article,
+    content: article.content || article.excerpt,
+    excerpt: article.excerpt || article.content || { en: "", vi: "" },
+  };
+}
+
 function getStaticCategoryName(categorySlug: string) {
   return categories.find((item) => item.slug === categorySlug)?.name || categorySlug;
 }
@@ -64,9 +72,12 @@ export async function listProducts(): Promise<Product[]> {
       return staticProducts.map(normalizeProduct);
     }
 
-    return records.map(({ _id: _unused, updatedAt: _ignored, ...product }) =>
-      normalizeProduct(product),
-    );
+    return records.map((record) => {
+      const { _id, updatedAt, ...product } = record;
+      void _id;
+      void updatedAt;
+      return normalizeProduct(product);
+    });
   } catch {
     return staticProducts.map(normalizeProduct);
   }
@@ -78,7 +89,9 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     const record = await collection.findOne({ slug });
 
     if (record) {
-      const { _id: _unused, updatedAt: _ignored, ...product } = record;
+      const { _id, updatedAt, ...product } = record;
+      void _id;
+      void updatedAt;
       return normalizeProduct(product);
     }
   } catch {
@@ -100,13 +113,37 @@ export async function listNewsArticles(): Promise<NewsArticle[]> {
     const records = await collection.find({}, { sort: { date: -1, updatedAt: -1 } }).toArray();
 
     if (records.length === 0) {
-      return staticNewsArticles;
+      return staticNewsArticles.map(normalizeNewsArticle);
     }
 
-    return records.map(({ _id: _unused, updatedAt: _ignored, ...article }) => article);
+    return records.map((record) => {
+      const { _id, updatedAt, ...article } = record;
+      void _id;
+      void updatedAt;
+      return normalizeNewsArticle(article);
+    });
   } catch {
-    return staticNewsArticles;
+    return staticNewsArticles.map(normalizeNewsArticle);
   }
+}
+
+export async function getNewsArticleBySlug(slug: string): Promise<NewsArticle | null> {
+  try {
+    const collection = await getNewsCollection();
+    const record = await collection.findOne({ slug });
+
+    if (record) {
+      const { _id, updatedAt, ...article } = record;
+      void _id;
+      void updatedAt;
+      return normalizeNewsArticle(article);
+    }
+  } catch {
+    // Fall through to static data.
+  }
+
+  const fallback = staticNewsArticles.find((item) => item.slug === slug);
+  return fallback ? normalizeNewsArticle(fallback) : null;
 }
 
 export async function upsertProduct(payload: Product) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { type ChangeEvent, useEffect, useId, useRef, useState } from "react";
 
 type RichTextEditorProps = {
   label: string;
@@ -43,6 +43,8 @@ export function RichTextEditor({
 }: RichTextEditorProps) {
   const editorId = useId();
   const editorRef = useRef<HTMLDivElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
     const editor = editorRef.current;
@@ -66,7 +68,49 @@ export function RichTextEditor({
       return;
     }
 
+    setFeedback("");
     applyCommand("insertImage", url.trim());
+  }
+
+  function triggerFilePicker() {
+    fileInputRef.current?.click();
+  }
+
+  function onImageFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file || !editorRef.current) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      setFeedback("Bạn chọn file ảnh giúp mình nhé.");
+      event.target.value = "";
+      return;
+    }
+
+    const maxBytes = 3 * 1024 * 1024;
+    if (file.size > maxBytes) {
+      setFeedback("Ảnh đang lớn hơn 3MB, bạn chọn ảnh nhỏ hơn để tải nhanh hơn.");
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = typeof reader.result === "string" ? reader.result : "";
+      if (!dataUrl) {
+        setFeedback("Chưa đọc được file ảnh, bạn thử lại giúp mình.");
+        return;
+      }
+
+      setFeedback("");
+      applyCommand("insertImage", dataUrl);
+    };
+    reader.onerror = () => {
+      setFeedback("Có lỗi khi tải ảnh lên editor, bạn thử lại nhé.");
+    };
+    reader.readAsDataURL(file);
+    event.target.value = "";
   }
 
   function onInput() {
@@ -95,9 +139,23 @@ export function RichTextEditor({
           onClick={insertImage}
           className="rounded-lg border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-700"
         >
-          Ảnh
+          URL ảnh
+        </button>
+        <button
+          type="button"
+          onClick={triggerFilePicker}
+          className="rounded-lg border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-700"
+        >
+          Tải ảnh
         </button>
       </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={onImageFileChange}
+      />
       <div
         id={editorId}
         ref={editorRef}
@@ -107,6 +165,7 @@ export function RichTextEditor({
         className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm leading-7 text-gray-800 outline-none focus:border-blue-400"
         style={{ minHeight }}
       />
+      {feedback ? <p className="text-xs text-amber-700">{feedback}</p> : null}
     </div>
   );
 }

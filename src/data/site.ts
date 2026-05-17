@@ -33,6 +33,7 @@ export type NewsArticle = {
   slug: string;
   title: { en: string; vi: string };
   excerpt: { en: string; vi: string };
+  content: { en: string; vi: string };
   date: string;
   tag: string;
 };
@@ -622,6 +623,10 @@ export const newsArticles: NewsArticle[] = [
       en: "From protein sequencing to PTM analysis, new platforms are expanding biomarker discovery for precision medicine.",
       vi: "Từ sequencing protein đến PTM, các nền tảng mới đang mở rộng khả năng phát hiện biomarker cho y học chính xác.",
     },
+    content: {
+      en: "<p>Single-molecule proteomics is opening a new direction for translational medicine. Instead of observing only gene-level signals, laboratories can now directly profile proteins and post-translational modifications.</p><p>With platforms like Quantum-Si, biomarker discovery can move faster, while sample consumption remains manageable for routine workflows.</p><p>This trend is especially relevant for oncology and immunology programs that require high-resolution protein signatures.</p>",
+      vi: "<p>Proteomics đơn phân tử đang mở ra hướng đi mới cho y học chuyển giao. Thay vì chỉ quan sát tín hiệu ở mức gene, phòng lab có thể đi thẳng vào phân tích protein và các biến đổi sau dịch mã.</p><p>Với các nền tảng như Quantum-Si, tốc độ phát hiện biomarker được cải thiện rõ rệt mà vẫn giữ mức tiêu thụ mẫu phù hợp cho workflow thực tế.</p><p>Xu hướng này đặc biệt phù hợp cho các chương trình ung thư và miễn dịch học cần dữ liệu protein độ phân giải cao.</p>",
+    },
     date: "2026-05-10",
     tag: "Proteomics",
   },
@@ -635,6 +640,10 @@ export const newsArticles: NewsArticle[] = [
       en: "Clinical pressure is accelerating demand for automation, panel standardization and integration of data analysis with targeted therapy.",
       vi: "Áp lực từ lâm sàng đang đẩy nhanh nhu cầu tự động hóa, chuẩn hóa panel và gắn kết phân tích dữ liệu với điều trị đích.",
     },
+    content: {
+      en: "<p>As NGS enters routine oncology diagnostics, laboratories face three key demands: reproducible sensitivity, practical panel scope, and stable throughput.</p><p>Automated library preparation and standardized interpretation pipelines are becoming central to reducing turnaround time and improving consistency.</p><p>Hospitals are also prioritizing workflows where genomic results can be linked directly to treatment boards and targeted therapy decisions.</p>",
+      vi: "<p>Khi NGS đi vào chẩn đoán ung thư thường quy, phòng xét nghiệm phải đáp ứng đồng thời ba yêu cầu: độ nhạy ổn định, phạm vi panel phù hợp và năng lực xử lý mẫu đều đặn.</p><p>Tự động hóa bước chuẩn bị thư viện cùng pipeline phân tích chuẩn hóa đang trở thành điểm then chốt để rút ngắn thời gian trả kết quả.</p><p>Nhiều bệnh viện cũng ưu tiên mô hình workflow giúp kết quả genomics kết nối trực tiếp với hội chẩn và quyết định điều trị đích.</p>",
+    },
     date: "2026-05-06",
     tag: "NGS",
   },
@@ -647,6 +656,10 @@ export const newsArticles: NewsArticle[] = [
     excerpt: {
       en: "Rapid identification of pathogens and antimicrobial resistance data are variables that can reshape early treatment protocols.",
       vi: "Chẩn đoán nhanh tác nhân gây bệnh và thông tin kháng kháng sinh là biến số có thể thay đổi phác đồ điều trị sớm.",
+    },
+    content: {
+      en: "<p>In sepsis care, each hour can affect outcomes. Rapid molecular diagnostics from whole blood are helping clinicians move from empirical treatment to informed antimicrobial choices earlier.</p><p>Beyond speed, the key value lies in combining pathogen identity with resistance signals to support safer escalation or de-escalation strategies.</p><p>For hospitals, this means reduced uncertainty in critical windows and better alignment between laboratory data and ICU decisions.</p>",
+      vi: "<p>Trong điều trị sepsis, mỗi giờ đều có thể ảnh hưởng đến tiên lượng. Chẩn đoán phân tử nhanh từ máu toàn phần đang giúp bác sĩ chuyển từ điều trị kinh nghiệm sang lựa chọn kháng sinh có cơ sở sớm hơn.</p><p>Giá trị cốt lõi không chỉ nằm ở tốc độ mà còn ở khả năng kết hợp định danh tác nhân với tín hiệu kháng thuốc để hỗ trợ chiến lược tăng hoặc giảm bậc điều trị an toàn hơn.</p><p>Với bệnh viện, điều này giúp giảm độ bất định trong giai đoạn nguy kịch và đồng bộ tốt hơn giữa dữ liệu phòng xét nghiệm với quyết định tại ICU.</p>",
     },
     date: "2026-04-30",
     tag: "Truyền nhiễm",

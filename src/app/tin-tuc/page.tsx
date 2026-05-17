@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { RichContent } from "@/components/rich-content";
 import { listNewsArticles } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
@@ -18,6 +19,10 @@ const pageCopy = {
   subhead: {
     en: "Articles on NGS, proteomics, molecular diagnostics, sepsis and clinical applications — for lab directors, R&D teams and healthcare organizations.",
     vi: "Theo dõi các bài viết về NGS, proteomics, chẩn đoán phân tử, sepsis và ứng dụng lâm sàng — dành cho lãnh đạo phòng lab, khối R&D và đơn vị y tế.",
+  },
+  readMore: {
+    en: "Read full article",
+    vi: "Đọc toàn bộ bài viết",
   },
 };
 
@@ -48,6 +53,12 @@ export default async function NewsPage() {
               html={localizeText(article.excerpt, locale)}
               className="mt-4 text-sm text-[var(--color-muted)]"
             />
+            <Link
+              href={`/tin-tuc/${article.slug}`}
+              className="mt-4 inline-flex rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+            >
+              {localizeText(pageCopy.readMore, locale)}
+            </Link>
           </article>
         ))}
       </div>

@@ -10,8 +10,16 @@ type AdminNewsManagerProps = {
 
 type LocaleField = "vi" | "en";
 
+function normalizeArticle(article: NewsArticle): NewsArticle {
+  return {
+    ...article,
+    content: article.content || article.excerpt,
+  };
+}
+
 function templateArticle(): NewsArticle {
   return {
+    content: { en: "", vi: "" },
     date: new Date().toISOString().slice(0, 10),
     excerpt: { en: "", vi: "" },
     slug: "new-article",
@@ -21,16 +29,18 @@ function templateArticle(): NewsArticle {
 }
 
 export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
-  const [articles, setArticles] = useState(initialArticles);
+  const [articles, setArticles] = useState(initialArticles.map(normalizeArticle));
   const [selectedSlug, setSelectedSlug] = useState(initialArticles[0]?.slug || "");
-  const [draft, setDraft] = useState<NewsArticle>(initialArticles[0] || templateArticle());
+  const [draft, setDraft] = useState<NewsArticle>(
+    normalizeArticle(initialArticles[0] || templateArticle()),
+  );
   const [activeLocale, setActiveLocale] = useState<LocaleField>("vi");
   const [feedback, setFeedback] = useState("");
   const [isPending, startTransition] = useTransition();
 
   function openArticle(article: NewsArticle) {
     setSelectedSlug(article.slug);
-    setDraft(article);
+    setDraft(normalizeArticle(article));
     setFeedback("");
   }
 
@@ -44,7 +54,7 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
     setDraft((current) => ({ ...current, [field]: value }));
   }
 
-  function updateLocalized(field: "title" | "excerpt", locale: LocaleField, value: string) {
+  function updateLocalized(field: "title" | "excerpt" | "content", locale: LocaleField, value: string) {
     setDraft((current) => ({
       ...current,
       [field]: {
@@ -56,8 +66,9 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
 
   function saveArticle() {
     startTransition(async () => {
+      const normalizedDraft = normalizeArticle(draft);
       const response = await fetch("/api/admin/news", {
-        body: JSON.stringify(draft),
+        body: JSON.stringify(normalizedDraft),
         headers: {
           "Content-Type": "application/json",
         },
@@ -71,13 +82,14 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
         return;
       }
 
-      const exists = articles.some((item) => item.slug === draft.slug);
+      const exists = articles.some((item) => item.slug === normalizedDraft.slug);
       const next = exists
-        ? articles.map((item) => (item.slug === draft.slug ? draft : item))
-        : [draft, ...articles];
+        ? articles.map((item) => (item.slug === normalizedDraft.slug ? normalizedDraft : item))
+        : [normalizedDraft, ...articles];
 
       setArticles(next);
-      setSelectedSlug(draft.slug);
+      setSelectedSlug(normalizedDraft.slug);
+      setDraft(normalizedDraft);
       setFeedback("Đã lưu bài viết.");
     });
   }
@@ -223,7 +235,14 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
             label={`Tóm tắt bài viết (${activeLocale.toUpperCase()})`}
             value={draft.excerpt[activeLocale]}
             onChange={(next) => updateLocalized("excerpt", activeLocale, next)}
-            minHeight={260}
+            minHeight={170}
+          />
+
+          <RichTextEditor
+            label={`Nội dung đầy đủ (${activeLocale.toUpperCase()})`}
+            value={draft.content[activeLocale]}
+            onChange={(next) => updateLocalized("content", activeLocale, next)}
+            minHeight={320}
           />
         </div>
 

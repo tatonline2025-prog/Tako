@@ -1,10 +1,15 @@
 import type { MetadataRoute } from "next";
-import { navigationItems, products } from "@/data/site";
+import { navigationItems } from "@/data/site";
+import { listNewsArticles, listProducts } from "@/lib/catalog-repository";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const [products, newsArticles] = await Promise.all([
+    listProducts(),
+    listNewsArticles(),
+  ]);
   const staticRoutes = navigationItems.map((item) => ({
     url: `${baseUrl}${item.href}`,
     lastModified: now,
@@ -13,6 +18,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}/san-pham/${product.slug}`,
     lastModified: now,
   }));
+  const newsRoutes = newsArticles.map((article) => ({
+    url: `${baseUrl}/tin-tuc/${article.slug}`,
+    lastModified: now,
+  }));
 
-  return [...staticRoutes, ...productRoutes];
+  return [...staticRoutes, ...productRoutes, ...newsRoutes];
 }

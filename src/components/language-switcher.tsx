@@ -42,7 +42,11 @@ export function LanguageSwitcher({
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-white/90 p-1 shadow-sm">
+    <div
+      className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-white/90 p-1 shadow-sm"
+      aria-label={label}
+      title={label}
+    >
       {options.map((option) => {
         const isActive = option.locale === currentLocale;
 
