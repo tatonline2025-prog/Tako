@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import {
-  allApplications,
-  allManufacturers,
   categories,
-  products,
 } from "@/data/site";
 import { ProductCatalog } from "@/components/product-catalog";
+import { listProducts } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 export const metadata: Metadata = {
@@ -16,6 +14,13 @@ export const metadata: Metadata = {
 
 export default async function ProductsPage() {
   const locale = await getRequestLocale();
+  const products = await listProducts();
+  const manufacturers = Array.from(
+    new Set(products.map((product) => product.manufacturer)),
+  );
+  const applications = Array.from(
+    new Set(products.flatMap((product) => product.applications)),
+  );
 
   return (
     <div className="section-shell py-12 sm:py-16">
@@ -30,8 +35,8 @@ export default async function ProductsPage() {
       <ProductCatalog
         locale={locale}
         categories={categories}
-        manufacturers={allManufacturers}
-        applications={allApplications}
+        manufacturers={manufacturers}
+        applications={applications}
         products={products}
       />
     </div>

@@ -40,7 +40,12 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!verifyAdminCredentials(parsed.data.username, parsed.data.password)) {
+  const identity = verifyAdminCredentials(
+    parsed.data.username,
+    parsed.data.password,
+  );
+
+  if (!identity) {
     return NextResponse.json(
       {
         message: "Thông tin đăng nhập không chính xác.",
@@ -57,7 +62,7 @@ export async function POST(request: Request) {
 
   response.cookies.set(
     ADMIN_SESSION_COOKIE,
-    createAdminSessionToken(parsed.data.username),
+    createAdminSessionToken(identity),
     getAdminSessionCookieOptions(
       parsed.data.rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 12,
     ),

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductBySlug, products } from "@/data/site";
+import {
+  getProductBySlug,
+  listProducts,
+} from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 type ProductDetailPageProps = {
@@ -9,6 +12,7 @@ type ProductDetailPageProps = {
 };
 
 export async function generateStaticParams() {
+  const products = await listProducts();
   return products.map((product) => ({ slug: product.slug }));
 }
 

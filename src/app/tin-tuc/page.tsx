@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { newsArticles } from "@/data/site";
+import { listNewsArticles } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 export const metadata: Metadata = {
@@ -22,6 +22,7 @@ const pageCopy = {
 
 export default async function NewsPage() {
   const locale = await getRequestLocale();
+  const newsArticles = await listNewsArticles();
 
   return (
     <div className="section-shell py-12 sm:py-16">

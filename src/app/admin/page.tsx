@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AdminLoginForm } from "@/components/admin-login-form";
-import { getAuthenticatedAdmin, normalizeRedirectPath } from "@/lib/admin-auth";
+import {
+  getAdminConfigurationStatus,
+  getAuthenticatedAdmin,
+  normalizeRedirectPath,
+} from "@/lib/admin-auth";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 type LoginPageProps = {
@@ -20,6 +24,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
     ? query.redirectTo[0]
     : query.redirectTo;
   const redirectTo = normalizeRedirectPath(redirectValue);
+  const configStatus = getAdminConfigurationStatus();
   const admin = await getAuthenticatedAdmin();
 
   if (admin) {
@@ -41,7 +46,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
           </p>
         </div>
         <AdminLoginForm
-          isConfigured={true}
+          isConfigured={configStatus.configured}
           locale={locale}
           redirectTo={redirectTo}
         />

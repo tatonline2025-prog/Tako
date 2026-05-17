@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthenticatedAdmin } from "@/lib/admin-auth";
-import { newsArticles } from "@/data/site";
+import { AdminNewsManager } from "@/components/admin-news-manager";
+import { listNewsArticles } from "@/lib/catalog-repository";
 
 export const metadata: Metadata = {
   title: "Quản lý tin tức — TAKO Vietnam",
@@ -16,6 +17,8 @@ export default async function AdminNewsPage() {
   if (!admin) {
     redirect("/admin?redirectTo=/quan-tri/tin-tuc");
   }
+
+  const newsArticles = await listNewsArticles();
 
   return (
     <div className="space-y-6">
@@ -36,45 +39,7 @@ export default async function AdminNewsPage() {
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
-        <table className="min-w-full text-sm">
-          <thead className="border-b border-gray-200 bg-gray-50">
-            <tr>
-              <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tiêu đề</th>
-              <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nhãn</th>
-              <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Ngày</th>
-              <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Trang</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {newsArticles.map((article) => (
-              <tr key={article.slug} className="hover:bg-gray-50 transition">
-                <td className="px-5 py-4">
-                  <div className="font-medium text-gray-900">{article.title.vi}</div>
-                  <div className="mt-0.5 text-xs text-gray-400 line-clamp-2">{article.excerpt.vi}</div>
-                </td>
-                <td className="px-5 py-4">
-                  <span className="inline-flex rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-medium text-purple-700">
-                    {article.tag}
-                  </span>
-                </td>
-                <td className="px-5 py-4 text-gray-500 text-xs">
-                  {new Date(article.date).toLocaleDateString("vi-VN")}
-                </td>
-                <td className="px-5 py-4">
-                  <Link
-                    href={`/tin-tuc`}
-                    target="_blank"
-                    className="text-blue-600 hover:underline text-xs"
-                  >
-                    Xem →
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <AdminNewsManager initialArticles={newsArticles} />
     </div>
   );
 }

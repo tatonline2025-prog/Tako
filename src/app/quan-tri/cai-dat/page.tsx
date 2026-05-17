@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { AdminMailSettingsForm } from "@/components/admin-mail-settings-form";
+import { getMailSettings } from "@/lib/admin-settings-repository";
 import {
   getAdminConfigurationStatus,
   getAuthenticatedAdmin,
@@ -22,8 +24,13 @@ export default async function AdminSettingsPage() {
     redirect("/admin?redirectTo=/quan-tri/cai-dat");
   }
 
+  if (admin.role !== "admin") {
+    redirect("/quan-tri");
+  }
+
   const adminStatus = getAdminConfigurationStatus();
-  const mailStatus = getMailSetupStatus();
+  const mailStatus = await getMailSetupStatus();
+  const storedMailSettings = await getMailSettings();
   const databaseConfigured = Boolean(process.env.MONGODB_URI && process.env.MONGODB_DB);
   const missingDatabase = [
     !process.env.MONGODB_URI ? "MONGODB_URI" : null,
@@ -85,6 +92,8 @@ export default async function AdminSettingsPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
+        <AdminMailSettingsForm initialSettings={storedMailSettings} />
+
         <div className="rounded-2xl border border-gray-200 bg-white p-6">
           <h2 className="font-semibold text-gray-900">Gmail SMTP</h2>
           <div className="mt-3 space-y-2 text-sm text-gray-500">

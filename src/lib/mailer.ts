@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { siteMetadata } from "@/data/site";
+import { getMailSettings } from "@/lib/admin-settings-repository";
 import type { ContactSubmissionInput } from "@/lib/contact-schema";
 
 type MailDispatchResult = {
@@ -17,14 +18,69 @@ export type MailSetupStatus = {
   smtp: ProviderStatus;
 };
 
-function getSmtpConfig() {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const from = process.env.MAIL_FROM;
-  const to = process.env.MAIL_TO;
-  const port = Number(process.env.SMTP_PORT || "587");
-  const secure = process.env.SMTP_SECURE === "true" || port === 465;
+type EffectiveMailConfig = {
+  resend: {
+    apiKey?: string;
+    from?: string;
+    to?: string;
+  };
+  smtp: {
+    host?: string;
+    user?: string;
+    pass?: string;
+    from?: string;
+    to?: string;
+    port?: number;
+    secure?: boolean;
+  };
+};
+
+async function getEffectiveMailConfig(): Promise<EffectiveMailConfig> {
+  const dbSettings = await getMailSettings();
+
+  const from = dbSettings?.mailFrom || process.env.MAIL_FROM;
+  const to = dbSettings?.mailTo || process.env.MAIL_TO;
+
+  return {
+    resend: {
+      apiKey: dbSettings?.provider === "resend"
+        ? dbSettings.resendApiKey || process.env.RESEND_API_KEY
+        : process.env.RESEND_API_KEY,
+      from,
+      to,
+    },
+    smtp: {
+      from,
+      host: dbSettings?.provider === "smtp"
+        ? dbSettings.smtpHost || process.env.SMTP_HOST
+        : process.env.SMTP_HOST,
+      pass: dbSettings?.provider === "smtp"
+        ? dbSettings.smtpPass || process.env.SMTP_PASS
+        : process.env.SMTP_PASS,
+      port: Number(
+        dbSettings?.provider === "smtp"
+          ? dbSettings.smtpPort || process.env.SMTP_PORT || "587"
+          : process.env.SMTP_PORT || "587",
+      ),
+      secure: dbSettings?.provider === "smtp"
+        ? (dbSettings.smtpSecure ?? (process.env.SMTP_SECURE === "true"))
+        : (process.env.SMTP_SECURE === "true"),
+      to,
+      user: dbSettings?.provider === "smtp"
+        ? dbSettings.smtpUser || process.env.SMTP_USER
+        : process.env.SMTP_USER,
+    },
+  };
+}
+
+function getSmtpConfig(config: EffectiveMailConfig) {
+  const host = config.smtp.host;
+  const user = config.smtp.user;
+  const pass = config.smtp.pass;
+  const from = config.smtp.from;
+  const to = config.smtp.to;
+  const port = Number(config.smtp.port || 587);
+  const secure = config.smtp.secure || port === 465;
 
   if (!host || !user || !pass || !from || !to || Number.isNaN(port)) {
     return null;
@@ -43,10 +99,10 @@ function getSmtpConfig() {
   };
 }
 
-function getResendConfig() {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.MAIL_FROM;
-  const to = process.env.MAIL_TO;
+function getResendConfig(config: EffectiveMailConfig) {
+  const apiKey = config.resend.apiKey;
+  const from = config.resend.from;
+  const to = config.resend.to;
 
   if (!apiKey || !from || !to) {
     return null;
@@ -59,49 +115,49 @@ function getResendConfig() {
   };
 }
 
-export function getMailSetupStatus(): MailSetupStatus {
+export async function getMailSetupStatus(): Promise<MailSetupStatus> {
+  const config = await getEffectiveMailConfig();
   const resendMissing: string[] = [];
   const smtpMissing: string[] = [];
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!config.resend.apiKey) {
     resendMissing.push("RESEND_API_KEY");
   }
 
-  if (!process.env.MAIL_FROM) {
+  if (!config.resend.from) {
     resendMissing.push("MAIL_FROM");
   }
 
-  if (!process.env.MAIL_TO) {
+  if (!config.resend.to) {
     resendMissing.push("MAIL_TO");
   }
 
-  if (!process.env.SMTP_HOST) {
+  if (!config.smtp.host) {
     smtpMissing.push("SMTP_HOST");
   }
 
-  if (!process.env.SMTP_PORT) {
+  if (!config.smtp.port) {
     smtpMissing.push("SMTP_PORT");
   }
 
-  if (!process.env.SMTP_USER) {
+  if (!config.smtp.user) {
     smtpMissing.push("SMTP_USER");
   }
 
-  if (!process.env.SMTP_PASS) {
+  if (!config.smtp.pass) {
     smtpMissing.push("SMTP_PASS");
   }
 
-  if (!process.env.MAIL_FROM) {
+  if (!config.smtp.from) {
     smtpMissing.push("MAIL_FROM");
   }
 
-  if (!process.env.MAIL_TO) {
+  if (!config.smtp.to) {
     smtpMissing.push("MAIL_TO");
   }
 
   const resendConfigured = resendMissing.length === 0;
-  const smtpConfigured =
-    smtpMissing.length === 0 && !Number.isNaN(Number(process.env.SMTP_PORT));
+  const smtpConfigured = smtpMissing.length === 0;
 
   return {
     activeProvider: resendConfigured ? "resend" : smtpConfigured ? "smtp" : null,
@@ -116,8 +172,8 @@ export function getMailSetupStatus(): MailSetupStatus {
   };
 }
 
-async function sendViaResend(payload: ContactSubmissionInput) {
-  const resendConfig = getResendConfig();
+async function sendViaResend(payload: ContactSubmissionInput, config: EffectiveMailConfig) {
+  const resendConfig = getResendConfig(config);
 
   if (!resendConfig) {
     return false;
@@ -166,11 +222,13 @@ async function sendViaResend(payload: ContactSubmissionInput) {
 export async function sendContactNotification(
   payload: ContactSubmissionInput,
 ): Promise<MailDispatchResult> {
-  if (await sendViaResend(payload)) {
+  const config = await getEffectiveMailConfig();
+
+  if (await sendViaResend(payload, config)) {
     return { status: "sent" };
   }
 
-  const mailConfig = getSmtpConfig();
+  const mailConfig = getSmtpConfig(config);
 
   if (!mailConfig) {
     return { status: "skipped" };

@@ -2,12 +2,14 @@ import Link from "next/link";
 import {
   categories,
   companyHighlights,
-  featuredProducts,
   focusAreas,
   getSiteMetadata,
-  newsArticles,
   partnerManufacturers,
 } from "@/data/site";
+import {
+  listFeaturedProducts,
+  listNewsArticles,
+} from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText, type Locale } from "@/lib/i18n";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
@@ -121,6 +123,8 @@ const homeCopy = {
 export default async function Home() {
   const locale = await getRequestLocale();
   const siteMetadata = getSiteMetadata(locale);
+  const featuredProducts = await listFeaturedProducts(6);
+  const newsArticles = await listNewsArticles();
 
   return (
     <div className="pb-20">
@@ -226,6 +230,7 @@ export default async function Home() {
       </section>
 
       <section className="section-shell pb-16">
+        <ScrollReveal>
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.fieldOverview, locale)}</span>
@@ -287,7 +292,7 @@ export default async function Home() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredProducts.slice(0, 6).map((product, i) => (
+          {featuredProducts.map((product, i) => (
             <ScrollReveal key={product.slug} delay={i * 80}>
             <article className="panel group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5">
               <div className={`h-48 bg-gradient-to-br ${product.imageTone} p-6 text-white`}>

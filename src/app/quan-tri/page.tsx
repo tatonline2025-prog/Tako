@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthenticatedAdmin } from "@/lib/admin-auth";
+import {
+  listNewsArticles,
+  listProducts,
+} from "@/lib/catalog-repository";
 import { listContacts } from "@/lib/contact-repository";
-import { products, newsArticles, categories } from "@/data/site";
+import { categories } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Quản trị — TAKO Vietnam",
@@ -28,6 +32,11 @@ export default async function AdminDashboardPage() {
   } catch {
     dbOk = false;
   }
+
+  const [products, newsArticles] = await Promise.all([
+    listProducts(),
+    listNewsArticles(),
+  ]);
 
   const statCards = [
     {
@@ -72,6 +81,9 @@ export default async function AdminDashboardPage() {
         <p className="mt-1 text-sm text-gray-500">
           Xin chào, <span className="font-semibold">{admin.username}</span>. Đây là bảng điều khiển TAKO Vietnam.
         </p>
+        <div className="mt-2 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700">
+          Vai trò: {admin.role === "admin" ? "Admin" : "Manager"}
+        </div>
       </div>
 
       {/* Stats grid */}
@@ -175,6 +187,27 @@ export default async function AdminDashboardPage() {
             <div className="text-xs text-gray-400 uppercase tracking-wider">Platform</div>
             <div className="mt-1 font-medium text-gray-700">Next.js 15 · Vercel</div>
           </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+        <h2 className="font-semibold text-gray-900">Audit phạm vi quản trị</h2>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { name: "Trang chủ", status: "Đã quản lý một phần (highlight/featured)", tone: "bg-emerald-50 text-emerald-700" },
+            { name: "Sản phẩm", status: "CRUD đầy đủ", tone: "bg-emerald-50 text-emerald-700" },
+            { name: "Tin tức", status: "CRUD đầy đủ", tone: "bg-emerald-50 text-emerald-700" },
+            { name: "Liên hệ", status: "Đọc danh sách lead", tone: "bg-blue-50 text-blue-700" },
+            { name: "Cài đặt hệ thống", status: admin.role === "admin" ? "Admin-only" : "Không có quyền", tone: admin.role === "admin" ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700" },
+            { name: "Giới thiệu", status: "Chưa có editor riêng", tone: "bg-slate-100 text-slate-700" },
+          ].map((item) => (
+            <div key={item.name} className="rounded-xl border border-gray-200 px-4 py-3">
+              <div className="text-sm font-semibold text-gray-900">{item.name}</div>
+              <div className={`mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${item.tone}`}>
+                {item.status}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

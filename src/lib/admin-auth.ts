@@ -4,16 +4,41 @@ import { cookies } from "next/headers";
 export const ADMIN_SESSION_COOKIE = "tako_admin_session";
 const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
+export type AdminRole = "admin" | "manager";
+
 type AdminIdentity = {
   username: string;
+  role: AdminRole;
+};
+
+type AdminCredential = {
+  username: string;
+  password: string;
+  role: AdminRole;
 };
 
 function getAdminCredentials() {
-  const username = process.env.ADMIN_USERNAME || "admin";
-  const password = process.env.ADMIN_PASSWORD || "admin";
   const sessionSecret = process.env.ADMIN_SESSION_SECRET || "tako-admin-session-secret-default";
+  const users: AdminCredential[] = [];
 
-  return { username, password, sessionSecret };
+  const adminUsername = process.env.ADMIN_USERNAME || "admin";
+  const adminPassword = process.env.ADMIN_PASSWORD || "admin";
+
+  users.push({
+    username: adminUsername,
+    password: adminPassword,
+    role: "admin",
+  });
+
+  if (process.env.MANAGER_USERNAME && process.env.MANAGER_PASSWORD) {
+    users.push({
+      username: process.env.MANAGER_USERNAME,
+      password: process.env.MANAGER_PASSWORD,
+      role: "manager",
+    });
+  }
+
+  return { sessionSecret, users };
 }
 
 function safeEqual(left: string, right: string) {
@@ -32,13 +57,34 @@ function signPayload(payload: string, sessionSecret: string) {
 }
 
 export function isAdminConfigured() {
-  return true;
+  const hasUsername = Boolean(process.env.ADMIN_USERNAME || "admin");
+  const hasPassword = Boolean(process.env.ADMIN_PASSWORD || "admin");
+  const hasSecret = Boolean(process.env.ADMIN_SESSION_SECRET);
+  return hasUsername && hasPassword && hasSecret;
 }
 
 export function getAdminConfigurationStatus() {
+  const missing: string[] = [];
+
+  if (!process.env.ADMIN_USERNAME) {
+    missing.push("ADMIN_USERNAME");
+  }
+
+  if (!process.env.ADMIN_PASSWORD) {
+    missing.push("ADMIN_PASSWORD");
+  }
+
+  if (!process.env.ADMIN_SESSION_SECRET) {
+    missing.push("ADMIN_SESSION_SECRET");
+  }
+
+  if ((process.env.MANAGER_USERNAME && !process.env.MANAGER_PASSWORD) || (!process.env.MANAGER_USERNAME && process.env.MANAGER_PASSWORD)) {
+    missing.push("MANAGER_USERNAME|MANAGER_PASSWORD");
+  }
+
   return {
-    configured: true,
-    missing: [] as string[],
+    configured: missing.length === 0,
+    missing,
   };
 }
 
@@ -46,16 +92,28 @@ export function verifyAdminCredentials(username: string, password: string) {
   const credentials = getAdminCredentials();
 
   if (!credentials) {
-    return false;
+    return null;
   }
 
-  return (
-    safeEqual(username, credentials.username) &&
-    safeEqual(password, credentials.password)
+  const account = credentials.users.find((candidate) =>
+    safeEqual(username, candidate.username),
   );
+
+  if (!account) {
+    return null;
+  }
+
+  if (!safeEqual(password, account.password)) {
+    return null;
+  }
+
+  return {
+    role: account.role,
+    username: account.username,
+  } as AdminIdentity;
 }
 
-export function createAdminSessionToken(username: string) {
+export function createAdminSessionToken(identity: AdminIdentity) {
   const credentials = getAdminCredentials();
 
   if (!credentials) {
@@ -63,7 +121,7 @@ export function createAdminSessionToken(username: string) {
   }
 
   const issuedAt = Date.now().toString();
-  const payload = `${username}:${issuedAt}`;
+  const payload = `${identity.username}:${identity.role}:${issuedAt}`;
   const signature = signPayload(payload, credentials.sessionSecret);
 
   return Buffer.from(`${payload}:${signature}`).toString("base64url");
@@ -82,13 +140,31 @@ export function verifyAdminSessionToken(token?: string): AdminIdentity | null {
 
   try {
     const decoded = Buffer.from(token, "base64url").toString("utf8");
-    const [username, issuedAt, signature] = decoded.split(":");
+    const segments = decoded.split(":");
+    let username = "";
+    let role: AdminRole = "admin";
+    let issuedAt = "";
+    let signature = "";
 
-    if (!username || !issuedAt || !signature) {
+    // Backward compatibility: old token format was username:issuedAt:signature.
+    if (segments.length === 3) {
+      [username, issuedAt, signature] = segments;
+    } else if (segments.length === 4) {
+      [username, role, issuedAt, signature] = segments as [
+        string,
+        AdminRole,
+        string,
+        string,
+      ];
+    }
+
+    if (!username || !issuedAt || !signature || (role !== "admin" && role !== "manager")) {
       return null;
     }
 
-    const payload = `${username}:${issuedAt}`;
+    const payload = segments.length === 3
+      ? `${username}:${issuedAt}`
+      : `${username}:${role}:${issuedAt}`;
     const expectedSignature = signPayload(payload, credentials.sessionSecret);
 
     if (!safeEqual(signature, expectedSignature)) {
@@ -101,11 +177,18 @@ export function verifyAdminSessionToken(token?: string): AdminIdentity | null {
       return null;
     }
 
-    if (!safeEqual(username, credentials.username)) {
+    const account = credentials.users.find((candidate) =>
+      safeEqual(username, candidate.username),
+    );
+
+    if (!account) {
       return null;
     }
 
-    return { username };
+    return {
+      role: account.role,
+      username: account.username,
+    };
   } catch {
     return null;
   }
@@ -118,6 +201,15 @@ export async function getAuthenticatedAdmin() {
 
 export async function isAdminAuthenticated() {
   return Boolean(await getAuthenticatedAdmin());
+}
+
+export async function hasAdminRole(roles: AdminRole[]) {
+  const admin = await getAuthenticatedAdmin();
+  if (!admin) {
+    return false;
+  }
+
+  return roles.includes(admin.role);
 }
 
 export function getAdminSessionCookieOptions(maxAge: number = 60 * 60 * 12) {
