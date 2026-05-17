@@ -22,7 +22,9 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
     ? query.interest[0]
     : query.interest || "";
   const requestedProduct = interestValue ? getProductBySlug(interestValue) : undefined;
-  const defaultInterest = requestedProduct?.name || interestValue;
+  const defaultInterest = requestedProduct
+    ? localizeText(requestedProduct.name, locale)
+    : interestValue;
 
   return (
     <div className="section-shell py-12 sm:py-16">
