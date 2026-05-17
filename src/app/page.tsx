@@ -128,7 +128,7 @@ export default async function Home() {
           <div className="space-y-8">
             <span className="eyebrow">{localizeText(homeCopy.eyebrow, locale)}</span>
             <div className="space-y-6">
-              <h1 className="max-w-4xl font-[family:var(--font-display)] text-5xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-6xl lg:text-7xl">
+              <h1 className="max-w-4xl font-[family:var(--font-display)] text-5xl font-bold tracking-tight text-[var(--color-ink)] sm:text-6xl lg:text-7xl">
                 {siteMetadata.tagline}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-[var(--color-muted)] sm:text-xl">
@@ -139,13 +139,16 @@ export default async function Home() {
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/san-pham"
-                className="inline-flex items-center justify-center rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(13,78,166,0.22)] transition hover:bg-[var(--color-primary-strong)]"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(13,78,166,0.28)] transition hover:bg-[var(--color-primary-strong)] hover:shadow-[0_16px_40px_rgba(13,78,166,0.40)]"
               >
                 {localizeText(homeCopy.exploreCatalog, locale)}
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </Link>
               <Link
                 href="/lien-he"
-                className="inline-flex items-center justify-center rounded-full border border-[var(--color-line)] bg-white px-6 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
+                className="inline-flex items-center justify-center rounded-full border border-[var(--color-line)] bg-white px-7 py-3.5 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
               >
                 {localizeText(homeCopy.quote, locale)}
               </Link>
@@ -153,8 +156,8 @@ export default async function Home() {
 
             <div className="grid gap-4 sm:grid-cols-3">
               {homeCopy.stats[locale as Locale].map(([value, label]) => (
-                <div key={label} className="panel px-5 py-5">
-                  <div className="font-[family:var(--font-display)] text-3xl font-semibold text-[var(--color-primary)]">
+                <div key={label} className="group panel px-5 py-5 transition hover:shadow-md">
+                  <div className="font-[family:var(--font-display)] text-4xl font-bold text-[var(--color-primary)]">
                     {value}
                   </div>
                   <div className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
@@ -188,10 +191,10 @@ export default async function Home() {
               <div className="grid gap-3 sm:grid-cols-2">
                 {focusAreas.map((item) => (
                   <div
-                    key={item}
+                    key={item.en}
                     className="rounded-[1.5rem] border border-white/12 bg-white/10 px-4 py-4 text-sm leading-6 text-white/86"
                   >
-                    {item}
+                    {localizeText(item, locale)}
                   </div>
                 ))}
               </div>
@@ -209,10 +212,10 @@ export default async function Home() {
           <div className="grid gap-4">
             {companyHighlights.map((highlight) => (
               <div
-                key={highlight}
+                key={highlight.en}
                 className="rounded-[1.5rem] border border-[var(--color-line)] bg-[linear-gradient(180deg,rgba(13,78,166,0.04),rgba(13,78,166,0))] px-5 py-5 text-sm leading-7 text-[var(--color-muted)]"
               >
-                {highlight}
+                {localizeText(highlight, locale)}
               </div>
             ))}
           </div>
@@ -230,27 +233,44 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-5">
-          {categories.map((category) => (
-            <div key={category.slug} className="panel flex h-full flex-col px-5 py-6">
-              <div className="text-sm uppercase tracking-[0.22em] text-[var(--color-primary)]">
-                {category.name}
-              </div>
-              <p className="mt-4 flex-1 text-sm leading-7 text-[var(--color-muted)]">
-                {category.description}
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {category.applications.slice(0, 2).map((application) => (
-                  <span
-                    key={application}
-                    className="rounded-full bg-[rgba(13,78,166,0.08)] px-3 py-1 text-xs font-medium text-[var(--color-primary)]"
-                  >
-                    {application}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          {categories.map((category, index) => {
+            const colors = [
+              { bg: "bg-blue-50", text: "text-blue-700", accent: "bg-blue-600", dot: "bg-blue-500" },
+              { bg: "bg-purple-50", text: "text-purple-700", accent: "bg-purple-600", dot: "bg-purple-500" },
+              { bg: "bg-emerald-50", text: "text-emerald-700", accent: "bg-emerald-600", dot: "bg-emerald-500" },
+              { bg: "bg-amber-50", text: "text-amber-700", accent: "bg-amber-600", dot: "bg-amber-500" },
+              { bg: "bg-slate-50", text: "text-slate-700", accent: "bg-slate-600", dot: "bg-slate-500" },
+            ];
+            const color = colors[index % colors.length];
+            return (
+              <Link
+                key={category.slug}
+                href={`/san-pham`}
+                className="panel group flex h-full flex-col px-5 py-6 transition hover:shadow-lg hover:-translate-y-0.5"
+              >
+                <div className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl ${color.bg}`}>
+                  <span className={`h-2.5 w-2.5 rounded-full ${color.dot}`} />
+                </div>
+                <div className={`text-xs font-semibold uppercase tracking-[0.2em] ${color.text}`}>
+                  {category.name}
+                </div>
+                <p className="mt-3 flex-1 text-sm leading-7 text-[var(--color-muted)]">
+                  {localizeText(category.description, locale)}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {category.applications.slice(0, 2).map((application) => (
+                    <span
+                      key={application}
+                      className={`rounded-full ${color.bg} px-2.5 py-0.5 text-xs font-medium ${color.text}`}
+                    >
+                      {application}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -262,39 +282,39 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredProducts.slice(0, 6).map((product) => (
-            <article key={product.slug} className="panel overflow-hidden">
-              <div className={`h-52 bg-gradient-to-br ${product.imageTone} p-6 text-white`}>
-                <div className="inline-flex rounded-full border border-white/22 bg-white/12 px-3 py-1 text-xs uppercase tracking-[0.22em] text-white/88">
+            <article key={product.slug} className="panel group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5">
+              <div className={`h-48 bg-gradient-to-br ${product.imageTone} p-6 text-white`}>
+                <div className="inline-flex rounded-full border border-white/22 bg-white/14 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-white/90">
                   {product.manufacturer}
                 </div>
-                <div className="mt-12 font-[family:var(--font-display)] text-3xl font-semibold leading-tight">
+                <div className="mt-8 font-[family:var(--font-display)] text-2xl font-bold leading-tight">
                   {product.imageLabel}
                 </div>
               </div>
-              <div className="space-y-4 px-6 py-6">
+              <div className="space-y-3 px-6 py-5">
                 <div>
-                  <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
+                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-primary)]">
                     {product.categoryName}
                   </div>
-                  <h3 className="mt-2 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
+                  <h3 className="mt-1.5 font-[family:var(--font-display)] text-xl font-semibold text-[var(--color-ink)]">
                     {product.name}
                   </h3>
                 </div>
-                <p className="text-sm leading-7 text-[var(--color-muted)]">
+                <p className="text-sm leading-6 text-[var(--color-muted)] line-clamp-2">
                   {product.shortDescription}
                 </p>
-                <div className="flex gap-3">
+                <div className="flex gap-2.5 pt-1">
                   <Link
                     href={`/san-pham/${product.slug}`}
-                    className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white"
+                    className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[var(--color-primary-strong)]"
                   >
                     {localizeText(homeCopy.viewDetail, locale)}
                   </Link>
                   <Link
                     href={`/lien-he?interest=${product.slug}`}
-                    className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
+                    className="rounded-full border border-[var(--color-line)] px-4 py-2 text-xs font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
                   >
                     {localizeText(homeCopy.requestQuote, locale)}
                   </Link>
@@ -306,17 +326,17 @@ export default async function Home() {
       </section>
 
       <section className="section-shell pb-16">
-        <div className="panel px-6 py-8 lg:px-8">
+        <div className="panel overflow-hidden px-6 py-8 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-4">
+            <div className="space-y-3">
               <span className="eyebrow">{localizeText(homeCopy.partners, locale)}</span>
               <h2 className="section-title">{localizeText(homeCopy.partnersTitle, locale)}</h2>
             </div>
-            <div className="grid gap-3 text-sm font-semibold text-[var(--color-muted)] sm:grid-cols-4">
+            <div className="grid grid-cols-4 gap-3 text-sm font-semibold text-[var(--color-muted)] sm:grid-cols-4 lg:max-w-lg">
               {partnerManufacturers.map((partner) => (
                 <div
                   key={partner}
-                  className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-4 text-center"
+                  className="flex items-center justify-center rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-3.5 text-center text-xs transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                 >
                   {partner}
                 </div>
@@ -337,19 +357,18 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {newsArticles.map((article) => (
-            <article key={article.slug} className="panel px-6 py-6">
+            <article key={article.slug} className="panel group flex flex-col overflow-hidden px-6 py-6 transition hover:shadow-lg hover:-translate-y-0.5">
               <div className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-[var(--color-primary)]">
-                <span>{article.tag}</span>
-                <span className="h-1 w-1 rounded-full bg-[var(--color-primary)]" />
-                <span>{article.date}</span>
+                <span className="rounded-full bg-[rgba(13,78,166,0.1)] px-2.5 py-1 font-semibold">{article.tag}</span>
+                <span className="text-[var(--color-muted)]">{article.date}</span>
               </div>
-              <h3 className="mt-4 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-                {article.title}
+              <h3 className="mt-4 flex-1 font-[family:var(--font-display)] text-xl font-semibold leading-snug text-[var(--color-ink)]">
+                {localizeText(article.title, locale)}
               </h3>
-              <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
-                {article.excerpt}
+              <p className="mt-3 text-sm leading-7 text-[var(--color-muted)] line-clamp-3">
+                {localizeText(article.excerpt, locale)}
               </p>
             </article>
           ))}

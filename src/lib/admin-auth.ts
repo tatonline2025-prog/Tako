@@ -132,7 +132,7 @@ export function getAdminSessionCookieOptions() {
 
 export function normalizeRedirectPath(
   redirectTo: string | undefined,
-  fallback = "/quan-tri/lien-he",
+  fallback = "/quan-tri",
 ) {
   if (!redirectTo || !redirectTo.startsWith("/") || redirectTo.startsWith("//")) {
     return fallback;

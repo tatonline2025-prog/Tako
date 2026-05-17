@@ -61,8 +61,7 @@ export function LanguageSwitcher({
                 : "text-[var(--color-muted)] hover:bg-[rgba(13,78,166,0.08)] hover:text-[var(--color-ink)]"
             } disabled:cursor-default`}
           >
-            <span className="text-sm leading-none">{option.flag}</span>
-            <span>{option.text}</span>
+            <span className="text-base leading-none">{option.flag}</span>
           </button>
         );
       })}

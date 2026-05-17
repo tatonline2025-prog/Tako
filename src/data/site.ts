@@ -8,7 +8,7 @@ export type NavigationItem = {
 export type Category = {
   slug: string;
   name: string;
-  description: string;
+  description: { en: string; vi: string };
   applications: string[];
 };
 
@@ -31,8 +31,8 @@ export type Product = {
 
 export type NewsArticle = {
   slug: string;
-  title: string;
-  excerpt: string;
+  title: { en: string; vi: string };
+  excerpt: { en: string; vi: string };
   date: string;
   tag: string;
 };
@@ -102,17 +102,26 @@ export const siteMetadata = getSiteMetadata("vi");
 
 export const navigationItems: NavigationItem[] = getNavigationItems("vi");
 
-export const companyHighlights = [
-  "Định hướng theo Nghị quyết 57-NQ/TW và 36-NQ/TW về phát triển công nghệ chiến lược và khoa học sức khỏe.",
-  "Tập trung B2B cho phòng xét nghiệm, bệnh viện, viện nghiên cứu, cơ sở kiểm định và doanh nghiệp dược sinh học.",
-  "Kết nối thiết bị, sinh phẩm, workflow và dịch vụ hỗ trợ để rút ngắn thời gian đưa công nghệ vào vận hành.",
+export const companyHighlights: { en: string; vi: string }[] = [
+  {
+    en: "Aligned with Resolution 57-NQ/TW and 36-NQ/TW on strategic technology development and health sciences.",
+    vi: "Định hướng theo Nghị quyết 57-NQ/TW và 36-NQ/TW về phát triển công nghệ chiến lược và khoa học sức khỏe.",
+  },
+  {
+    en: "B2B-focused for laboratories, hospitals, research institutes, quality control centers and biotech enterprises.",
+    vi: "Tập trung B2B cho phòng xét nghiệm, bệnh viện, viện nghiên cứu, cơ sở kiểm định và doanh nghiệp dược sinh học.",
+  },
+  {
+    en: "Integrating equipment, reagents, workflows and support services to shorten time-to-deployment of new technologies.",
+    vi: "Kết nối thiết bị, sinh phẩm, workflow và dịch vụ hỗ trợ để rút ngắn thời gian đưa công nghệ vào vận hành.",
+  },
 ];
 
-export const focusAreas = [
-  "Proteomics độ phân giải cao",
-  "Giải trình tự gene thế hệ mới",
-  "Chẩn đoán sinh học phân tử cho bệnh viện và phòng lab",
-  "Sinh phẩm cơ bản và vật tư tiêu hao",
+export const focusAreas: { en: string; vi: string }[] = [
+  { en: "High-resolution Proteomics", vi: "Proteomics độ phân giải cao" },
+  { en: "Next-generation gene sequencing (NGS)", vi: "Giải trình tự gene thế hệ mới" },
+  { en: "Molecular diagnostics for hospitals and labs", vi: "Chẩn đoán sinh học phân tử cho bệnh viện và phòng lab" },
+  { en: "Basic reagents and consumables", vi: "Sinh phẩm cơ bản và vật tư tiêu hao" },
 ];
 
 export const partnerManufacturers = [
@@ -130,36 +139,46 @@ export const categories: Category[] = [
   {
     slug: "proteomics",
     name: "Proteomics",
-    description:
-      "Nền tảng giải trình tự và phân tích protein cho nghiên cứu thuốc và y học chính xác.",
+    description: {
+      en: "Protein sequencing and analysis platforms for drug discovery and precision medicine.",
+      vi: "Nền tảng giải trình tự và phân tích protein cho nghiên cứu thuốc và y học chính xác.",
+    },
     applications: ["Proteomics", "Y học chính xác", "Drug discovery"],
   },
   {
     slug: "ngs",
-    name: "Giải trình tự gene thế hệ mới (NGS)",
-    description:
-      "Hệ thống giải trình tự, hóa chất và tự động hóa workflow cho chẩn đoán và nghiên cứu genomics.",
+    name: "NGS",
+    description: {
+      en: "Sequencing systems, chemistries and workflow automation for genomics diagnostics and research.",
+      vi: "Hệ thống giải trình tự, hóa chất và tự động hóa workflow cho chẩn đoán và nghiên cứu genomics.",
+    },
     applications: ["Ung thư", "Di truyền", "Sàng lọc trước sinh", "Dịch tễ học"],
   },
   {
     slug: "sinh-hoc-phan-tu",
-    name: "Giải pháp xét nghiệm sinh học phân tử",
-    description:
-      "qPCR, PCR, sinh phẩm tách chiết và thiết bị phòng lab cho xét nghiệm lâm sàng và nghiên cứu.",
+    name: "Molecular Diagnostics",
+    description: {
+      en: "qPCR, PCR, extraction reagents and lab equipment for clinical testing and research.",
+      vi: "qPCR, PCR, sinh phẩm tách chiết và thiết bị phòng lab cho xét nghiệm lâm sàng và nghiên cứu.",
+    },
     applications: ["Truyền nhiễm", "Kháng kháng sinh", "HLA", "Chẩn đoán lâm sàng"],
   },
   {
     slug: "sinh-pham-co-ban",
-    name: "Sinh phẩm cơ bản",
-    description:
-      "Enzyme, buffer và kit tách chiết phục vụ workflow sinh học phân tử cơ bản và mở rộng.",
+    name: "Basic Reagents",
+    description: {
+      en: "Enzymes, buffers and extraction kits for routine and advanced molecular biology workflows.",
+      vi: "Enzyme, buffer và kit tách chiết phục vụ workflow sinh học phân tử cơ bản và mở rộng.",
+    },
     applications: ["PCR", "qPCR", "NGS"],
   },
   {
     slug: "khac",
-    name: "Khác",
-    description:
-      "Phụ kiện, hóa chất và vật tư tiêu hao cho hoạt động thường quy của phòng thí nghiệm.",
+    name: "Others",
+    description: {
+      en: "Accessories, chemicals and consumables for routine laboratory operations.",
+      vi: "Phụ kiện, hóa chất và vật tư tiêu hao cho hoạt động thường quy của phòng thí nghiệm.",
+    },
     applications: ["Vật tư tiêu hao", "Hóa chất", "Phụ kiện phòng lab"],
   },
 ];
@@ -525,25 +544,40 @@ export const products: Product[] = [
 export const newsArticles: NewsArticle[] = [
   {
     slug: "cong-nghe-proteomics-trong-y-hoc-chinh-xac",
-    title: "Proteomics đơn phân tử đang thay đổi tốc độ giải mã cơ chế bệnh học",
-    excerpt:
-      "Từ sequencing protein đến PTM, các nền tảng mới đang mở rộng khả năng phát hiện biomarker cho y học chính xác.",
+    title: {
+      en: "Single-molecule proteomics is transforming the speed of disease mechanism discovery",
+      vi: "Proteomics đơn phân tử đang thay đổi tốc độ giải mã cơ chế bệnh học",
+    },
+    excerpt: {
+      en: "From protein sequencing to PTM analysis, new platforms are expanding biomarker discovery for precision medicine.",
+      vi: "Từ sequencing protein đến PTM, các nền tảng mới đang mở rộng khả năng phát hiện biomarker cho y học chính xác.",
+    },
     date: "2026-05-10",
     tag: "Proteomics",
   },
   {
     slug: "ngs-trong-chan-doan-ung-thu-thuong-quy",
-    title: "NGS trong chẩn đoán ung thư thường quy: bài toán độ nhạy, panel và vận hành",
-    excerpt:
-      "Áp lực từ lâm sàng đang đẩy nhanh nhu cầu tự động hóa, chuẩn hóa panel và gắn kết phân tích dữ liệu với điều trị đích.",
+    title: {
+      en: "NGS in routine oncology diagnostics: sensitivity, panel design and operational challenges",
+      vi: "NGS trong chẩn đoán ung thư thường quy: bài toán độ nhạy, panel và vận hành",
+    },
+    excerpt: {
+      en: "Clinical pressure is accelerating demand for automation, panel standardization and integration of data analysis with targeted therapy.",
+      vi: "Áp lực từ lâm sàng đang đẩy nhanh nhu cầu tự động hóa, chuẩn hóa panel và gắn kết phân tích dữ liệu với điều trị đích.",
+    },
     date: "2026-05-06",
     tag: "NGS",
   },
   {
     slug: "sepsis-va-cuoc-dua-rut-ngan-thoi-gian-tra-ket-qua",
-    title: "Sepsis và cuộc đua rút ngắn thời gian trả kết quả trong hồi sức cấp cứu",
-    excerpt:
-      "Chẩn đoán nhanh tác nhân gây bệnh và thông tin kháng kháng sinh là biến số có thể thay đổi phác đồ điều trị sớm.",
+    title: {
+      en: "Sepsis and the race to reduce turnaround time in critical care",
+      vi: "Sepsis và cuộc đua rút ngắn thời gian trả kết quả trong hồi sức cấp cứu",
+    },
+    excerpt: {
+      en: "Rapid identification of pathogens and antimicrobial resistance data are variables that can reshape early treatment protocols.",
+      vi: "Chẩn đoán nhanh tác nhân gây bệnh và thông tin kháng kháng sinh là biến số có thể thay đổi phác đồ điều trị sớm.",
+    },
     date: "2026-04-30",
     tag: "Truyền nhiễm",
   },

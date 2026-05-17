@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthenticatedAdmin } from "@/lib/admin-auth";
 import { listContacts } from "@/lib/contact-repository";
 
 export const metadata: Metadata = {
-  title: "Danh sách liên hệ",
-  description: "Trang demo để xem các yêu cầu liên hệ đã lưu trong MongoDB.",
+  title: "Yêu cầu liên hệ — TAKO Vietnam",
 };
 
 export const dynamic = "force-dynamic";
@@ -19,70 +17,59 @@ export default async function AdminContactsPage() {
     redirect("/admin?redirectTo=/quan-tri/lien-he");
   }
 
-  const contacts = await listContacts();
+  let contacts: Awaited<ReturnType<typeof listContacts>> = [];
+  let dbOk = true;
+  try {
+    contacts = await listContacts();
+  } catch {
+    dbOk = false;
+  }
 
   return (
-    <div className="section-shell py-12 sm:py-16">
-      <section className="flex flex-col gap-5 pb-10 lg:flex-row lg:items-end lg:justify-between">
-        <div className="space-y-4">
-          <span className="eyebrow">Quản trị</span>
-          <h1 className="section-title">Danh sách liên hệ</h1>
-          <p className="section-copy">
-            Khu vực này đã được bảo vệ bằng đăng nhập quản trị và chỉ hiển thị cho phiên đã xác thực.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Yêu cầu liên hệ</h1>
+        <p className="mt-1 text-sm text-gray-500">{dbOk ? `${contacts.length} yêu cầu đã nhận` : "Chưa kết nối MongoDB"}</p>
+      </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <Link
-            href="/quan-tri/cai-dat"
-            className="rounded-full border border-[var(--color-line)] bg-white px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"
-          >
-            Cài đặt hệ thống
-          </Link>
-          <form action="/api/admin/logout" method="post">
-            <input type="hidden" name="redirectTo" value="/admin" />
-            <button
-              type="submit"
-              className="rounded-full border border-[var(--color-line)] bg-white px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"
-            >
-              Đăng xuất ({admin.username})
-            </button>
-          </form>
+      {!dbOk && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-800">
+          Chưa kết nối MongoDB. Vui lòng cài đặt <code className="font-mono">MONGODB_URI</code> và <code className="font-mono">MONGODB_DB</code> trên Vercel.
         </div>
-      </section>
+      )}
 
-      <div className="panel overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-[var(--color-line)] text-left text-sm">
-            <thead className="bg-[rgba(13,78,166,0.04)] text-[var(--color-ink)]">
+          <table className="min-w-full text-sm">
+            <thead className="border-b border-gray-200 bg-gray-50">
               <tr>
-                <th className="px-5 py-4 font-semibold">Thời gian</th>
-                <th className="px-5 py-4 font-semibold">Người liên hệ</th>
-                <th className="px-5 py-4 font-semibold">Công ty</th>
-                <th className="px-5 py-4 font-semibold">Quan tam</th>
-                <th className="px-5 py-4 font-semibold">Nội dung</th>
+                <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Thời gian</th>
+                <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Người liên hệ</th>
+                <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Công ty</th>
+                <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Quan tâm</th>
+                <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nội dung</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--color-line)] bg-white">
+            <tbody className="divide-y divide-gray-100">
               {contacts.length > 0 ? (
                 contacts.map((contact) => (
-                  <tr key={contact.id}>
-                    <td className="px-5 py-5 align-top text-[var(--color-muted)]">
+                  <tr key={contact.id} className="hover:bg-gray-50 transition">
+                    <td className="px-5 py-4 align-top text-xs text-gray-400">
                       {new Date(contact.createdAt).toLocaleString("vi-VN")}
                     </td>
-                    <td className="px-5 py-5 align-top text-[var(--color-muted)]">
-                      <div className="font-semibold text-[var(--color-ink)]">{contact.fullName}</div>
-                      <div>{contact.email}</div>
-                      <div>{contact.phone}</div>
+                    <td className="px-5 py-4 align-top">
+                      <div className="font-medium text-gray-900">{contact.fullName}</div>
+                      <div className="text-xs text-gray-500">{contact.email}</div>
+                      <div className="text-xs text-gray-500">{contact.phone}</div>
                     </td>
-                    <td className="px-5 py-5 align-top text-[var(--color-muted)]">{contact.company}</td>
-                    <td className="px-5 py-5 align-top text-[var(--color-muted)]">{contact.interest}</td>
-                    <td className="px-5 py-5 align-top text-[var(--color-muted)]">{contact.message}</td>
+                    <td className="px-5 py-4 align-top text-gray-600">{contact.company}</td>
+                    <td className="px-5 py-4 align-top text-gray-600">{contact.interest}</td>
+                    <td className="px-5 py-4 align-top text-gray-600">{contact.message}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-5 py-10 text-center text-[var(--color-muted)]">
+                  <td colSpan={5} className="px-5 py-12 text-center text-gray-400">
                     Chưa có yêu cầu liên hệ nào trong database.
                   </td>
                 </tr>

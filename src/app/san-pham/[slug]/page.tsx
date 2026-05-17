@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductBySlug, products } from "@/data/site";
+import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 type ProductDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -34,10 +35,20 @@ export default async function ProductDetailPage({
 }: ProductDetailPageProps) {
   const { slug } = await params;
   const product = getProductBySlug(slug);
+  const locale = await getRequestLocale();
 
   if (!product) {
     notFound();
   }
+
+  const copy = {
+    subcategoryLabel: localizeText({ en: "Subcategory", vi: "Danh mục cấp 2" }, locale),
+    manufacturerLabel: localizeText({ en: "Manufacturer", vi: "Hãng sản xuất" }, locale),
+    highlightsLabel: localizeText({ en: "Key highlights", vi: "Điểm nổi bật" }, locale),
+    applicationsLabel: localizeText({ en: "Applications", vi: "Ứng dụng" }, locale),
+    downloadPdf: localizeText({ en: "Download PDF", vi: "Tải tài liệu PDF" }, locale),
+    requestQuote: localizeText({ en: "Request quote", vi: "Liên hệ báo giá" }, locale),
+  };
 
   return (
     <div className="section-shell py-12 sm:py-16">
@@ -70,7 +81,7 @@ export default async function ProductDetailPage({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-[1.5rem] border border-[var(--color-line)] bg-[rgba(13,78,166,0.04)] px-5 py-5">
               <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
-                Danh mục cấp 2
+                {copy.subcategoryLabel}
               </div>
               <div className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
                 {product.subcategory}
@@ -78,7 +89,7 @@ export default async function ProductDetailPage({
             </div>
             <div className="rounded-[1.5rem] border border-[var(--color-line)] bg-[rgba(13,78,166,0.04)] px-5 py-5">
               <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
-                Hãng sản xuất
+                {copy.manufacturerLabel}
               </div>
               <div className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
                 {product.manufacturer}
@@ -88,7 +99,7 @@ export default async function ProductDetailPage({
 
           <div>
             <h2 className="font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-              Điểm nổi bật
+              {copy.highlightsLabel}
             </h2>
             <div className="mt-4 grid gap-3">
               {product.highlights.map((highlight) => (
@@ -101,7 +112,7 @@ export default async function ProductDetailPage({
 
           <div>
             <h2 className="font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-              Ứng dụng
+              {copy.applicationsLabel}
             </h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {product.applications.map((application) => (
@@ -120,13 +131,13 @@ export default async function ProductDetailPage({
               href={product.pdfPath}
               className="rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white"
             >
-              Tải tài liệu PDF
+              {copy.downloadPdf}
             </Link>
             <Link
               href={`/lien-he?interest=${product.slug}`}
               className="rounded-full border border-[var(--color-line)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"
             >
-              Liên hệ báo giá
+              {copy.requestQuote}
             </Link>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   getAdminConfigurationStatus,
@@ -32,140 +31,107 @@ export default async function AdminSettingsPage() {
   ].filter(Boolean) as string[];
 
   return (
-    <div className="section-shell py-12 sm:py-16">
-      <section className="flex flex-col gap-5 pb-10 lg:flex-row lg:items-end lg:justify-between">
-        <div className="space-y-4">
-          <span className="eyebrow">Cấu hình hệ thống</span>
-          <h1 className="section-title">Trạng thái cấu hình hệ thống</h1>
-          <p className="section-copy">
-            Theo dõi kết nối database, cấu hình email và trạng thái triển khai.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Cài đặt hệ thống</h1>
+        <p className="mt-1 text-sm text-gray-500">Trạng thái kết nối database, email và triển khai.</p>
+      </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/quan-tri/lien-he"
-            className="rounded-full border border-[var(--color-line)] bg-white px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"
-          >
-            Xem danh sách liên hệ
-          </Link>
-          <form action="/api/admin/logout" method="post">
-            <input type="hidden" name="redirectTo" value="/admin" />
-            <button
-              type="submit"
-              className="rounded-full border border-[var(--color-line)] bg-white px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"
-            >
-              Đăng xuất ({admin.username})
-            </button>
-          </form>
-        </div>
-      </section>
-
-      <section className="grid gap-6 lg:grid-cols-3">
-        <article className="panel px-6 py-6">
-          <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Database</div>
-          <h2 className="mt-3 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-            {statusBadge(databaseConfigured)}
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
-            Kết nối MongoDB cần `MONGODB_URI` và `MONGODB_DB`.
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Database</div>
+          <div className="mt-2 flex items-center gap-2">
+            <span className={`h-2.5 w-2.5 rounded-full ${databaseConfigured ? 'bg-emerald-500' : 'bg-red-400'}`} />
+            <span className="font-semibold text-gray-900">{statusBadge(databaseConfigured)}</span>
+          </div>
+          <p className="mt-2 text-xs text-gray-500">
+            MongoDB cần <code className="font-mono">MONGODB_URI</code> và <code className="font-mono">MONGODB_DB</code>.
           </p>
-          {!databaseConfigured ? (
-            <div className="mt-4 rounded-[1.5rem] bg-[rgba(201,60,60,0.08)] px-4 py-4 text-sm leading-7 text-[#8c2b2b]">
+          {!databaseConfigured && (
+            <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
               Thiếu: {missingDatabase.join(", ")}
             </div>
-          ) : null}
-        </article>
+          )}
+        </div>
 
-        <article className="panel px-6 py-6">
-          <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Admin auth</div>
-          <h2 className="mt-3 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-            {statusBadge(adminStatus.configured)}
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
-            Cần `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` để bảo vệ khu vực quản trị.
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Admin auth</div>
+          <div className="mt-2 flex items-center gap-2">
+            <span className={`h-2.5 w-2.5 rounded-full ${adminStatus.configured ? 'bg-emerald-500' : 'bg-amber-400'}`} />
+            <span className="font-semibold text-gray-900">{statusBadge(adminStatus.configured)}</span>
+          </div>
+          <p className="mt-2 text-xs text-gray-500">
+            Cần <code className="font-mono">ADMIN_USERNAME</code>, <code className="font-mono">ADMIN_PASSWORD</code>, <code className="font-mono">ADMIN_SESSION_SECRET</code>.
           </p>
-          {!adminStatus.configured ? (
-            <div className="mt-4 rounded-[1.5rem] bg-[rgba(201,60,60,0.08)] px-4 py-4 text-sm leading-7 text-[#8c2b2b]">
+          {!adminStatus.configured && (
+            <div className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700">
               Thiếu: {adminStatus.missing.join(", ")}
             </div>
-          ) : null}
-        </article>
+          )}
+        </div>
 
-        <article className="panel px-6 py-6">
-          <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Email delivery</div>
-          <h2 className="mt-3 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-            {mailStatus.activeProvider === "resend"
-              ? "Đang dùng Resend"
-              : mailStatus.activeProvider === "smtp"
-                ? "Đang dùng SMTP"
-                : "Chưa hoàn tất"}
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
-            Ưu tiên Resend nếu `RESEND_API_KEY` đầy đủ. Nếu chưa có, hệ thống sẽ dùng SMTP khi đủ biến.
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email delivery</div>
+          <div className="mt-2 flex items-center gap-2">
+            <span className={`h-2.5 w-2.5 rounded-full ${mailStatus.activeProvider !== null ? 'bg-emerald-500' : 'bg-red-400'}`} />
+            <span className="font-semibold text-gray-900">
+              {mailStatus.activeProvider === "resend" ? "Đang dùng Resend" : mailStatus.activeProvider === "smtp" ? "Đang dùng SMTP" : "Chưa cài đặt"}
+            </span>
+          </div>
+          <p className="mt-2 text-xs text-gray-500">
+            Ưu tiên Resend nếu có <code className="font-mono">RESEND_API_KEY</code>, dự phòng SMTP.
           </p>
-        </article>
-      </section>
+        </div>
+      </div>
 
-      <section className="grid gap-6 py-10 lg:grid-cols-2">
-        <article className="panel px-6 py-6">
-          <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Gmail SMTP</div>
-          <h2 className="mt-3 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-            Thiết lập nhanh bằng App Password
-          </h2>
-          <div className="mt-4 space-y-3 text-sm leading-7 text-[var(--color-muted)]">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6">
+          <h2 className="font-semibold text-gray-900">Gmail SMTP</h2>
+          <div className="mt-3 space-y-2 text-sm text-gray-500">
             <p>1. Bật xác minh hai bước cho tài khoản Gmail gửi mail.</p>
-            <p>2. Vào Google Account → Security → App passwords, tạo mật khẩu ứng dụng cho Mail.</p>
-            <p>3. Điền các biến: `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=465`, `SMTP_SECURE=true`.</p>
-            <p>4. Đặt `SMTP_USER` là địa chỉ Gmail, `SMTP_PASS` là App Password 16 ký tự.</p>
-            <p>5. Dùng `MAIL_FROM` là email gửi và `MAIL_TO` là hộp thư nhận lead.</p>
+            <p>2. Tạo App Password tại Google Account → Security → App passwords.</p>
+            <p>3. Biến: <code className="font-mono text-xs">SMTP_HOST=smtp.gmail.com</code>, <code className="font-mono text-xs">SMTP_PORT=465</code>, <code className="font-mono text-xs">SMTP_SECURE=true</code>.</p>
+            <p>4. <code className="font-mono text-xs">SMTP_USER</code> = Gmail, <code className="font-mono text-xs">SMTP_PASS</code> = App Password 16 ký tự.</p>
           </div>
           {!mailStatus.smtp.configured ? (
-            <div className="mt-4 rounded-[1.5rem] bg-[rgba(201,60,60,0.08)] px-4 py-4 text-sm leading-7 text-[#8c2b2b]">
-              Còn thiếu cho SMTP: {mailStatus.smtp.missing.join(", ")}
+            <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+              Thiếu: {mailStatus.smtp.missing.join(", ")}
             </div>
           ) : (
-            <div className="mt-4 rounded-[1.5rem] bg-[rgba(23,160,112,0.10)] px-4 py-4 text-sm leading-7 text-[#0f6c50]">
-              SMTP đã sẵn sàng hoạt động.
+            <div className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+              SMTP đã sẵn sàng.
             </div>
           )}
-        </article>
+        </div>
 
-        <article className="panel px-6 py-6">
-          <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Resend</div>
-          <h2 className="mt-3 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-            Thiết lập gọn hơn cho production
-          </h2>
-          <div className="mt-4 space-y-3 text-sm leading-7 text-[var(--color-muted)]">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6">
+          <h2 className="font-semibold text-gray-900">Resend API</h2>
+          <div className="mt-3 space-y-2 text-sm text-gray-500">
             <p>1. Tạo tài khoản Resend và xác minh domain gửi mail.</p>
-            <p>2. Tạo API key rồi gán vào `RESEND_API_KEY`.</p>
-            <p>3. Đặt `MAIL_FROM` bằng địa chỉ đã xác minh, ví dụ `TAKO Vietnam &lt;noreply@domain.com&gt;`.</p>
-            <p>4. Đặt `MAIL_TO` là địa chỉ nhận lead nội bộ.</p>
-            <p>5. Khi đủ biến, hệ thống sẽ ưu tiên gửi qua Resend trước SMTP.</p>
+            <p>2. Tạo API key rồi gán vào <code className="font-mono text-xs">RESEND_API_KEY</code>.</p>
+            <p>3. <code className="font-mono text-xs">MAIL_FROM</code> bằng địa chỉ đã xác minh.</p>
+            <p>4. <code className="font-mono text-xs">MAIL_TO</code> là địa chỉ nhận lead nội bộ.</p>
           </div>
           {!mailStatus.resend.configured ? (
-            <div className="mt-4 rounded-[1.5rem] bg-[rgba(201,60,60,0.08)] px-4 py-4 text-sm leading-7 text-[#8c2b2b]">
-              Còn thiếu cho Resend: {mailStatus.resend.missing.join(", ")}
+            <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+              Thiếu: {mailStatus.resend.missing.join(", ")}
             </div>
           ) : (
-            <div className="mt-4 rounded-[1.5rem] bg-[rgba(23,160,112,0.10)] px-4 py-4 text-sm leading-7 text-[#0f6c50]">
-              Resend đã sẵn sàng hoạt động.
+            <div className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+              Resend đã sẵn sàng.
             </div>
           )}
-        </article>
-      </section>
-
-      <section className="panel px-6 py-6">
-        <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Vercel</div>
-        <h2 className="mt-3 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-          Chuẩn bị để đồng bộ biến môi trường
-        </h2>
-        <div className="mt-4 space-y-3 text-sm leading-7 text-[var(--color-muted)]">
-          <p>1. Link project với Vercel CLI để repo có `.vercel/project.json`.</p>
-          <p>2. Dùng script đồng bộ env từ `.env.local` lên các môi trường preview và production.</p>
-          <p>3. Sau khi sync, deploy lại để app nạp cấu hình mail và admin mới.</p>
         </div>
-      </section>
+      </div>
+
+      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+        <h2 className="font-semibold text-gray-900">Triển khai Vercel</h2>
+        <div className="mt-3 space-y-2 text-sm text-gray-500">
+          <p>1. Link project với Vercel CLI để repo có <code className="font-mono text-xs">.vercel/project.json</code>.</p>
+          <p>2. Dùng script đồng bộ env từ <code className="font-mono text-xs">.env.local</code> lên các môi trường preview và production.</p>
+          <p>3. Sau khi sync, deploy lại để app nạp cấu hình mới.</p>
+        </div>
+      </div>
     </div>
   );
 }
