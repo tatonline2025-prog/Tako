@@ -1,7 +1,7 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { ObjectId } from "mongodb";
 import type { AdminRole } from "@/lib/admin-auth";
-import { ensureMongoIndexes, getMongoDatabase } from "@/lib/mongodb";
+import { getMongoDatabase } from "@/lib/mongodb";
 
 type AdminUserDocument = {
   _id: ObjectId;
@@ -21,7 +21,6 @@ export type AdminUser = {
 };
 
 async function getUsersCollection() {
-  await ensureMongoIndexes();
   const database = await getMongoDatabase();
   return database.collection<AdminUserDocument>("admin_users");
 }

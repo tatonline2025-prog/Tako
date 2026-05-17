@@ -6,7 +6,7 @@ import {
   type NewsArticle,
   type Product,
 } from "@/data/site";
-import { ensureMongoIndexes, getMongoDatabase } from "@/lib/mongodb";
+import { getMongoDatabase } from "@/lib/mongodb";
 
 type ProductDocument = Product & {
   _id?: ObjectId;
@@ -60,13 +60,11 @@ function normalizeProduct(product: Product): Product {
 }
 
 async function getProductsCollection() {
-  await ensureMongoIndexes();
   const database = await getMongoDatabase();
   return database.collection<ProductDocument>("products");
 }
 
 async function getNewsCollection() {
-  await ensureMongoIndexes();
   const database = await getMongoDatabase();
   return database.collection<NewsDocument>("news_articles");
 }

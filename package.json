@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "db:indexes": "node scripts/ensure-mongo-indexes.mjs",
     "vercel:env:sync": "node scripts/sync-vercel-env.mjs"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import type { ContactSubmissionInput } from "@/lib/contact-schema";
-import { ensureMongoIndexes, getMongoDatabase } from "@/lib/mongodb";
+import { getMongoDatabase } from "@/lib/mongodb";
 
 type ContactDocument = ContactSubmissionInput & {
   _id?: ObjectId;
@@ -15,7 +15,6 @@ export type StoredContact = ContactSubmissionInput & {
 };
 
 async function getContactsCollection() {
-  await ensureMongoIndexes();
   const database = await getMongoDatabase();
   return database.collection<ContactDocument>("contacts");
 }
