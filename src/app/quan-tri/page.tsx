@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+              { label: "Quản lý nội dung", href: "/quan-tri/noi-dung" },
 
 export default async function AdminDashboardPage() {
   const admin = await getAuthenticatedAdmin();
@@ -194,12 +195,12 @@ export default async function AdminDashboardPage() {
         <h2 className="font-semibold text-gray-900">Audit phạm vi quản trị</h2>
         <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { name: "Trang chủ", status: "Đã quản lý một phần (highlight/featured)", tone: "bg-emerald-50 text-emerald-700" },
+            { name: "Trang chủ", status: "Có editor nội dung", tone: "bg-emerald-50 text-emerald-700" },
             { name: "Sản phẩm", status: "CRUD đầy đủ", tone: "bg-emerald-50 text-emerald-700" },
             { name: "Tin tức", status: "CRUD đầy đủ", tone: "bg-emerald-50 text-emerald-700" },
             { name: "Liên hệ", status: "Đọc danh sách lead", tone: "bg-blue-50 text-blue-700" },
             { name: "Cài đặt hệ thống", status: admin.role === "admin" ? "Admin-only" : "Không có quyền", tone: admin.role === "admin" ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700" },
-            { name: "Giới thiệu", status: "Chưa có editor riêng", tone: "bg-slate-100 text-slate-700" },
+            { name: "Giới thiệu", status: "Có editor nội dung", tone: "bg-emerald-50 text-emerald-700" },
           ].map((item) => (
             <div key={item.name} className="rounded-xl border border-gray-200 px-4 py-3">
               <div className="text-sm font-semibold text-gray-900">{item.name}</div>

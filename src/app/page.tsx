@@ -11,6 +11,7 @@ import {
   listNewsArticles,
 } from "@/lib/catalog-repository";
 import { getRequestLocale, localizeText, type Locale } from "@/lib/i18n";
+import { getHomeContent } from "@/lib/site-content-repository";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
 const homeCopy = {
@@ -123,6 +124,7 @@ const homeCopy = {
 export default async function Home() {
   const locale = await getRequestLocale();
   const siteMetadata = getSiteMetadata(locale);
+  const homeContent = await getHomeContent();
   const featuredProducts = await listFeaturedProducts(6);
   const newsArticles = await listNewsArticles();
 
@@ -131,13 +133,13 @@ export default async function Home() {
       <section className="section-shell pt-10 pb-14 sm:pt-16 sm:pb-20">
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="space-y-8">
-            <span className="eyebrow">{localizeText(homeCopy.eyebrow, locale)}</span>
+            <span className="eyebrow">{localizeText(homeContent.eyebrow, locale)}</span>
             <div className="space-y-6">
               <h1 className="max-w-4xl font-[family:var(--font-display)] text-5xl font-bold tracking-tight text-[var(--color-ink)] sm:text-6xl lg:text-7xl">
                 {siteMetadata.tagline}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-[var(--color-muted)] sm:text-xl">
-                {localizeText(homeCopy.subhead, locale)}
+                {localizeText(homeContent.subhead, locale)}
               </p>
             </div>
 
@@ -189,7 +191,7 @@ export default async function Home() {
                   {localizeText(homeCopy.heroPartnerDesc, locale)}
                 </div>
                 <p className="mt-4 text-sm leading-7 text-white/80">
-                  {localizeText(homeCopy.heroDesc, locale)}
+                  {localizeText(homeContent.heroDesc, locale)}
                 </p>
               </div>
 
@@ -287,7 +289,7 @@ export default async function Home() {
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.featuredProducts, locale)}</span>
-            <h2 className="section-title">{localizeText(homeCopy.featuredProductsTitle, locale)}</h2>
+            <h2 className="section-title">{localizeText(homeContent.featuredProductsTitle, locale)}</h2>
           </div>
         </div>
 
@@ -363,7 +365,7 @@ export default async function Home() {
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
             <span className="eyebrow">{localizeText(homeCopy.featuredNews, locale)}</span>
-            <h2 className="section-title">{localizeText(homeCopy.newsTitle, locale)}</h2>
+            <h2 className="section-title">{localizeText(homeContent.newsTitle, locale)}</h2>
           </div>
           <Link href="/tin-tuc" className="text-sm font-semibold text-[var(--color-primary)]">
             {localizeText(homeCopy.readAllNews, locale)}

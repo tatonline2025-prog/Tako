@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { getSiteMetadata } from "@/data/site";
 import { getRequestLocale, localizeText } from "@/lib/i18n";
+import { getAboutContent } from "@/lib/site-content-repository";
 
 export const metadata: Metadata = {
   title: "Giới thiệu | About",
@@ -112,15 +113,16 @@ const capabilityItems = [
 export default async function AboutPage() {
   const locale = await getRequestLocale();
   const siteMetadata = getSiteMetadata(locale);
+  const aboutContent = await getAboutContent();
 
   return (
     <div className="section-shell py-12 sm:py-16">
       <section className="panel grid gap-8 px-6 py-8 lg:grid-cols-[1fr_0.9fr] lg:px-8 lg:py-10">
         <div className="space-y-5">
           <span className="eyebrow">{localizeText(copy.eyebrow, locale)}</span>
-          <h1 className="section-title">{localizeText(copy.h1, locale)}</h1>
-          <p className="section-copy">{siteMetadata.legalName} — {localizeText(copy.intro1, locale)}</p>
-          <p className="section-copy">{localizeText(copy.intro2, locale)}</p>
+          <h1 className="section-title">{localizeText(aboutContent.h1, locale)}</h1>
+          <p className="section-copy">{siteMetadata.legalName} — {localizeText(aboutContent.intro1, locale)}</p>
+          <p className="section-copy">{localizeText(aboutContent.intro2, locale)}</p>
         </div>
 
         <div className="rounded-[2rem] bg-[linear-gradient(160deg,#0d2d62,#165cbb)] p-6 text-white shadow-[0_30px_90px_rgba(13,45,98,0.24)]">
@@ -130,11 +132,11 @@ export default async function AboutPage() {
           <div className="mt-5 space-y-5">
             <div className="rounded-[1.5rem] border border-white/14 bg-white/8 p-5">
               <h2 className="font-[family:var(--font-display)] text-2xl font-semibold">{localizeText(copy.visionTitle, locale)}</h2>
-              <p className="mt-3 text-sm leading-7 text-white/82">{localizeText(copy.visionText, locale)}</p>
+              <p className="mt-3 text-sm leading-7 text-white/82">{localizeText(aboutContent.visionText, locale)}</p>
             </div>
             <div className="rounded-[1.5rem] border border-white/14 bg-white/8 p-5">
               <h2 className="font-[family:var(--font-display)] text-2xl font-semibold">{localizeText(copy.missionTitle, locale)}</h2>
-              <p className="mt-3 text-sm leading-7 text-white/82">{localizeText(copy.missionText, locale)}</p>
+              <p className="mt-3 text-sm leading-7 text-white/82">{localizeText(aboutContent.missionText, locale)}</p>
             </div>
           </div>
         </div>
@@ -159,8 +161,8 @@ export default async function AboutPage() {
       <section className="panel grid gap-8 px-6 py-8 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
         <div className="space-y-4">
           <span className="eyebrow">{localizeText(copy.capabilityEyebrow, locale)}</span>
-          <h2 className="section-title">{localizeText(copy.capabilityTitle, locale)}</h2>
-          <p className="section-copy">{localizeText(copy.capabilityDesc, locale)}</p>
+          <h2 className="section-title">{localizeText(aboutContent.capabilityTitle, locale)}</h2>
+          <p className="section-copy">{localizeText(aboutContent.capabilityDesc, locale)}</p>
           <Link
             href="/lien-he"
             className="inline-flex rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white"

@@ -54,6 +54,17 @@ const navItems = [
     exact: false,
   },
   {
+    href: "/quan-tri/noi-dung",
+    label: "Nội dung",
+    color: "text-fuchsia-700 bg-fuchsia-50",
+    icon: (
+      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}>
+        <path d="M4 6h16M4 12h10M4 18h8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    exact: false,
+  },
+  {
     href: "/quan-tri/cai-dat",
     label: "Cài đặt",
     color: "text-gray-700 bg-gray-100",
