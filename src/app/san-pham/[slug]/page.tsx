@@ -20,7 +20,7 @@ export async function generateMetadata({
   params,
 }: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return {
@@ -38,7 +38,7 @@ export default async function ProductDetailPage({
   params,
 }: ProductDetailPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   const locale = await getRequestLocale();
 
   if (!product) {
