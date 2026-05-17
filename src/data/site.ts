@@ -473,9 +473,15 @@ export const products: Product[] = [
   // --- Additional proteomics products ---
   {
     slug: "quantum-si-chip-cartridge",
-    name: "Chip Platinum® & Cartridge Kit",
+    name: {
+      en: "Chip Platinum® & Cartridge Kit",
+      vi: "Chip Platinum® và bộ Cartridge",
+    },
     category: "proteomics",
-    categoryName: "Proteomics",
+    categoryName: {
+      en: "Proteomics",
+      vi: "Proteomics",
+    },
     subcategory: "Vật tư tiêu hao Platinum®",
     manufacturer: "Quantum-Si",
     applications: ["Proteomics", "Protein sequencing", "PTM"],
