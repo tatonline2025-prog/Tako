@@ -41,6 +41,7 @@ function normalizeProduct(product: Product) {
 export function AdminProductManager({ categories, initialProducts }: AdminProductManagerProps) {
   const [products, setProducts] = useState(initialProducts.map(normalizeProduct));
   const [selectedSlug, setSelectedSlug] = useState(initialProducts[0]?.slug || "");
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [draft, setDraft] = useState<Product>(
     normalizeProduct(initialProducts[0] || templateProduct()),
   );
@@ -63,12 +64,14 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
   function loadProduct(product: Product) {
     setSelectedSlug(product.slug);
     applyDraft(product);
+    setIsEditorOpen(true);
     setFeedback("");
   }
 
   function startNewProduct() {
     setSelectedSlug("");
     applyDraft(templateProduct());
+    setIsEditorOpen(true);
     setFeedback("Đang tạo sản phẩm mới.");
   }
 
@@ -189,14 +192,15 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
         const fallback = next[0] || templateProduct();
         setSelectedSlug(next[0]?.slug || "");
         applyDraft(fallback);
+        setIsEditorOpen(false);
       }
 
       setFeedback("Đã xóa sản phẩm.");
     });
   }
 
-  return (
-    <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+  if (!isEditorOpen) {
+    return (
       <div className="rounded-2xl border border-gray-200 bg-white p-4">
         <div className="mb-3 flex items-center justify-between">
           <div>
@@ -208,7 +212,7 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
             onClick={startNewProduct}
             className="rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700"
           >
-            + Tạo mới
+            + Thêm mới
           </button>
         </div>
 
@@ -216,7 +220,7 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
           {products.map((product) => (
             <div
               key={product.slug}
-              className={`rounded-xl border px-3 py-3 ${selectedSlug === product.slug ? "border-blue-300 bg-blue-50" : "border-gray-200 bg-white"}`}
+              className="rounded-xl border border-gray-200 bg-white px-3 py-3"
             >
               <div className="text-sm font-semibold text-gray-900">{product.name.vi || "(Chưa đặt tên)"}</div>
               <div className="mt-1 text-xs text-gray-500">{product.slug}</div>
@@ -242,21 +246,35 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-sm font-semibold text-gray-900">
             {selectedProduct ? `Đang sửa: ${selectedProduct.slug}` : "Sản phẩm mới"}
           </h2>
-          <button
-            type="button"
-            onClick={saveProduct}
-            disabled={isPending}
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
-          >
-            {isPending ? "Đang lưu..." : "Lưu sản phẩm"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsEditorOpen(false)}
+              className="rounded-xl border border-gray-300 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+            >
+              Quay lại danh sách
+            </button>
+            <button
+              type="button"
+              onClick={saveProduct}
+              disabled={isPending}
+              className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            >
+              {isPending ? "Đang lưu..." : "Lưu sản phẩm"}
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -441,8 +459,7 @@ export function AdminProductManager({ categories, initialProducts }: AdminProduc
           </div>
         </div>
 
-        {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
-      </div>
+      {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
     </div>
   );
 }

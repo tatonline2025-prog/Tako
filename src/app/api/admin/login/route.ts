@@ -8,6 +8,7 @@ import {
   normalizeRedirectPath,
   verifyAdminCredentials,
 } from "@/lib/admin-auth";
+import { verifyAdminUserCredentials } from "@/lib/admin-users-repository";
 
 const loginSchema = z.object({
   password: z.string().min(1),
@@ -40,7 +41,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const identity = verifyAdminCredentials(
+  const dbIdentity = await verifyAdminUserCredentials(
+    parsed.data.username,
+    parsed.data.password,
+  );
+
+  const identity = dbIdentity || verifyAdminCredentials(
     parsed.data.username,
     parsed.data.password,
   );

@@ -10,7 +10,7 @@ import { getMailSetupStatus } from "@/lib/mailer";
 
 export const metadata: Metadata = {
   title: "Cài đặt hệ thống",
-  description: "Xem trạng thái cấu hình admin, SMTP, Resend và hướng dẫn triển khai trên Vercel.",
+  description: "Xem trạng thái cấu hình admin, SMTP và Resend.",
 };
 
 function statusBadge(configured: boolean) {
@@ -91,57 +91,52 @@ export default async function AdminSettingsPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-1">
         <AdminMailSettingsForm initialSettings={storedMailSettings} />
-
-        <div className="rounded-2xl border border-gray-200 bg-white p-6">
-          <h2 className="font-semibold text-gray-900">Gmail SMTP</h2>
-          <div className="mt-3 space-y-2 text-sm text-gray-500">
-            <p>1. Bật xác minh hai bước cho tài khoản Gmail gửi mail.</p>
-            <p>2. Vào Google Account → Security → App passwords → chọn Mail để lấy mật khẩu 16 ký tự.</p>
-            <p>3. Biến: <code className="font-mono text-xs">SMTP_HOST=smtp.gmail.com</code>, <code className="font-mono text-xs">SMTP_PORT=465</code>, <code className="font-mono text-xs">SMTP_SECURE=true</code>.</p>
-            <p>4. <code className="font-mono text-xs">SMTP_USER</code> = Gmail, <code className="font-mono text-xs">SMTP_PASS</code> = App Password 16 ký tự.</p>
-            <p>5. Lưu cấu hình, sau đó bấm &quot;Gửi email test&quot; để xác nhận kết nối SMTP.</p>
-          </div>
-          {!mailStatus.smtp.configured ? (
-            <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
-              Thiếu: {mailStatus.smtp.missing.join(", ")}
-            </div>
-          ) : (
-            <div className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
-              SMTP đã sẵn sàng.
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl border border-gray-200 bg-white p-6">
-          <h2 className="font-semibold text-gray-900">Resend API</h2>
-          <div className="mt-3 space-y-2 text-sm text-gray-500">
-            <p>1. Tạo tài khoản Resend và thêm domain gửi mail ở mục Domains.</p>
-            <p>2. Cấu hình DNS theo hướng dẫn của Resend đến khi domain hiển thị trạng thái Verified.</p>
-            <p>3. Tạo API key ở mục API Keys rồi gán vào <code className="font-mono text-xs">RESEND_API_KEY</code>.</p>
-            <p>4. <code className="font-mono text-xs">MAIL_FROM</code> bằng địa chỉ đã xác minh.</p>
-            <p>5. <code className="font-mono text-xs">MAIL_TO</code> là địa chỉ nhận lead nội bộ.</p>
-            <p>6. Bấm &quot;Gửi email test&quot; để kiểm tra key và domain đã hoạt động.</p>
-          </div>
-          {!mailStatus.resend.configured ? (
-            <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
-              Thiếu: {mailStatus.resend.missing.join(", ")}
-            </div>
-          ) : (
-            <div className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
-              Resend đã sẵn sàng.
-            </div>
-          )}
-        </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6">
-        <h2 className="font-semibold text-gray-900">Triển khai Vercel</h2>
-        <div className="mt-3 space-y-2 text-sm text-gray-500">
-          <p>1. Link project với Vercel CLI để repo có <code className="font-mono text-xs">.vercel/project.json</code>.</p>
-          <p>2. Dùng script đồng bộ env từ <code className="font-mono text-xs">.env.local</code> lên các môi trường preview và production.</p>
-          <p>3. Sau khi sync, deploy lại để app nạp cấu hình mới.</p>
+      <div className="overflow-x-auto">
+        <div className="flex min-w-max gap-4 pb-2">
+          <div className="w-[380px] rounded-2xl border border-gray-200 bg-white p-6">
+            <h2 className="font-semibold text-gray-900">Resend API</h2>
+            <div className="mt-3 space-y-2 text-sm text-gray-500">
+              <p>1. Tạo tài khoản Resend và thêm domain gửi mail ở mục Domains.</p>
+              <p>2. Cấu hình DNS theo hướng dẫn của Resend đến khi domain hiển thị trạng thái Verified.</p>
+              <p>3. Tạo API key ở mục API Keys rồi gán vào <code className="font-mono text-xs">RESEND_API_KEY</code>.</p>
+              <p>4. <code className="font-mono text-xs">MAIL_FROM</code> bằng địa chỉ đã xác minh.</p>
+              <p>5. <code className="font-mono text-xs">MAIL_TO</code> là địa chỉ nhận lead nội bộ.</p>
+              <p>6. Bấm &quot;Gửi email test&quot; để kiểm tra key và domain đã hoạt động.</p>
+            </div>
+            {!mailStatus.resend.configured ? (
+              <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+                Thiếu: {mailStatus.resend.missing.join(", ")}
+              </div>
+            ) : (
+              <div className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+                Resend đã sẵn sàng.
+              </div>
+            )}
+          </div>
+
+          <div className="w-[380px] rounded-2xl border border-gray-200 bg-white p-6">
+            <h2 className="font-semibold text-gray-900">Gmail SMTP</h2>
+            <div className="mt-3 space-y-2 text-sm text-gray-500">
+              <p>1. Bật xác minh hai bước cho tài khoản Gmail gửi mail.</p>
+              <p>2. Vào Google Account → Security → App passwords → chọn Mail để lấy mật khẩu 16 ký tự.</p>
+              <p>3. Biến: <code className="font-mono text-xs">SMTP_HOST=smtp.gmail.com</code>, <code className="font-mono text-xs">SMTP_PORT=465</code>, <code className="font-mono text-xs">SMTP_SECURE=true</code>.</p>
+              <p>4. <code className="font-mono text-xs">SMTP_USER</code> = Gmail, <code className="font-mono text-xs">SMTP_PASS</code> = App Password 16 ký tự.</p>
+              <p>5. Lưu cấu hình, sau đó bấm &quot;Gửi email test&quot; để xác nhận kết nối SMTP.</p>
+            </div>
+            {!mailStatus.smtp.configured ? (
+              <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+                Thiếu: {mailStatus.smtp.missing.join(", ")}
+              </div>
+            ) : (
+              <div className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+                SMTP đã sẵn sàng.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ export function FloatingFrontActions({
   return (
     <>
       <FloatingZaloShortcut href={zaloUrl} label={zaloLabel} />
-      <FloatingHomeShortcut label={homeLabel} bottom compact />
+      <FloatingHomeShortcut label={homeLabel} bottom compact tone="sun" />
     </>
   );
 }

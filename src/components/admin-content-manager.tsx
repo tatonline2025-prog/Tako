@@ -14,6 +14,7 @@ type LocaleField = "vi" | "en";
 
 export function AdminContentManager({ initialAbout, initialHome }: AdminContentManagerProps) {
   const [scope, setScope] = useState<Scope>("home");
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [locale, setLocale] = useState<LocaleField>("vi");
   const [homeDraft, setHomeDraft] = useState<HomeContent>(initialHome);
   const [aboutDraft, setAboutDraft] = useState<AboutContent>(initialAbout);
@@ -60,47 +61,56 @@ export function AdminContentManager({ initialAbout, initialHome }: AdminContentM
     });
   }
 
-  return (
-    <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
+  function openScope(nextScope: Scope) {
+    setScope(nextScope);
+    setIsEditorOpen(true);
+    setFeedback("");
+  }
+
+  if (!isEditorOpen) {
+    return (
       <div className="rounded-2xl border border-gray-200 bg-white p-5">
-        <h2 className="text-base font-semibold text-gray-900">Danh sách trang</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Chọn trang cần sửa rồi cập nhật nhanh nội dung.
-        </p>
+        <h2 className="text-base font-semibold text-gray-900">Danh sách trang nội dung</h2>
+        <p className="mt-1 text-sm text-gray-500">Chọn trang cần sửa để mở trình biên tập toàn màn hình.</p>
 
         <div className="mt-4 space-y-2">
           <button
             type="button"
-            onClick={() => setScope("home")}
-            className={`w-full rounded-xl border px-4 py-3 text-left text-sm ${scope === "home" ? "border-blue-300 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-700 hover:bg-gray-50"}`}
+            onClick={() => openScope("home")}
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50"
           >
             <div className="font-semibold">Trang chủ</div>
             <div className="mt-0.5 text-xs">Sửa phần hero, sản phẩm nổi bật, tiêu đề tin tức</div>
           </button>
           <button
             type="button"
-            onClick={() => setScope("about")}
-            className={`w-full rounded-xl border px-4 py-3 text-left text-sm ${scope === "about" ? "border-violet-300 bg-violet-50 text-violet-700" : "border-gray-200 text-gray-700 hover:bg-gray-50"}`}
+            onClick={() => openScope("about")}
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50"
           >
             <div className="font-semibold">Giới thiệu</div>
             <div className="mt-0.5 text-xs">Sửa tầm nhìn, sứ mệnh và năng lực</div>
           </button>
         </div>
 
-        <div className="mt-4 rounded-xl bg-gray-50 p-3 text-xs leading-6 text-gray-600">
-          <div className="font-semibold text-gray-700">Gợi ý:</div>
-          <div>- Dùng nút B/I/list để định dạng nhanh.</div>
-          <div>- Có thể chèn ảnh bằng URL trong trình soạn thảo.</div>
-          <div>- Có thể viết tiếng Việt trước, sau đó bổ sung tiếng Anh sau.</div>
-        </div>
+        {feedback ? <p className="mt-3 text-sm text-gray-700">{feedback}</p> : null}
       </div>
+    );
+  }
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-5">
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-base font-semibold text-gray-900">
             {scope === "home" ? "Nội dung trang chủ" : "Nội dung giới thiệu"}
           </h2>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsEditorOpen(false)}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+            >
+              Quay lại danh sách
+            </button>
             {(["vi", "en"] as LocaleField[]).map((item) => (
               <button
                 key={item}
@@ -219,8 +229,7 @@ export function AdminContentManager({ initialAbout, initialHome }: AdminContentM
           </div>
         )}
 
-        {feedback ? <p className="mt-3 text-sm text-gray-700">{feedback}</p> : null}
-      </div>
+      {feedback ? <p className="mt-3 text-sm text-gray-700">{feedback}</p> : null}
     </div>
   );
 }

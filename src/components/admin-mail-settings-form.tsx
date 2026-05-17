@@ -77,15 +77,26 @@ export function AdminMailSettingsForm({ initialSettings }: AdminMailSettingsForm
       <h2 className="font-semibold text-gray-900">Cấu hình gửi email (lưu trong MongoDB)</h2>
       <p className="mt-1 text-xs text-gray-500">Thiết lập này ghi đè env server khi gửi mail lead.</p>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <label className="grid gap-1 text-sm text-gray-700">
-          Provider
-          <select value={provider} onChange={(event) => setProvider(event.target.value as "resend" | "smtp")} className="rounded-lg border border-gray-300 px-3 py-2">
-            <option value="resend">Resend</option>
-            <option value="smtp">SMTP</option>
-          </select>
-        </label>
+      <div className="mt-4 overflow-x-auto">
+        <div className="inline-flex min-w-full gap-2 rounded-xl bg-slate-100 p-1">
+          <button
+            type="button"
+            onClick={() => setProvider("resend")}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${provider === "resend" ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:text-slate-900"}`}
+          >
+            Resend
+          </button>
+          <button
+            type="button"
+            onClick={() => setProvider("smtp")}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${provider === "smtp" ? "bg-white text-blue-700 shadow-sm" : "text-slate-600 hover:text-slate-900"}`}
+          >
+            SMTP
+          </button>
+        </div>
+      </div>
 
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
         <label className="grid gap-1 text-sm text-gray-700">
           MAIL_FROM
           <input value={mailFrom} onChange={(event) => setMailFrom(event.target.value)} className="rounded-lg border border-gray-300 px-3 py-2" placeholder="contact@takovietnam.vn" />

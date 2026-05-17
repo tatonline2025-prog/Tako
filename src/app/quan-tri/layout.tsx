@@ -55,6 +55,19 @@ const navItems = [
     tone: "from-amber-500 to-orange-600",
   },
   {
+    href: "/quan-tri/nguoi-dung",
+    label: "Người dùng",
+    icon: (
+      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}>
+        <circle cx="9" cy="8" r="3" />
+        <path d="M3 19c0-3 2.5-5 6-5s6 2 6 5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M17 8h4M19 6v4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    exact: false,
+    tone: "from-cyan-500 to-sky-600",
+  },
+  {
     href: "/quan-tri/cai-dat",
     label: "Cài đặt",
     icon: (
@@ -95,9 +108,15 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <input type="hidden" name="redirectTo" value="/admin" />
               <button
                 type="submit"
-                className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100"
+                aria-label="Đăng xuất"
+                title="Đăng xuất"
               >
-                Đăng xuất
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M16 17l5-5-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M21 12H9" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </button>
             </form>
           </div>
@@ -131,17 +150,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <div className="border-t border-slate-200/80 p-3">
-          <form action="/api/admin/logout" method="post">
-            <input type="hidden" name="redirectTo" value="/admin" />
-            <button
-              type="submit"
-              className="flex w-full items-center justify-center rounded-xl border border-rose-200 bg-rose-50 px-3 py-2.5 text-sm font-semibold text-rose-700 transition hover:bg-rose-100"
-            >
-              Đăng xuất
-            </button>
-          </form>
-        </div>
       </aside>
 
       <div className="flex flex-1 flex-col overflow-hidden">

@@ -31,6 +31,7 @@ function templateArticle(): NewsArticle {
 export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
   const [articles, setArticles] = useState(initialArticles.map(normalizeArticle));
   const [selectedSlug, setSelectedSlug] = useState(initialArticles[0]?.slug || "");
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [draft, setDraft] = useState<NewsArticle>(
     normalizeArticle(initialArticles[0] || templateArticle()),
   );
@@ -42,12 +43,14 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
   function openArticle(article: NewsArticle) {
     setSelectedSlug(article.slug);
     setDraft(normalizeArticle(article));
+    setIsEditorOpen(true);
     setFeedback("");
   }
 
   function newArticle() {
     setSelectedSlug("");
     setDraft(templateArticle());
+    setIsEditorOpen(true);
     setFeedback("Đang tạo bài viết mới.");
   }
 
@@ -167,13 +170,14 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
         const fallback = next[0] || templateArticle();
         setSelectedSlug(next[0]?.slug || "");
         setDraft(fallback);
+        setIsEditorOpen(false);
       }
       setFeedback("Đã xóa bài viết.");
     });
   }
 
-  return (
-    <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+  if (!isEditorOpen) {
+    return (
       <div className="rounded-2xl border border-gray-200 bg-white p-4">
         <div className="mb-3 flex items-center justify-between">
           <div>
@@ -185,7 +189,7 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
             onClick={newArticle}
             className="rounded-xl bg-violet-600 px-3 py-2 text-xs font-semibold text-white hover:bg-violet-700"
           >
-            + Tạo mới
+            + Thêm mới
           </button>
         </div>
 
@@ -193,7 +197,7 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
           {articles.map((article) => (
             <div
               key={article.slug}
-              className={`rounded-xl border px-3 py-3 ${selectedSlug === article.slug ? "border-violet-300 bg-violet-50" : "border-gray-200 bg-white"}`}
+              className="rounded-xl border border-gray-200 bg-white px-3 py-3"
             >
               <div className="text-sm font-semibold text-gray-900">{article.title.vi || "(Chưa đặt tiêu đề)"}</div>
               <div className="mt-1 text-xs text-gray-500">{article.slug}</div>
@@ -211,14 +215,26 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-sm font-semibold text-gray-900">
             {selectedSlug ? `Đang sửa: ${selectedSlug}` : "Bài viết mới"}
           </h2>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsEditorOpen(false)}
+              className="rounded-xl border border-gray-300 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+            >
+              Quay lại danh sách
+            </button>
             <button
               type="button"
               onClick={translateEnglish}
@@ -310,8 +326,7 @@ export function AdminNewsManager({ initialArticles }: AdminNewsManagerProps) {
           />
         </div>
 
-        {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
-      </div>
+      {feedback ? <p className="mt-4 text-sm text-gray-700">{feedback}</p> : null}
     </div>
   );
 }

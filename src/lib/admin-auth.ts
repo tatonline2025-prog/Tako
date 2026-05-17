@@ -177,17 +177,9 @@ export function verifyAdminSessionToken(token?: string): AdminIdentity | null {
       return null;
     }
 
-    const account = credentials.users.find((candidate) =>
-      safeEqual(username, candidate.username),
-    );
-
-    if (!account) {
-      return null;
-    }
-
     return {
-      role: account.role,
-      username: account.username,
+      role,
+      username,
     };
   } catch {
     return null;
