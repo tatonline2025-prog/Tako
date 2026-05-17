@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import {
-  navigationItems,
-  siteMetadata,
+  getNavigationItems,
+  getSiteMetadata,
 } from "@/data/site";
+import {
+  chromeCopy,
+  getRequestLocale,
+  localizeText,
+} from "@/lib/i18n";
 import "./globals.css";
 
 const bodyFont = IBM_Plex_Sans({
@@ -19,29 +25,34 @@ const displayFont = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteMetadata.companyName} | Cong nghe sinh hoc va chan doan lam sang`,
-    template: `%s | ${siteMetadata.companyName}`,
+    default: `TAKO Vietnam | Công nghệ sinh học và chẩn đoán lâm sàng`,
+    template: `%s | TAKO Vietnam`,
   },
-  description: siteMetadata.description,
-  applicationName: siteMetadata.companyName,
+  description:
+    "TAKO Vietnam phân phối thiết bị, sinh phẩm và giải pháp công nghệ sinh học cho phòng xét nghiệm, bệnh viện, trung tâm nghiên cứu và doanh nghiệp dược sinh học.",
+  applicationName: "TAKO Vietnam",
   keywords: [
     "TAKO Vietnam",
     "Proteomics",
     "NGS",
     "PCR",
-    "Sinh hoc phan tu",
-    "Chan doan lam sang",
+    "Sinh học phân tử",
+    "Chẩn đoán lâm sàng",
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getRequestLocale();
+  const siteMetadata = getSiteMetadata(locale);
+  const navigationItems = getNavigationItems(locale);
+
   return (
     <html
-      lang="vi"
+      lang={locale}
       className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-[var(--color-bg)] text-[var(--color-ink)]">
@@ -58,29 +69,43 @@ export default function RootLayout({
                     {siteMetadata.companyName}
                   </span>
                   <span className="block text-xs uppercase tracking-[0.24em] text-[var(--color-muted)]">
-                    Biotechnology systems partner
+                    {localizeText(chromeCopy.partnerTagline, locale)}
                   </span>
                 </span>
               </Link>
 
-              <nav className="hidden items-center gap-6 text-sm font-medium text-[var(--color-muted)] lg:flex">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="transition hover:text-[var(--color-ink)]"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
+              <div className="hidden items-center gap-4 lg:flex">
+                <nav className="items-center gap-6 text-sm font-medium text-[var(--color-muted)] lg:flex">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="transition hover:text-[var(--color-ink)]"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+                <LanguageSwitcher
+                  currentLocale={locale}
+                  label={localizeText(chromeCopy.language, locale)}
+                />
+              </div>
 
-              <Link
-                href="/lien-he"
-                className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(13,45,98,0.18)] transition hover:bg-[var(--color-primary-strong)]"
-              >
-                Lien he bao gia
-              </Link>
+              <div className="flex items-center gap-3">
+                <div className="lg:hidden">
+                  <LanguageSwitcher
+                    currentLocale={locale}
+                    label={localizeText(chromeCopy.language, locale)}
+                  />
+                </div>
+                <Link
+                  href="/lien-he"
+                  className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(13,45,98,0.18)] transition hover:bg-[var(--color-primary-strong)]"
+                >
+                  {localizeText(chromeCopy.cta, locale)}
+                </Link>
+              </div>
             </div>
           </header>
 
@@ -93,15 +118,13 @@ export default function RootLayout({
                   {siteMetadata.legalName}
                 </h2>
                 <p className="max-w-xl text-sm leading-7 text-[var(--color-muted)]">
-                  Website demo dinh huong catalog B2B cho thiet bi, sinh pham,
-                  vat tu tieu hao va giai phap cong nghe sinh hoc, y sinh phan tu,
-                  chan doan lam sang.
+                  {localizeText(chromeCopy.footerDescription, locale)}
                 </p>
               </div>
 
               <div className="space-y-4 text-sm text-[var(--color-muted)]">
                 <h3 className="font-[family:var(--font-display)] text-base font-semibold text-[var(--color-ink)]">
-                  Lien ket nhanh
+                  {localizeText(chromeCopy.quickLinks, locale)}
                 </h3>
                 <div className="grid gap-3">
                   {navigationItems.map((item) => (
@@ -114,7 +137,7 @@ export default function RootLayout({
 
               <div className="space-y-4 text-sm text-[var(--color-muted)]">
                 <h3 className="font-[family:var(--font-display)] text-base font-semibold text-[var(--color-ink)]">
-                  Lien he
+                  {localizeText(chromeCopy.contact, locale)}
                 </h3>
                 <p>{siteMetadata.address}</p>
                 <a href={`tel:${siteMetadata.hotline.replace(/\s+/g, "")}`} className="block hover:text-[var(--color-ink)]">
@@ -132,13 +155,13 @@ export default function RootLayout({
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0068ff] text-xs font-bold text-white">
                     Z
                   </span>
-                  Zalo chat
+                  {localizeText(chromeCopy.zaloChat, locale)}
                 </a>
               </div>
             </div>
 
             <div className="border-t border-[var(--color-line)] px-6 py-4 text-center text-xs uppercase tracking-[0.24em] text-[var(--color-muted)] lg:px-8">
-              Copyright {new Date().getFullYear()} TAKO Vietnam. Chinh sach bao mat dang duoc cap nhat.
+              Copyright {new Date().getFullYear()} TAKO Vietnam. {localizeText(chromeCopy.copyright, locale)}
             </div>
           </footer>
         </div>

@@ -43,6 +43,27 @@ export function isAdminConfigured() {
   return Boolean(getAdminCredentials());
 }
 
+export function getAdminConfigurationStatus() {
+  const missing: string[] = [];
+
+  if (!process.env.ADMIN_USERNAME) {
+    missing.push("ADMIN_USERNAME");
+  }
+
+  if (!process.env.ADMIN_PASSWORD) {
+    missing.push("ADMIN_PASSWORD");
+  }
+
+  if (!process.env.ADMIN_SESSION_SECRET) {
+    missing.push("ADMIN_SESSION_SECRET");
+  }
+
+  return {
+    configured: missing.length === 0,
+    missing,
+  };
+}
+
 export function verifyAdminCredentials(username: string, password: string) {
   const credentials = getAdminCredentials();
 

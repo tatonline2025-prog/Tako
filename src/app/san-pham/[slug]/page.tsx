@@ -19,7 +19,7 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: "San pham khong ton tai",
+      title: "Sản phẩm không tồn tại",
     };
   }
 
@@ -70,7 +70,7 @@ export default async function ProductDetailPage({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-[1.5rem] border border-[var(--color-line)] bg-[rgba(13,78,166,0.04)] px-5 py-5">
               <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
-                Danh muc cap 2
+                Danh mục cấp 2
               </div>
               <div className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
                 {product.subcategory}
@@ -78,7 +78,7 @@ export default async function ProductDetailPage({
             </div>
             <div className="rounded-[1.5rem] border border-[var(--color-line)] bg-[rgba(13,78,166,0.04)] px-5 py-5">
               <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
-                Hang san xuat
+                Hãng sản xuất
               </div>
               <div className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
                 {product.manufacturer}
@@ -88,7 +88,7 @@ export default async function ProductDetailPage({
 
           <div>
             <h2 className="font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-              Diem noi bat
+              Điểm nổi bật
             </h2>
             <div className="mt-4 grid gap-3">
               {product.highlights.map((highlight) => (
@@ -101,7 +101,7 @@ export default async function ProductDetailPage({
 
           <div>
             <h2 className="font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
-              Ung dung
+              Ứng dụng
             </h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {product.applications.map((application) => (
@@ -120,13 +120,13 @@ export default async function ProductDetailPage({
               href={product.pdfPath}
               className="rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white"
             >
-              Tai tai lieu PDF
+              Tải tài liệu PDF
             </Link>
             <Link
               href={`/lien-he?interest=${product.slug}`}
               className="rounded-full border border-[var(--color-line)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)]"
             >
-              Lien he bao gia
+              Liên hệ báo giá
             </Link>
           </div>
         </div>

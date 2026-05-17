@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   if (!isAdminConfigured()) {
     return NextResponse.json(
       {
-        message: "Thong tin dang nhap quan tri chua duoc cau hinh.",
+        message: "Thông tin đăng nhập quản trị chưa được cấu hình.",
       },
       { status: 500 },
     );
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return NextResponse.json(
       {
-        message: "Vui long nhap day du tai khoan va mat khau.",
+        message: "Vui lòng nhập đầy đủ tài khoản và mật khẩu.",
       },
       { status: 400 },
     );
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
   if (!verifyAdminCredentials(parsed.data.username, parsed.data.password)) {
     return NextResponse.json(
       {
-        message: "Thong tin dang nhap khong chinh xac.",
+        message: "Thông tin đăng nhập không chính xác.",
       },
       { status: 401 },
     );
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
 
   const redirectTo = normalizeRedirectPath(parsed.data.redirectTo);
   const response = NextResponse.json({
-    message: "Dang nhap thanh cong.",
+    message: "Đăng nhập thành công.",
     redirectTo,
   });
 

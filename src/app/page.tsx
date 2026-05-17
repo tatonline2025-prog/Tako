@@ -4,26 +4,91 @@ import {
   companyHighlights,
   featuredProducts,
   focusAreas,
+  getSiteMetadata,
   newsArticles,
   partnerManufacturers,
-  siteMetadata,
 } from "@/data/site";
+import { getRequestLocale, localizeText, type Locale } from "@/lib/i18n";
 
-export default function Home() {
+const homeCopy = {
+  eyebrow: {
+    en: "B2B biotechnology solutions",
+    vi: "Giải pháp công nghệ sinh học B2B",
+  },
+  exploreCatalog: {
+    en: "Explore catalog",
+    vi: "Khám phá danh mục",
+  },
+  featuredNews: {
+    en: "Featured news",
+    vi: "Tin tức nổi bật",
+  },
+  featuredProducts: {
+    en: "Featured products",
+    vi: "Sản phẩm nổi bật",
+  },
+  fieldOverview: {
+    en: "Core sectors",
+    vi: "Lĩnh vực chính",
+  },
+  partnerLabs: {
+    en: "Labs, hospitals, and research centers",
+    vi: "Phòng xét nghiệm, bệnh viện và trung tâm nghiên cứu",
+  },
+  partners: {
+    en: "Manufacturing partners",
+    vi: "Nhà sản xuất đối tác",
+  },
+  quote: {
+    en: "Request consultation",
+    vi: "Yêu cầu tư vấn",
+  },
+  readAllNews: {
+    en: "View all articles",
+    vi: "Xem tất cả bài viết",
+  },
+  solutionSystem: {
+    en: "A platform shaped to present a manageable, searchable product system",
+    vi: "Nền tảng được xây dựng để gợi mở một hệ thống sản phẩm dễ quản trị và dễ tra cứu",
+  },
+  stats: {
+    en: [
+      ["05", "Core solution groups"],
+      ["10+", "Demo catalog items"],
+      ["08", "Key manufacturing partners"],
+    ],
+    vi: [
+      ["05", "Nhóm giải pháp chính"],
+      ["10+", "Danh mục sản phẩm demo"],
+      ["08", "Hãng đối tác tiêu biểu"],
+    ],
+  },
+  subhead: {
+    en: "TAKO Vietnam connects equipment, reagents, and workflows for laboratories, hospitals, research centers, institutes, and biotech enterprises.",
+    vi: "TAKO Vietnam kết nối thiết bị, sinh phẩm và workflow ứng dụng cho phòng xét nghiệm, bệnh viện, trung tâm nghiên cứu, viện kiểm định và doanh nghiệp dược sinh học.",
+  },
+  workflows: {
+    en: "Solutions structured around laboratory workflows",
+    vi: "Danh mục giải pháp được tổ chức theo workflow phòng xét nghiệm",
+  },
+};
+
+export default async function Home() {
+  const locale = await getRequestLocale();
+  const siteMetadata = getSiteMetadata(locale);
+
   return (
     <div className="pb-20">
       <section className="section-shell pt-10 pb-14 sm:pt-16 sm:pb-20">
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="space-y-8">
-            <span className="eyebrow">B2B biotechnology solutions</span>
+            <span className="eyebrow">{localizeText(homeCopy.eyebrow, locale)}</span>
             <div className="space-y-6">
               <h1 className="max-w-4xl font-[family:var(--font-display)] text-5xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-6xl lg:text-7xl">
                 {siteMetadata.tagline}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-[var(--color-muted)] sm:text-xl">
-                TAKO Vietnam ket noi thiet bi, sinh pham va workflow ung dung cho
-                phong xet nghiem, benh vien, trung tam nghien cuu, vien kiem dinh
-                va doanh nghiep duoc sinh hoc.
+                {localizeText(homeCopy.subhead, locale)}
               </p>
             </div>
 
@@ -32,22 +97,18 @@ export default function Home() {
                 href="/san-pham"
                 className="inline-flex items-center justify-center rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(13,78,166,0.22)] transition hover:bg-[var(--color-primary-strong)]"
               >
-                Kham pha danh muc
+                {localizeText(homeCopy.exploreCatalog, locale)}
               </Link>
               <Link
                 href="/lien-he"
                 className="inline-flex items-center justify-center rounded-full border border-[var(--color-line)] bg-white px-6 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
               >
-                Yeu cau tu van
+                {localizeText(homeCopy.quote, locale)}
               </Link>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-              {[
-                ["05", "Nhom giai phap chinh"],
-                ["10+", "Danh muc san pham demo"],
-                ["08", "Hang doi tac tieu bieu"],
-              ].map(([value, label]) => (
+              {homeCopy.stats[locale as Locale].map(([value, label]) => (
                 <div key={label} className="panel px-5 py-5">
                   <div className="font-[family:var(--font-display)] text-3xl font-semibold text-[var(--color-primary)]">
                     {value}
@@ -99,8 +160,8 @@ export default function Home() {
       <section className="section-shell pb-16">
         <div className="panel grid gap-8 px-6 py-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
           <div className="space-y-4">
-            <span className="eyebrow">Dinh huong phat trien</span>
-            <h2 className="section-title">Nen tang duoc xay dung de goi mo mot he thong san pham de quan tri va de tra cuu</h2>
+            <span className="eyebrow">Định hướng phát triển</span>
+            <h2 className="section-title">{localizeText(homeCopy.solutionSystem, locale)}</h2>
           </div>
           <div className="grid gap-4">
             {companyHighlights.map((highlight) => (
@@ -118,11 +179,11 @@ export default function Home() {
       <section className="section-shell pb-16">
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
-            <span className="eyebrow">Linh vuc chinh</span>
-            <h2 className="section-title">Danh muc giai phap duoc to chuc theo workflow phong xet nghiem</h2>
+            <span className="eyebrow">{localizeText(homeCopy.fieldOverview, locale)}</span>
+            <h2 className="section-title">{localizeText(homeCopy.workflows, locale)}</h2>
           </div>
           <Link href="/san-pham" className="text-sm font-semibold text-[var(--color-primary)]">
-            Xem toan bo danh muc
+            Xem toàn bộ danh mục
           </Link>
         </div>
 
@@ -153,8 +214,8 @@ export default function Home() {
       <section className="section-shell pb-16">
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
-            <span className="eyebrow">San pham noi bat</span>
-            <h2 className="section-title">4-6 giai phap duoc trinh bay theo mo hinh catalog ky thuat</h2>
+            <span className="eyebrow">{localizeText(homeCopy.featuredProducts, locale)}</span>
+            <h2 className="section-title">4-6 giải pháp được trình bày theo mô hình catalog kỹ thuật</h2>
           </div>
         </div>
 
@@ -186,13 +247,13 @@ export default function Home() {
                     href={`/san-pham/${product.slug}`}
                     className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white"
                   >
-                    Xem chi tiet
+                    Xem chi tiết
                   </Link>
                   <Link
                     href={`/lien-he?interest=${product.slug}`}
                     className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
                   >
-                    Bao gia
+                    Báo giá
                   </Link>
                 </div>
               </div>
@@ -205,8 +266,8 @@ export default function Home() {
         <div className="panel px-6 py-8 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-4">
-              <span className="eyebrow">Nha san xuat doi tac</span>
-              <h2 className="section-title">Mang luoi doi tac phu hop voi ca lam sang va nghien cuu</h2>
+              <span className="eyebrow">{localizeText(homeCopy.partners, locale)}</span>
+              <h2 className="section-title">Mạng lưới đối tác phù hợp với cả lâm sàng và nghiên cứu</h2>
             </div>
             <div className="grid gap-3 text-sm font-semibold text-[var(--color-muted)] sm:grid-cols-4">
               {partnerManufacturers.map((partner) => (
@@ -225,11 +286,11 @@ export default function Home() {
       <section className="section-shell pb-16">
         <div className="flex flex-col gap-4 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-4">
-            <span className="eyebrow">Tin tuc noi bat</span>
-            <h2 className="section-title">Noi dung danh cho lanh dao phong lab, benh vien va don vi R&amp;D</h2>
+            <span className="eyebrow">{localizeText(homeCopy.featuredNews, locale)}</span>
+            <h2 className="section-title">Nội dung dành cho lãnh đạo phòng lab, bệnh viện và đơn vị R&amp;D</h2>
           </div>
           <Link href="/tin-tuc" className="text-sm font-semibold text-[var(--color-primary)]">
-            Xem tat ca bai viet
+            {localizeText(homeCopy.readAllNews, locale)}
           </Link>
         </div>
 

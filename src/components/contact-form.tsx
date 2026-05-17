@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import type { Locale } from "@/lib/i18n";
 
 type ContactFormProps = {
   interestOptions: string[];
   defaultInterest?: string;
+  locale?: Locale;
 };
 
 type FormState = {
@@ -28,6 +30,7 @@ const emptyForm = {
 export function ContactForm({
   interestOptions,
   defaultInterest = "",
+  locale = "vi",
 }: ContactFormProps) {
   const [form, setForm] = useState<FormState>({
     ...emptyForm,
@@ -38,6 +41,27 @@ export function ContactForm({
     "idle",
   );
   const [isPending, startTransition] = useTransition();
+
+  const copy = {
+    company: locale === "en" ? "Company" : "Công ty",
+    email: "Email",
+    error: locale === "en"
+      ? "Unable to submit your request right now."
+      : "Không thể gửi yêu cầu lúc này.",
+    fullName: locale === "en" ? "Full name" : "Họ tên",
+    interest: locale === "en" ? "Product / category of interest" : "Sản phẩm / danh mục quan tâm",
+    message: locale === "en" ? "Request details" : "Nội dung yêu cầu",
+    pending: locale === "en" ? "Sending..." : "Đang gửi...",
+    phone: locale === "en" ? "Phone number" : "Số điện thoại",
+    placeholder: locale === "en" ? "Choose a product or category" : "Chọn sản phẩm hoặc danh mục",
+    submit: locale === "en" ? "Submit request" : "Gửi yêu cầu",
+    success: locale === "en"
+      ? "Your information has been submitted successfully."
+      : "Thông tin đã được gửi thành công.",
+    systemError: locale === "en"
+      ? "Unable to connect to the system. Please try again later."
+      : "Không thể kết nối đến hệ thống. Vui lòng thử lại sau.",
+  };
 
   function updateField<Key extends keyof FormState>(
     field: Key,
@@ -70,16 +94,16 @@ export function ContactForm({
           const firstError = payload.errors
             ? Object.values(payload.errors).flat()[0]
             : undefined;
-          setFeedback(firstError || payload.message || "Khong the gui yeu cau luc nay.");
+          setFeedback(firstError || payload.message || copy.error);
           setFeedbackTone("error");
           return;
         }
 
         setForm({ ...emptyForm, interest: defaultInterest });
-        setFeedback(payload.message || "Thong tin da duoc gui thanh cong.");
+        setFeedback(payload.message || copy.success);
         setFeedbackTone("success");
       } catch {
-        setFeedback("Khong the ket noi den he thong. Vui long thu lai sau.");
+        setFeedback(copy.systemError);
         setFeedbackTone("error");
       }
     });
@@ -89,7 +113,7 @@ export function ContactForm({
     <form onSubmit={handleSubmit} className="panel space-y-5 px-6 py-6 lg:px-8">
       <div className="grid gap-5 md:grid-cols-2">
         <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-          Ho ten
+          {copy.fullName}
           <input
             value={form.fullName}
             onChange={(event) => updateField("fullName", event.target.value)}
@@ -108,7 +132,7 @@ export function ContactForm({
           />
         </label>
         <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-          So dien thoai
+          {copy.phone}
           <input
             value={form.phone}
             onChange={(event) => updateField("phone", event.target.value)}
@@ -117,7 +141,7 @@ export function ContactForm({
           />
         </label>
         <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-          Cong ty
+          {copy.company}
           <input
             value={form.company}
             onChange={(event) => updateField("company", event.target.value)}
@@ -128,14 +152,14 @@ export function ContactForm({
       </div>
 
       <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-        San pham / danh muc quan tam
+        {copy.interest}
         <select
           value={form.interest}
           onChange={(event) => updateField("interest", event.target.value)}
           required
           className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm outline-none transition focus:border-[var(--color-primary)]"
         >
-          <option value="">Chon san pham hoac danh muc</option>
+          <option value="">{copy.placeholder}</option>
           {interestOptions.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -145,7 +169,7 @@ export function ContactForm({
       </label>
 
       <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-        Noi dung yeu cau
+        {copy.message}
         <textarea
           value={form.message}
           onChange={(event) => updateField("message", event.target.value)}
@@ -172,7 +196,7 @@ export function ContactForm({
         disabled={isPending}
         className="rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(13,78,166,0.22)] transition hover:bg-[var(--color-primary-strong)] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isPending ? "Dang gui..." : "Gui yeu cau"}
+        {isPending ? copy.pending : copy.submit}
       </button>
     </form>
   );

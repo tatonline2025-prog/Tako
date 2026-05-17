@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 type AdminLoginFormProps = {
   isConfigured: boolean;
   redirectTo: string;
+  locale?: "vi" | "en";
 };
 
 export function AdminLoginForm({
   isConfigured,
+  locale = "vi",
   redirectTo,
 }: AdminLoginFormProps) {
   const router = useRouter();
@@ -18,11 +20,26 @@ export function AdminLoginForm({
   const [feedback, setFeedback] = useState("");
   const [isPending, startTransition] = useTransition();
 
+  const copy = {
+    button: locale === "en" ? "Sign in" : "Đăng nhập",
+    description: locale === "en"
+      ? "Sign in to view contact leads and internal admin data."
+      : "Đăng nhập để xem danh sách liên hệ và các dữ liệu quản trị nội bộ.",
+    failed: locale === "en" ? "Sign-in failed." : "Đăng nhập thất bại.",
+    password: locale === "en" ? "Password" : "Mật khẩu",
+    pending: locale === "en" ? "Processing..." : "Đang xử lý...",
+    systemError: locale === "en"
+      ? "Unable to connect to the sign-in system."
+      : "Không thể kết nối đến hệ thống đăng nhập.",
+    title: locale === "en" ? "Admin sign in" : "Đăng nhập quản trị",
+    username: locale === "en" ? "Admin username" : "Tài khoản quản trị",
+  };
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!isConfigured) {
-      setFeedback("Khu vuc quan tri chua duoc cau hinh thong tin dang nhap.");
+      setFeedback("Khu vực quản trị chưa được cấu hình thông tin đăng nhập.");
       return;
     }
 
@@ -44,14 +61,14 @@ export function AdminLoginForm({
         };
 
         if (!response.ok) {
-          setFeedback(payload.message || "Dang nhap that bai.");
+          setFeedback(payload.message || copy.failed);
           return;
         }
 
         router.push(payload.redirectTo || redirectTo);
         router.refresh();
       } catch {
-        setFeedback("Khong the ket noi den he thong dang nhap.");
+        setFeedback(copy.systemError);
       }
     });
   }
@@ -60,21 +77,21 @@ export function AdminLoginForm({
     <form onSubmit={handleSubmit} className="panel space-y-5 px-6 py-6 lg:px-8">
       <div className="space-y-2">
         <h1 className="font-[family:var(--font-display)] text-3xl font-semibold text-[var(--color-ink)]">
-          Dang nhap quan tri
+          {copy.title}
         </h1>
         <p className="text-sm leading-7 text-[var(--color-muted)]">
-          Dang nhap de xem danh sach lien he va cac du lieu quan tri noi bo.
+          {copy.description}
         </p>
       </div>
 
       {!isConfigured ? (
         <div className="rounded-[1.5rem] bg-[rgba(201,60,60,0.12)] px-4 py-4 text-sm leading-7 text-[#a12d2d]">
-          Chua co `ADMIN_USERNAME`, `ADMIN_PASSWORD` hoac `ADMIN_SESSION_SECRET` trong moi truong.
+          Chưa có `ADMIN_USERNAME`, `ADMIN_PASSWORD` hoặc `ADMIN_SESSION_SECRET` trong môi trường.
         </div>
       ) : null}
 
       <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-        Tai khoan quan tri
+        {copy.username}
         <input
           value={username}
           onChange={(event) => setUsername(event.target.value)}
@@ -85,7 +102,7 @@ export function AdminLoginForm({
       </label>
 
       <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-        Mat khau
+        {copy.password}
         <input
           type="password"
           value={password}
@@ -107,7 +124,7 @@ export function AdminLoginForm({
         disabled={isPending || !isConfigured}
         className="rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_30px_rgba(13,78,166,0.22)] transition hover:bg-[var(--color-primary-strong)] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isPending ? "Dang xu ly..." : "Dang nhap"}
+        {isPending ? copy.pending : copy.button}
       </button>
     </form>
   );

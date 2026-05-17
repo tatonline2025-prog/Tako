@@ -2,20 +2,20 @@ import type { Metadata } from "next";
 import { newsArticles } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Tin tuc",
+  title: "Tin tức",
   description:
-    "Cac bai viet demo ve xu huong cong nghe sinh hoc, NGS, proteomics, sepsis va ung dung trong chan doan lam sang.",
+    "Các bài viết demo về xu hướng công nghệ sinh học, NGS, proteomics, sepsis và ứng dụng trong chẩn đoán lâm sàng.",
 };
 
 export default function NewsPage() {
   return (
     <div className="section-shell py-12 sm:py-16">
       <section className="space-y-4 pb-10">
-        <span className="eyebrow">Tin tuc</span>
-        <h1 className="section-title">Noi dung duoc thiet ke cho lanh dao phong lab, khoi R&amp;D va don vi lam sang</h1>
+        <span className="eyebrow">Tin tức</span>
+        <h1 className="section-title">Nội dung được thiết kế cho lãnh đạo phòng lab, khối R&amp;D và đơn vị lâm sàng</h1>
         <p className="section-copy">
-          Giai doan demo tap trung vao khung tin tuc de sau nay co the dang bai viet
-          ve xu huong cong nghe sinh hoc, chinh sach va su kien cua TAKO Vietnam.
+          Giai đoạn demo tập trung vào khung tin tức để sau này có thể đăng bài viết
+          về xu hướng công nghệ sinh học, chính sách và sự kiện của TAKO Vietnam.
         </p>
       </section>
 
@@ -34,7 +34,7 @@ export default function NewsPage() {
               {article.excerpt}
             </p>
             <div className="mt-6 rounded-[1.5rem] border border-dashed border-[var(--color-line)] px-4 py-4 text-sm leading-7 text-[var(--color-muted)]">
-              Khung bai viet da san sang de ket noi voi he quan tri tin tuc sau nay.
+              Khung bài viết đã sẵn sàng để kết nối với hệ quản trị tin tức sau này.
             </div>
           </article>
         ))}

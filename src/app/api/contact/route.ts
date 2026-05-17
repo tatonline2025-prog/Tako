@@ -11,7 +11,7 @@ export async function GET() {
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json(
       {
-        message: "Ban can dang nhap quan tri de xem du lieu nay.",
+        message: "Bạn cần đăng nhập quản trị để xem dữ liệu này.",
       },
       { status: 401 },
     );
@@ -23,7 +23,7 @@ export async function GET() {
   } catch {
     return NextResponse.json(
       {
-        message: "Khong the tai danh sach lien he luc nay.",
+        message: "Không thể tải danh sách liên hệ lúc này.",
       },
       { status: 500 },
     );
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     if (!parsed.success) {
       return NextResponse.json(
         {
-          message: "Du lieu gui len khong hop le.",
+          message: "Dữ liệu gửi lên không hợp lệ.",
           errors: parsed.error.flatten().fieldErrors,
         },
         { status: 400 },
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         id: contactId,
-        message: "TAKO Vietnam da nhan yeu cau. Chung toi se lien he som.",
+        message: "TAKO Vietnam đã nhận yêu cầu. Chúng tôi sẽ liên hệ sớm.",
         notificationStatus,
       },
       { status: 201 },
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       {
-        message: "Khong the luu yeu cau vao he thong luc nay.",
+        message: "Không thể lưu yêu cầu vào hệ thống lúc này.",
       },
       { status: 500 },
     );

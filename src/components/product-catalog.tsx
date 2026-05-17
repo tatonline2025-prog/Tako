@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
 import type { Category, Product } from "@/data/site";
+import type { Locale } from "@/lib/i18n";
 
 type ProductCatalogProps = {
+  locale?: Locale;
   categories: Category[];
   manufacturers: string[];
   applications: string[];
@@ -12,6 +14,7 @@ type ProductCatalogProps = {
 };
 
 export function ProductCatalog({
+  locale = "vi",
   categories,
   manufacturers,
   applications,
@@ -51,27 +54,46 @@ export function ProductCatalog({
     );
   });
 
+  const copy = {
+    allApplications: locale === "en" ? "All applications" : "Tất cả ứng dụng",
+    allCategories: locale === "en" ? "All sectors" : "Tất cả lĩnh vực",
+    allManufacturers: locale === "en" ? "All manufacturers" : "Tất cả hãng",
+    application: locale === "en" ? "Application" : "Ứng dụng",
+    category: locale === "en" ? "Sector" : "Lĩnh vực",
+    details: locale === "en" ? "View details" : "Xem chi tiết",
+    empty: locale === "en"
+      ? "No products match the current filters. Try another keyword or reset the filters."
+      : "Không tìm thấy sản phẩm phù hợp với bộ lọc hiện tại. Hãy đổi từ khóa hoặc đặt lại bộ lọc.",
+    manufacturer: locale === "en" ? "Manufacturer" : "Hãng sản xuất",
+    pdf: locale === "en" ? "Download PDF" : "Tải PDF",
+    quote: locale === "en" ? "Request quote" : "Liên hệ báo giá",
+    reset: locale === "en" ? "Reset filters" : "Đặt lại bộ lọc",
+    results: locale === "en" ? "matching products found" : "sản phẩm phù hợp",
+    search: locale === "en" ? "Search by name or keyword" : "Tìm theo tên hoặc từ khóa",
+    searchPlaceholder: locale === "en" ? "e.g. MGI, sepsis, HLA, proteomics" : "VD: MGI, sepsis, HLA, proteomics",
+  };
+
   return (
     <div className="space-y-8">
       <div className="panel grid gap-5 px-6 py-6 lg:grid-cols-[1.2fr_repeat(3,_0.6fr)] lg:px-8">
         <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-          Tim theo ten hoac tu khoa
+          {copy.search}
           <input
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
-            placeholder="VD: MGI, sepsis, HLA, proteomics"
+            placeholder={copy.searchPlaceholder}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           />
         </label>
 
         <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-          Linh vuc
+          {copy.category}
           <select
             value={categoryFilter}
             onChange={(event) => setCategoryFilter(event.target.value)}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
-            <option value="all">Tat ca linh vuc</option>
+            <option value="all">{copy.allCategories}</option>
             {categories.map((category) => (
               <option key={category.slug} value={category.slug}>
                 {category.name}
@@ -81,13 +103,13 @@ export function ProductCatalog({
         </label>
 
         <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-          Hang san xuat
+          {copy.manufacturer}
           <select
             value={manufacturerFilter}
             onChange={(event) => setManufacturerFilter(event.target.value)}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
-            <option value="all">Tat ca hang</option>
+            <option value="all">{copy.allManufacturers}</option>
             {manufacturers.map((manufacturer) => (
               <option key={manufacturer} value={manufacturer}>
                 {manufacturer}
@@ -97,13 +119,13 @@ export function ProductCatalog({
         </label>
 
         <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
-          Ung dung
+          {copy.application}
           <select
             value={applicationFilter}
             onChange={(event) => setApplicationFilter(event.target.value)}
             className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
           >
-            <option value="all">Tat ca ung dung</option>
+            <option value="all">{copy.allApplications}</option>
             {applications.map((application) => (
               <option key={application} value={application}>
                 {application}
@@ -114,7 +136,7 @@ export function ProductCatalog({
 
         <div className="lg:col-span-4 flex items-center justify-between gap-4 rounded-[1.5rem] border border-[var(--color-line)] bg-[rgba(13,78,166,0.04)] px-4 py-4">
           <p className="text-sm leading-7 text-[var(--color-muted)]">
-            Tim thay <strong className="text-[var(--color-ink)]">{filteredProducts.length}</strong> san pham phu hop.
+            Tìm thấy <strong className="text-[var(--color-ink)]">{filteredProducts.length}</strong> {copy.results}.
           </p>
           <button
             type="button"
@@ -126,7 +148,7 @@ export function ProductCatalog({
             }}
             className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
           >
-            Dat lai bo loc
+            {copy.reset}
           </button>
         </div>
       </div>
@@ -173,19 +195,19 @@ export function ProductCatalog({
                   href={`/san-pham/${product.slug}`}
                   className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white"
                 >
-                  Xem chi tiet
+                  {copy.details}
                 </Link>
                 <Link
                   href={product.pdfPath}
                   className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
                 >
-                  Tai PDF
+                  {copy.pdf}
                 </Link>
                 <Link
                   href={`/lien-he?interest=${product.slug}`}
                   className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
                 >
-                  Lien he bao gia
+                  {copy.quote}
                 </Link>
               </div>
             </div>
@@ -195,7 +217,7 @@ export function ProductCatalog({
 
       {filteredProducts.length === 0 ? (
         <div className="panel px-6 py-10 text-center text-sm leading-7 text-[var(--color-muted)]">
-          Khong tim thay san pham phu hop voi bo loc hien tai. Hay doi tu khoa hoac dat lai bo loc.
+          {copy.empty}
         </div>
       ) : null}
     </div>

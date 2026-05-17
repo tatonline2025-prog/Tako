@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
-import { categories, getProductBySlug, siteMetadata } from "@/data/site";
+import { categories, getProductBySlug, getSiteMetadata } from "@/data/site";
 import { contactInterestOptions } from "@/lib/contact-schema";
+import { getRequestLocale, localizeText } from "@/lib/i18n";
 
 type ContactPageProps = {
   searchParams: Promise<{ interest?: string | string[] }>;
 };
 
 export const metadata: Metadata = {
-  title: "Lien he",
+  title: "Liên hệ",
   description:
-    "Gui yeu cau tu van, bao gia va nhan ho tro tu TAKO Vietnam cho danh muc san pham va giai phap cong nghe sinh hoc.",
+    "Gửi yêu cầu tư vấn, báo giá và nhận hỗ trợ từ TAKO Vietnam cho danh mục sản phẩm và giải pháp công nghệ sinh học.",
 };
 
 export default async function ContactPage({ searchParams }: ContactPageProps) {
+  const locale = await getRequestLocale();
+  const siteMetadata = getSiteMetadata(locale);
   const query = await searchParams;
   const interestValue = Array.isArray(query.interest)
     ? query.interest[0]
@@ -25,19 +28,19 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
     <div className="section-shell py-12 sm:py-16">
       <section className="grid gap-8 pb-10 lg:grid-cols-[0.86fr_1.14fr]">
         <div className="space-y-5">
-          <span className="eyebrow">Lien he</span>
-          <h1 className="section-title">Yeu cau bao gia, tai lieu ky thuat hoac tu van giai phap</h1>
+          <span className="eyebrow">{localizeText({ en: "Contact", vi: "Liên hệ" }, locale)}</span>
+          <h1 className="section-title">{localizeText({ en: "Request quotations, technical documents, or solution consulting", vi: "Yêu cầu báo giá, tài liệu kỹ thuật hoặc tư vấn giải pháp" }, locale)}</h1>
           <p className="section-copy">
-            Form lien he duoc ket noi truc tiep voi database de doi ngu co the xem danh sach yeu cau tu mot dau moi. He thong da san sang gui email thong bao ve hop thu cong ty khi SMTP duoc cau hinh trong moi truong tri en khai.
+            {localizeText({ en: "The contact form is connected directly to the database so your team can review requests in one place. The system is also ready to send notifications to the company inbox once SMTP or Resend is configured.", vi: "Form liên hệ được kết nối trực tiếp với database để đội ngũ có thể xem danh sách yêu cầu từ một đầu mối. Hệ thống cũng đã sẵn sàng gửi email thông báo về hộp thư công ty khi SMTP hoặc Resend được cấu hình." }, locale)}
           </p>
 
           <div className="grid gap-4">
             <div className="panel px-5 py-5">
-              <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Dia chi</div>
+              <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">{localizeText({ en: "Address", vi: "Địa chỉ" }, locale)}</div>
               <div className="mt-3 text-sm leading-7 text-[var(--color-muted)]">{siteMetadata.address}</div>
             </div>
             <div className="panel px-5 py-5">
-              <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Lien lac nhanh</div>
+              <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">{localizeText({ en: "Quick contact", vi: "Liên lạc nhanh" }, locale)}</div>
               <div className="mt-3 space-y-2 text-sm leading-7 text-[var(--color-muted)]">
                 <a href={`tel:${siteMetadata.hotline.replace(/\s+/g, "")}`} className="block hover:text-[var(--color-ink)]">
                   Hotline: {siteMetadata.hotline}
@@ -47,12 +50,12 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                 </a>
                 <a href={siteMetadata.zaloUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 rounded-full border border-[var(--color-line)] px-4 py-2 font-semibold text-[var(--color-ink)]">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0068ff] text-xs font-bold text-white">Z</span>
-                  Chat Zalo
+                  {localizeText({ en: "Chat on Zalo", vi: "Chat Zalo" }, locale)}
                 </a>
               </div>
             </div>
             <div className="panel px-5 py-5">
-              <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">Danh muc quan tam</div>
+              <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">{localizeText({ en: "Interest categories", vi: "Danh mục quan tâm" }, locale)}</div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {categories.map((category) => (
                   <span
@@ -71,11 +74,15 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           <ContactForm
             interestOptions={contactInterestOptions}
             defaultInterest={defaultInterest}
+            locale={locale}
           />
           <div className="panel px-6 py-5 text-sm leading-7 text-[var(--color-muted)] lg:px-8">
-            Ban demo da luu lien he vao MongoDB va bao ve khu vuc xem du lieu bang dang nhap quan tri.
-            <span className="font-semibold text-[var(--color-ink)]"> Dang nhap tai /dang-nhap</span> de vao
-            <span className="font-semibold text-[var(--color-ink)]"> /quan-tri/lien-he</span>.
+            {localizeText({ en: "This demo already stores contacts in MongoDB and protects the internal view with admin login.", vi: "Bản demo đã lưu liên hệ vào MongoDB và bảo vệ khu vực xem dữ liệu bằng đăng nhập quản trị." }, locale)}
+            <span className="font-semibold text-[var(--color-ink)]"> /dang-nhap</span>
+            {localizeText({ en: " to access ", vi: " để vào " }, locale)}
+            <span className="font-semibold text-[var(--color-ink)]">/quan-tri/lien-he</span>
+            {localizeText({ en: " and ", vi: " và " }, locale)}
+            <span className="font-semibold text-[var(--color-ink)]">/quan-tri/cai-dat</span>.
           </div>
         </div>
       </section>

@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+
 export type NavigationItem = {
   href: string;
   label: string;
@@ -35,37 +37,82 @@ export type NewsArticle = {
   tag: string;
 };
 
-export const siteMetadata = {
-  companyName: "TAKO Vietnam",
-  legalName: "Cong ty Co phan Thuong mai TAKO Viet Nam",
-  tagline: "Giai phap cong nghe toan dien cho y te va nghien cuu khoa hoc",
-  description:
-    "TAKO Vietnam phan phoi thiet bi, sinh pham va giai phap cong nghe sinh hoc cho phong xet nghiem, benh vien, trung tam nghien cuu va doanh nghiep duoc sinh hoc.",
-  address: "Ha Noi, Viet Nam",
-  hotline: "+84 868 946 894",
-  email: "contact@takovietnam.vn",
-  zaloUrl: "https://zalo.me/0868946894",
+type SiteMetadata = {
+  companyName: string;
+  legalName: string;
+  tagline: string;
+  description: string;
+  address: string;
+  hotline: string;
+  email: string;
+  zaloUrl: string;
 };
 
-export const navigationItems: NavigationItem[] = [
-  { href: "/", label: "Trang chu" },
-  { href: "/gioi-thieu", label: "Gioi thieu" },
-  { href: "/san-pham", label: "San pham / Giai phap" },
-  { href: "/tin-tuc", label: "Tin tuc" },
-  { href: "/lien-he", label: "Lien he" },
-];
+const localizedSiteMetadata: Record<Locale, SiteMetadata> = {
+  en: {
+    companyName: "TAKO Vietnam",
+    legalName: "TAKO Vietnam Trading Joint Stock Company",
+    tagline: "Integrated technology solutions for healthcare and scientific research",
+    description:
+      "TAKO Vietnam distributes biotechnology equipment, reagents, and solutions for laboratories, hospitals, research centers, and biotech enterprises.",
+    address: "Hanoi, Vietnam",
+    hotline: "+84 868 946 894",
+    email: "contact@takovietnam.vn",
+    zaloUrl: "https://zalo.me/0868946894",
+  },
+  vi: {
+    companyName: "TAKO Vietnam",
+    legalName: "Công ty Cổ phần Thương mại TAKO Việt Nam",
+    tagline: "Giải pháp công nghệ toàn diện cho y tế và nghiên cứu khoa học",
+    description:
+      "TAKO Vietnam phân phối thiết bị, sinh phẩm và giải pháp công nghệ sinh học cho phòng xét nghiệm, bệnh viện, trung tâm nghiên cứu và doanh nghiệp dược sinh học.",
+    address: "Hà Nội, Việt Nam",
+    hotline: "+84 868 946 894",
+    email: "contact@takovietnam.vn",
+    zaloUrl: "https://zalo.me/0868946894",
+  },
+};
+
+const localizedNavigation: Record<Locale, NavigationItem[]> = {
+  en: [
+    { href: "/", label: "Home" },
+    { href: "/gioi-thieu", label: "About" },
+    { href: "/san-pham", label: "Products & Solutions" },
+    { href: "/tin-tuc", label: "News" },
+    { href: "/lien-he", label: "Contact" },
+  ],
+  vi: [
+    { href: "/", label: "Trang chủ" },
+    { href: "/gioi-thieu", label: "Giới thiệu" },
+    { href: "/san-pham", label: "Sản phẩm / Giải pháp" },
+    { href: "/tin-tuc", label: "Tin tức" },
+    { href: "/lien-he", label: "Liên hệ" },
+  ],
+};
+
+export function getSiteMetadata(locale: Locale) {
+  return localizedSiteMetadata[locale];
+}
+
+export function getNavigationItems(locale: Locale) {
+  return localizedNavigation[locale];
+}
+
+export const siteMetadata = getSiteMetadata("vi");
+
+export const navigationItems: NavigationItem[] = getNavigationItems("vi");
 
 export const companyHighlights = [
-  "Dinh huong theo Nghi quyet 57-NQ/TW va 36-NQ/TW ve phat trien cong nghe chien luoc va khoa hoc suc khoe.",
-  "Tap trung B2B cho phong xet nghiem, benh vien, vien nghien cuu, co so kiem dinh va doanh nghiep duoc sinh hoc.",
-  "Ket noi thiet bi, sinh pham, workflow va dich vu ho tro de rut ngan thoi gian dua cong nghe vao van hanh.",
+  "Định hướng theo Nghị quyết 57-NQ/TW và 36-NQ/TW về phát triển công nghệ chiến lược và khoa học sức khỏe.",
+  "Tập trung B2B cho phòng xét nghiệm, bệnh viện, viện nghiên cứu, cơ sở kiểm định và doanh nghiệp dược sinh học.",
+  "Kết nối thiết bị, sinh phẩm, workflow và dịch vụ hỗ trợ để rút ngắn thời gian đưa công nghệ vào vận hành.",
 ];
 
 export const focusAreas = [
-  "Proteomics do phan giai cao",
-  "Giai trinh tu gene the he moi",
-  "Chan doan sinh hoc phan tu cho benh vien va phong lab",
-  "Sinh pham co ban va vat tu tieu hao",
+  "Proteomics độ phân giải cao",
+  "Giải trình tự gene thế hệ mới",
+  "Chẩn đoán sinh học phân tử cho bệnh viện và phòng lab",
+  "Sinh phẩm cơ bản và vật tư tiêu hao",
 ];
 
 export const partnerManufacturers = [
@@ -84,36 +131,36 @@ export const categories: Category[] = [
     slug: "proteomics",
     name: "Proteomics",
     description:
-      "Nen tang giai trinh tu va phan tich protein cho nghien cuu thuoc va y hoc chinh xac.",
-    applications: ["Proteomics", "Y hoc chinh xac", "Drug discovery"],
+      "Nền tảng giải trình tự và phân tích protein cho nghiên cứu thuốc và y học chính xác.",
+    applications: ["Proteomics", "Y học chính xác", "Drug discovery"],
   },
   {
     slug: "ngs",
-    name: "Giai trinh tu Gene the he moi (NGS)",
+    name: "Giải trình tự gene thế hệ mới (NGS)",
     description:
-      "He thong giai trinh tu, hoa chat va tu dong hoa workflow cho chan doan va nghien cuu genomics.",
-    applications: ["Ung thu", "Di truyen", "San loc truoc sinh", "Dich te hoc"],
+      "Hệ thống giải trình tự, hóa chất và tự động hóa workflow cho chẩn đoán và nghiên cứu genomics.",
+    applications: ["Ung thư", "Di truyền", "Sàng lọc trước sinh", "Dịch tễ học"],
   },
   {
     slug: "sinh-hoc-phan-tu",
-    name: "Giai phap xet nghiem sinh hoc phan tu",
+    name: "Giải pháp xét nghiệm sinh học phân tử",
     description:
-      "qPCR, PCR, sinh pham tach chiet va thiet bi phong lab cho xet nghiem lam sang va nghien cuu.",
-    applications: ["Truyen nhiem", "Khang khang sinh", "HLA", "Chan doan lam sang"],
+      "qPCR, PCR, sinh phẩm tách chiết và thiết bị phòng lab cho xét nghiệm lâm sàng và nghiên cứu.",
+    applications: ["Truyền nhiễm", "Kháng kháng sinh", "HLA", "Chẩn đoán lâm sàng"],
   },
   {
     slug: "sinh-pham-co-ban",
-    name: "Sinh pham co ban",
+    name: "Sinh phẩm cơ bản",
     description:
-      "Enzyme, buffer va kit tach chiet phuc vu workflow sinh hoc phan tu co ban va mo rong.",
+      "Enzyme, buffer và kit tách chiết phục vụ workflow sinh học phân tử cơ bản và mở rộng.",
     applications: ["PCR", "qPCR", "NGS"],
   },
   {
     slug: "khac",
-    name: "Khac",
+    name: "Khác",
     description:
-      "Phu kien, hoa chat va vat tu tieu hao cho hoat dong thuong quy cua phong thí nghiem.",
-    applications: ["Vat tu tieu hao", "Hoa chat", "Phu kien phong lab"],
+      "Phụ kiện, hóa chất và vật tư tiêu hao cho hoạt động thường quy của phòng thí nghiệm.",
+    applications: ["Vật tư tiêu hao", "Hóa chất", "Phụ kiện phòng lab"],
   },
 ];
 
