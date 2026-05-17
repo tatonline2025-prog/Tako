@@ -1,0 +1,203 @@
+"use client";
+
+import Link from "next/link";
+import { useDeferredValue, useState } from "react";
+import type { Category, Product } from "@/data/site";
+
+type ProductCatalogProps = {
+  categories: Category[];
+  manufacturers: string[];
+  applications: string[];
+  products: Product[];
+};
+
+export function ProductCatalog({
+  categories,
+  manufacturers,
+  applications,
+  products,
+}: ProductCatalogProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [manufacturerFilter, setManufacturerFilter] = useState("all");
+  const [applicationFilter, setApplicationFilter] = useState("all");
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
+  const normalizedQuery = deferredSearchTerm.trim().toLowerCase();
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
+    const matchesManufacturer =
+      manufacturerFilter === "all" || product.manufacturer === manufacturerFilter;
+    const matchesApplication =
+      applicationFilter === "all" || product.applications.includes(applicationFilter);
+    const haystack = [
+      product.name,
+      product.subcategory,
+      product.shortDescription,
+      product.description,
+      product.manufacturer,
+      ...product.applications,
+    ]
+      .join(" ")
+      .toLowerCase();
+    const matchesSearch = !normalizedQuery || haystack.includes(normalizedQuery);
+
+    return (
+      matchesCategory &&
+      matchesManufacturer &&
+      matchesApplication &&
+      matchesSearch
+    );
+  });
+
+  return (
+    <div className="space-y-8">
+      <div className="panel grid gap-5 px-6 py-6 lg:grid-cols-[1.2fr_repeat(3,_0.6fr)] lg:px-8">
+        <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
+          Tim theo ten hoac tu khoa
+          <input
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="VD: MGI, sepsis, HLA, proteomics"
+            className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
+          />
+        </label>
+
+        <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
+          Linh vuc
+          <select
+            value={categoryFilter}
+            onChange={(event) => setCategoryFilter(event.target.value)}
+            className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
+          >
+            <option value="all">Tat ca linh vuc</option>
+            {categories.map((category) => (
+              <option key={category.slug} value={category.slug}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
+          Hang san xuat
+          <select
+            value={manufacturerFilter}
+            onChange={(event) => setManufacturerFilter(event.target.value)}
+            className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
+          >
+            <option value="all">Tat ca hang</option>
+            {manufacturers.map((manufacturer) => (
+              <option key={manufacturer} value={manufacturer}>
+                {manufacturer}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
+          Ung dung
+          <select
+            value={applicationFilter}
+            onChange={(event) => setApplicationFilter(event.target.value)}
+            className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition focus:border-[var(--color-primary)]"
+          >
+            <option value="all">Tat ca ung dung</option>
+            {applications.map((application) => (
+              <option key={application} value={application}>
+                {application}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div className="lg:col-span-4 flex items-center justify-between gap-4 rounded-[1.5rem] border border-[var(--color-line)] bg-[rgba(13,78,166,0.04)] px-4 py-4">
+          <p className="text-sm leading-7 text-[var(--color-muted)]">
+            Tim thay <strong className="text-[var(--color-ink)]">{filteredProducts.length}</strong> san pham phu hop.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchTerm("");
+              setCategoryFilter("all");
+              setManufacturerFilter("all");
+              setApplicationFilter("all");
+            }}
+            className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-primary)]"
+          >
+            Dat lai bo loc
+          </button>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+        {filteredProducts.map((product) => (
+          <article key={product.slug} className="panel overflow-hidden">
+            <div className={`h-44 bg-gradient-to-br ${product.imageTone} p-6 text-white`}>
+              <div className="inline-flex rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em]">
+                {product.manufacturer}
+              </div>
+              <div className="mt-8 font-[family:var(--font-display)] text-3xl font-semibold leading-tight">
+                {product.imageLabel}
+              </div>
+            </div>
+
+            <div className="space-y-4 px-6 py-6">
+              <div>
+                <div className="text-xs uppercase tracking-[0.22em] text-[var(--color-primary)]">
+                  {product.categoryName}
+                </div>
+                <h2 className="mt-2 font-[family:var(--font-display)] text-2xl font-semibold text-[var(--color-ink)]">
+                  {product.name}
+                </h2>
+              </div>
+
+              <p className="text-sm leading-7 text-[var(--color-muted)]">
+                {product.shortDescription}
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {product.applications.slice(0, 3).map((application) => (
+                  <span
+                    key={application}
+                    className="rounded-full bg-[rgba(13,78,166,0.08)] px-3 py-1 text-xs font-medium text-[var(--color-primary)]"
+                  >
+                    {application}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-3 pt-1">
+                <Link
+                  href={`/san-pham/${product.slug}`}
+                  className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white"
+                >
+                  Xem chi tiet
+                </Link>
+                <Link
+                  href={product.pdfPath}
+                  className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
+                >
+                  Tai PDF
+                </Link>
+                <Link
+                  href={`/lien-he?interest=${product.slug}`}
+                  className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)]"
+                >
+                  Lien he bao gia
+                </Link>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {filteredProducts.length === 0 ? (
+        <div className="panel px-6 py-10 text-center text-sm leading-7 text-[var(--color-muted)]">
+          Khong tim thay san pham phu hop voi bo loc hien tai. Hay doi tu khoa hoac dat lai bo loc.
+        </div>
+      ) : null}
+    </div>
+  );
+}
