@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-import { getProductBySlug } from "@/data/site";
+import { getProductBySlug } from "@/lib/catalog-repository";
 
 export const runtime = "nodejs";
 
@@ -55,18 +55,18 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return new Response("Not found", { status: 404 });
   }
 
   const pdfContent = buildPdfDocument([
-    product.name,
+    product.name.en,
     `Hang san xuat: ${product.manufacturer}`,
-    `Linh vuc: ${product.categoryName}`,
+    `Linh vuc: ${product.categoryName.en}`,
     `Danh muc: ${product.subcategory}`,
-    product.shortDescription,
+    product.shortDescription.en,
     "Tai lieu PDF placeholder. Se duoc thay bang catalog chinh thuc khi TAKO cung cap file thuc te.",
   ]);
 
